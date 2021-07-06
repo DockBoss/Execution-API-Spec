@@ -23,7 +23,7 @@
 
 ### Notes
 
-get devmode is always mining
+geth devmode is always mining
  
 ---
 ## Case
