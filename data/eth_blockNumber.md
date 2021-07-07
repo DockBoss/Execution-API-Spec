@@ -51,7 +51,9 @@ geth --http --ropsten --mine
 
 ### Notes
 
+ didn't get ropsten synced
  
+ Not enough space on my pc
  
 ---
 ## Case
@@ -74,7 +76,11 @@ no transactions
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 83,
+    "result": "0x0"
+}
 ``
 
 ### Notes
@@ -102,7 +108,11 @@ many transactions
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 83,
+    "result": "0x28"
+}
 ``
 
 ### Notes
@@ -130,7 +140,11 @@ on mainnet but not node not synced
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 83,
+    "result": "0x0"
+}
 ``
 
 ### Notes
