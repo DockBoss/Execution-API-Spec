@@ -1,16 +1,23 @@
 # EdgeCases
 Edge cases of Ethereum JSON RPC endpoints
 
+This is a progress report/checklist 
+
+### stages
+- not started
+- data collection
+- draft
+- final
 
 ---
 | endpoint | Status |
 |---|---|
-| web3_clientVersion|not started|
+| web3_clientVersion|data collection
 | web3_sha3|not started|
 | net_version|draft|
-| net_peerCount|collecting data|
-| net_listening|not started|
-| eth_protocolVersion|collecting data|
+| net_peerCount|data collection|
+| net_listening|data collection|
+| eth_protocolVersion|data collection|
 | eth_syncing|draft|
 | eth_coinbase|draft|
 | eth_mining|draft|
@@ -28,7 +35,7 @@ Edge cases of Ethereum JSON RPC endpoints
 | eth_getCode|draft|
 | eth_sign|not started|
 | eth_signTransaction|not started|
-| eth_sendTransaction|collecting data|
+| eth_sendTransaction|data collection|
 | eth_sendRawTransaction|not started|
 | eth_call|draft|
 | eth_estimateGas|not started|
@@ -37,21 +44,21 @@ Edge cases of Ethereum JSON RPC endpoints
 | eth_getTransactionByHash|not started|
 | eth_getTransactionByBlockHashAndIndex|not started|
 | eth_getTransactionByBlockNumberAndIndex|not started|
-| eth_getTransactinRecipt|collecting data|
+| eth_getTransactinRecipt|data collection|
 | eth_getUncleByBlockHashAndIndex|not started|
 | eth_getUncleByBlockNumberAndIndex|not started|
 | eth_getCompilers|not started|
 | eth_compileLLL|not started|
 | eth_compileSolidity|not started|
 | eth_compileSerpent|not started|
-| eth_newFilter|collecting data|
-| eth_newBlockFilter|collecting data|
-| eth_newPendingTransactinFilter|collecting data|
-| eth_uninstallFilter|collecting data|
-| eth_getFilterChanges|collecting data|
-| eth_getFilterLogs|collecting data|
-| eth_getLogs|collecting data|
-| eth_getWork|collecting data|
+| eth_newFilter|data collection|
+| eth_newBlockFilter|data collection|
+| eth_newPendingTransactinFilter|data collection|
+| eth_uninstallFilter|data collectiona|
+| eth_getFilterChanges|data collection|
+| eth_getFilterLogs|data collection|
+| eth_getLogs|data collection|
+| eth_getWork|data collection|
 | eth_submitWork|not started|
 | eth_submitHashrate|not started|
 | db_putString|not started|
