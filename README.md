@@ -27,7 +27,7 @@ This is a progress report/checklist
 | eth_blockNumber|data collection|
 | eth_getBalance|draft|
 | eth_getStorageAt|not started|
-| eth_getTransactionCount|not started|
+| eth_getTransactionCount|data collection|
 | eth_getBlockTransactionCountByHash|not started|
 | eth_getBlockTransactionCountByNumber|not started|
 | eth_getUncleCountByHash|not started|
