@@ -15,7 +15,11 @@ geth --http --dev dev account
 
 ### Return
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
 ``
 
 ### Notes
@@ -42,7 +46,11 @@ on mainnet
 
 ### Return
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
 ``
 
 ### Notes
@@ -69,12 +77,108 @@ on ropsten
 
 ### Return
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
 ``
 
 ### Notes
 
-check light client as well.
+
  
 ---
+## Case
+  
+geth --http --mine
 
+on mainnet
+ 
+### Call
+
+``
+{
+	"jsonrpc":"2.0",
+	"method":"net_listening",
+	"params":[],
+	"id":67
+}
+`` 
+
+### Return
+``
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
+``
+
+### Notes
+
+
+ 
+---
+## Case
+  
+geth --http --ropsten --syncmode light
+
+on mainnet
+ 
+### Call
+
+``
+{
+	"jsonrpc":"2.0",
+	"method":"net_listening",
+	"params":[],
+	"id":67
+}
+`` 
+
+### Return
+``
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
+``
+
+### Notes
+
+
+ 
+---
+## Case
+  
+geth --http --ropsten --syncmode snap
+
+on mainnet
+ 
+### Call
+
+``
+{
+	"jsonrpc":"2.0",
+	"method":"net_listening",
+	"params":[],
+	"id":67
+}
+`` 
+
+### Return
+``
+{
+    "jsonrpc": "2.0",
+    "id": 67,
+    "result": true
+}
+``
+
+### Notes
+
+
+ 
+---
