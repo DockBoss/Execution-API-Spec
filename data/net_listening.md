@@ -1,3 +1,9 @@
+# net_listening
+
+I have not found a situation where it is not looking for a netowrk connection
+
+---
+
 ## Case
   
 geth --http --dev dev account 
