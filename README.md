@@ -1,13 +1,14 @@
 # EdgeCases
 Edge cases of Ethereum JSON RPC endpoints
 
+
 ---
 | endpoint | Status |
 |---|---|
 | web3_clientVersion|not started|
 | web3_sha3|not started|
 | net_version|draft|
-| net_peerCount|draft|
+| net_peerCount|collecting data|
 | net_listening|not started|
 | eth_protocolVersion|collecting data|
 | eth_syncing|draft|
