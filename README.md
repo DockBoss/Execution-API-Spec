@@ -39,8 +39,8 @@ This is a progress report/checklist
 | eth_sendRawTransaction|not started|
 | eth_call|draft|
 | eth_estimateGas|not started|
-| eth_getBlockByHash|not started|
-| eth_getBlockByNumber|not started|
+| eth_getBlockByHash|data collection|
+| eth_getBlockByNumber|data collection|
 | eth_getTransactionByHash|not started|
 | eth_getTransactionByBlockHashAndIndex|data collection|
 | eth_getTransactionByBlockNumberAndIndex|data collection|
