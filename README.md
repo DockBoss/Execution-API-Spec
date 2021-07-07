@@ -21,7 +21,7 @@ This is a progress report/checklist
 | eth_syncing|draft|
 | eth_coinbase|draft|
 | eth_mining|draft|
-| eth_hashrate|not started|
+| eth_hashrate|data collection|
 | eth_gasPrice|draft|
 | eth_accounts|draft|
 | eth_blockNumber|not started|
