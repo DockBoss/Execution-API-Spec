@@ -24,7 +24,7 @@ This is a progress report/checklist
 | eth_hashrate|data collection|
 | eth_gasPrice|draft|
 | eth_accounts|draft|
-| eth_blockNumber|not started|
+| eth_blockNumber|data collection|
 | eth_getBalance|draft|
 | eth_getStorageAt|not started|
 | eth_getTransactionCount|not started|
