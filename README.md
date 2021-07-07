@@ -42,8 +42,8 @@ This is a progress report/checklist
 | eth_getBlockByHash|not started|
 | eth_getBlockByNumber|not started|
 | eth_getTransactionByHash|not started|
-| eth_getTransactionByBlockHashAndIndex|not started|
-| eth_getTransactionByBlockNumberAndIndex|not started|
+| eth_getTransactionByBlockHashAndIndex|data collection|
+| eth_getTransactionByBlockNumberAndIndex|data collection|
 | eth_getTransactinRecipt|data collection|
 | eth_getUncleByBlockHashAndIndex|not started|
 | eth_getUncleByBlockNumberAndIndex|not started|
