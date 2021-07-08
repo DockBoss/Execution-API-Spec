@@ -12,7 +12,7 @@ This is a progress report/checklist
 ---
 | endpoint | Status |
 |---|---|
-| web3_clientVersion|data collection
+| web3_clientVersion|data collection|
 | web3_sha3|not started|
 | net_version|draft|
 | net_peerCount|data collection|
