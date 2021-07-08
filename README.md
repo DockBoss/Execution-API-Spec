@@ -28,8 +28,8 @@ This is a progress report/checklist
 | eth_getBalance|draft|
 | eth_getStorageAt|not started|
 | eth_getTransactionCount|data collection|
-| eth_getBlockTransactionCountByHash|not started|
-| eth_getBlockTransactionCountByNumber|not started|
+| eth_getBlockTransactionCountByHash|data collection|
+| eth_getBlockTransactionCountByNumber|data collection|
 | eth_getUncleCountByHash|not started|
 | eth_getUncleCountByNumber|not started|
 | eth_getCode|draft|
@@ -41,7 +41,7 @@ This is a progress report/checklist
 | eth_estimateGas|not started|
 | eth_getBlockByHash|data collection|
 | eth_getBlockByNumber|data collection|
-| eth_getTransactionByHash|not started|
+| eth_getTransactionByHash|data collection|
 | eth_getTransactionByBlockHashAndIndex|data collection|
 | eth_getTransactionByBlockNumberAndIndex|data collection|
 | eth_getTransactinRecipt|data collection|
