@@ -18,7 +18,11 @@
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "Geth/v1.10.3-stable-991384a7/windows-amd64/go1.16.3"
+}
 ``
 
 ### Notes
@@ -46,7 +50,11 @@
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "Geth/v1.10.4-stable-aa637fd3/windows-amd64/go1.16.4"
+}
 ``
 
 ### Notes
