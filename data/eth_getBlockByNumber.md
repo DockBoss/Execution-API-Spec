@@ -431,7 +431,10 @@ also tried true
  
 ---
 ## Case
-  
+
+geth --http --dev
+
+missing second param
   
 ### Call
 
@@ -464,41 +467,8 @@ also tried true
  
  
 ---
+
 ## Case
-  
-  
-### Call
-
-``
-{
-	"jsonrpc":"2.0",
-	"method":"eth_getBlockByNumber",
-	"params":[
-		"0x0", 
-		"true"
-	],
-	"id":1
-}
-`` 
-
-### Return
-
-``
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "error": {
-        "code": -32602,
-        "message": "invalid argument 1: json: cannot unmarshal string into Go value of type bool"
-    }
-}
-``
-
-### Notes
-
- 
- 
----## Case
  
  geth --http --dev --dev.period 300
  
