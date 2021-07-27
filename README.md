@@ -12,8 +12,8 @@ This is a progress report/checklist
 ---
 | endpoint | Status |
 |---|---|
-| web3_clientVersion|data collection|
-| web3_sha3|not started|
+| web3_clientVersion|data collected|
+| web3_sha3|data collected|
 | net_version|draft|
 | net_peerCount|data collection|
 | net_listening|data collection|
@@ -24,14 +24,14 @@ This is a progress report/checklist
 | eth_hashrate|data collection|
 | eth_gasPrice|draft|
 | eth_accounts|draft|
-| eth_blockNumber|data collection|
+| eth_blockNumber|draft|
 | eth_getBalance|draft|
 | eth_getStorageAt|not started|
 | eth_getTransactionCount|data collection|
 | eth_getBlockTransactionCountByHash|data collection|
 | eth_getBlockTransactionCountByNumber|data collection|
-| eth_getUncleCountByHash|not started|
-| eth_getUncleCountByNumber|not started|
+| eth_getUncleCountByHash|data collected|
+| eth_getUncleCountByNumber|data collected|
 | eth_getCode|draft|
 | eth_sign|not started|
 | eth_signTransaction|not started|
@@ -39,18 +39,18 @@ This is a progress report/checklist
 | eth_sendRawTransaction|not started|
 | eth_call|draft|
 | eth_estimateGas|not started|
-| eth_getBlockByHash|data collection|
+| eth_getBlockByHash|draft|
 | eth_getBlockByNumber|data collection|
 | eth_getTransactionByHash|data collection|
 | eth_getTransactionByBlockHashAndIndex|data collection|
 | eth_getTransactionByBlockNumberAndIndex|data collection|
 | eth_getTransactinRecipt|data collection|
-| eth_getUncleByBlockHashAndIndex|not started|
-| eth_getUncleByBlockNumberAndIndex|not started|
-| eth_getCompilers|not started|
-| eth_compileLLL|not started|
-| eth_compileSolidity|not started|
-| eth_compileSerpent|not started|
+| eth_getUncleByBlockHashAndIndex|data collected|
+| eth_getUncleByBlockNumberAndIndex|data collected|
+| eth_getCompilers|data collection|
+| eth_compileLLL|data collection|
+| eth_compileSolidity|data collection|
+| eth_compileSerpent|data collection|
 | eth_newFilter|data collection|
 | eth_newBlockFilter|data collection|
 | eth_newPendingTransactinFilter|data collection|
@@ -61,10 +61,10 @@ This is a progress report/checklist
 | eth_getWork|data collection|
 | eth_submitWork|not started|
 | eth_submitHashrate|not started|
-| db_putString|not started|
-| db_getString|not started|
-| db_putHex|not started|
-| db_getHex|not started|
+| db_putString|data collection|
+| db_getString|data collection|
+| db_putHex|data collection|
+| db_getHex|data collection|
 | shh_version|not started|
 | shh_newIdentity|not started|
 | shh_hasIdentity|not started|

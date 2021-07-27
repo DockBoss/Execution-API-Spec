@@ -14,3 +14,5 @@ Copyright and related rights waived via [CC0](https://creativecommons.org/public
 I think it does not have any edge cases but this could be naive of me
 
 Not sure what actually happes seem to have a delay, but that may be the "delay" of just waiting to recieve the block or infura error
+
+I commited it instead of making a pr lol
