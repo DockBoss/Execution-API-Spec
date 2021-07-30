@@ -43,3 +43,4 @@ try boolean
 try string 
 try double
 create contract 3
+do all of these in one by testing how arrays work
