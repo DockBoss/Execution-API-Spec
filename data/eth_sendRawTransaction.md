@@ -51,7 +51,9 @@ OS Windows
     }
 }
 
+curl -X POST -u "apikey:9mQ7gXeWNGZ3AqAKAhat4g-Hw4KQJVoO6pb7zEsWWJYm" ^--header "Content-Type: audio/mp3" ^--data-binary @C:\Users\jared\dev\test.mp3 ^"https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/a8f23dfe-258a-48f4-864b-ca36c3151fbc/v1/recognize"
+
 curl -X POST -u "apikey:9mQ7gXeWNGZ3AqAKAhat4g-Hw4KQJVoO6pb7zEsWWJYm" \
---header "Content-Type: audio/mp3" \
---data-binary @quest.mp3 \
+--header "Content-Type: audio/flac" \
+--data-binary @{path_to_file}audio-file.flac \
 "https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/a8f23dfe-258a-48f4-864b-ca36c3151fbc/v1/recognize"
