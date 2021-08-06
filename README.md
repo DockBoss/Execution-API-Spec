@@ -26,19 +26,19 @@ This is a progress report/checklist
 | eth_accounts|draft|
 | eth_blockNumber|draft|
 | eth_getBalance|draft|
-| eth_getStorageAt|not started|
+| eth_getStorageAt|data collection|
 | eth_getTransactionCount|data collection|
 | eth_getBlockTransactionCountByHash|data collection|
 | eth_getBlockTransactionCountByNumber|data collection|
 | eth_getUncleCountByHash|data collected|
 | eth_getUncleCountByNumber|data collected|
 | eth_getCode|draft|
-| eth_sign|not started|
-| eth_signTransaction|not started|
+| eth_sign|data collection|
+| eth_signTransaction|data collection|
 | eth_sendTransaction|data collection|
-| eth_sendRawTransaction|not started|
+| eth_sendRawTransaction|data collection|
 | eth_call|draft|
-| eth_estimateGas|not started|
+| eth_estimateGas|data colletion|
 | eth_getBlockByHash|draft|
 | eth_getBlockByNumber|data collection|
 | eth_getTransactionByHash|data collection|
@@ -59,19 +59,19 @@ This is a progress report/checklist
 | eth_getFilterLogs|data collection|
 | eth_getLogs|data collection|
 | eth_getWork|data collection|
-| eth_submitWork|not started|
-| eth_submitHashrate|not started|
+| eth_submitWork|data collection|
+| eth_submitHashrate|data collection|
 | db_putString|data collection|
 | db_getString|data collection|
 | db_putHex|data collection|
 | db_getHex|data collection|
-| shh_version|not started|
-| shh_newIdentity|not started|
-| shh_hasIdentity|not started|
-| shh_newGroup|not started|
-| shh_addToGroup|not started|
-| shh_newFilter|not started|
-| shh_uninstallFilter|not started|
-| shh_getFilterChanges|not started|
-| shh_getMessages |not started|
+| shh_version|data collection|
+| shh_newIdentity|data collection|
+| shh_hasIdentity|data collection|
+| shh_newGroup|data collection|
+| shh_addToGroup|data collection|
+| shh_newFilter|data collection|
+| shh_uninstallFilter|data collection|
+| shh_getFilterChanges|data collection|
+| shh_getMessages |data collection|
 ---
