@@ -3,17 +3,11 @@ Edge cases of Ethereum JSON RPC endpoints
 
 This is a progress report/checklist 
 
-### stages
-- not started
-- data collection
-- draft
-- final
-
 ---
 | endpoint | Status |
 |---|---|
 | web3_clientVersion|data collected|
-| web3_sha3|data collected|
+| web3_sha3|draft|
 | net_version|draft|
 | net_peerCount|data collection|
 | net_listening|data collection|
@@ -28,22 +22,22 @@ This is a progress report/checklist
 | eth_getBalance|draft|
 | eth_getStorageAt|data collection|
 | eth_getTransactionCount|data collection|
-| eth_getBlockTransactionCountByHash|data collection|
-| eth_getBlockTransactionCountByNumber|data collection|
+| eth_getBlockTransactionCountByHash|draft|
+| eth_getBlockTransactionCountByNumber|draft|
 | eth_getUncleCountByHash|data collected|
 | eth_getUncleCountByNumber|data collected|
 | eth_getCode|draft|
 | eth_sign|data collection|
-| eth_signTransaction|data collection|
-| eth_sendTransaction|data collection|
-| eth_sendRawTransaction|data collection|
+| eth_signTransaction|data collected|
+| eth_sendTransaction|data collected|
+| eth_sendRawTransaction|data collected|
 | eth_call|draft|
-| eth_estimateGas|data colletion|
+| eth_estimateGas|data collected|
 | eth_getBlockByHash|draft|
-| eth_getBlockByNumber|data collection|
-| eth_getTransactionByHash|data collection|
-| eth_getTransactionByBlockHashAndIndex|data collection|
-| eth_getTransactionByBlockNumberAndIndex|data collection|
+| eth_getBlockByNumber|draft|
+| eth_getTransactionByHash|data collected|
+| eth_getTransactionByBlockHashAndIndex|data collected|
+| eth_getTransactionByBlockNumberAndIndex|data collected|
 | eth_getTransactinRecipt|data collection|
 | eth_getUncleByBlockHashAndIndex|data collected|
 | eth_getUncleByBlockNumberAndIndex|data collected|
@@ -61,17 +55,17 @@ This is a progress report/checklist
 | eth_getWork|data collection|
 | eth_submitWork|data collection|
 | eth_submitHashrate|data collection|
-| db_putString|data collection|
-| db_getString|data collection|
-| db_putHex|data collection|
-| db_getHex|data collection|
-| shh_version|data collection|
-| shh_newIdentity|data collection|
-| shh_hasIdentity|data collection|
-| shh_newGroup|data collection|
-| shh_addToGroup|data collection|
-| shh_newFilter|data collection|
-| shh_uninstallFilter|data collection|
-| shh_getFilterChanges|data collection|
-| shh_getMessages |data collection|
+| db_putString|deprecated|
+| db_getString|deprecated|
+| db_putHex|deprecated|
+| db_getHex|deprecated|
+| shh_version|deprecated|
+| shh_newIdentity|deprecated|
+| shh_hasIdentity|deprecated|
+| shh_newGroup|deprecated|
+| shh_addToGroup|deprecated|
+| shh_newFilter|deprecated|
+| shh_uninstallFilter|deprecated|
+| shh_getFilterChanges|deprecated|
+| shh_getMessages |deprecated|
 ---
