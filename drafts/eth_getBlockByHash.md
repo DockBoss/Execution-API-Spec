@@ -1,9 +1,5 @@
 # `eth_getBalanceByHash`
 
-**MUST** return the block object assosiated with the given hash when it exists
+If the client has a block assosiated with the hash in the `block_hash` parameter it **MUST** return it, otherwise it **MUST** return null.
 
-**OR** null if the block does not exist
-
-**MUST** include the full transaction for every transaction in the block if the full transaction parameter is true
-
-**OR** just the hashes for each transaction if the parameter is false
+If the `full_transaction` parameter is true, **MUST** include the full transaction deatails for every transaction in the block, otherwise it **MUST** return only the transcation hash for every transaction in the block.
