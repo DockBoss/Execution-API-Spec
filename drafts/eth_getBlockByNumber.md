@@ -1,4 +1,4 @@
-# `eth_getBalanceByNumber`
+# `eth_getBlockByNumber`
 
 * If the client has a block equal to the block in the `block_number` parameter it **MUST** return it, otherwise it **MUST** return null.
 
