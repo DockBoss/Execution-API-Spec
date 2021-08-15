@@ -8,7 +8,7 @@ This is a progress report/checklist
 |---|---|
 | web3_clientVersion|draft|
 | web3_sha3|draft|
-| net_version|ReDraft|
+| net_version|draft|
 | net_peerCount|data collection|
 | net_listening|data collection|
 | eth_protocolVersion|draft|
