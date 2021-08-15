@@ -9,8 +9,8 @@ This is a progress report/checklist
 | web3_clientVersion|draft|
 | web3_sha3|draft|
 | net_version|draft|
-| net_peerCount|data collection|
-| net_listening|data collection|
+| net_peerCount|draft|
+| net_listening|draft|
 | eth_protocolVersion|draft|
 | eth_syncing|draft|
 | eth_coinbase|draft|
@@ -18,7 +18,7 @@ This is a progress report/checklist
 | eth_hashrate|data collection|
 | eth_gasPrice|ReDraft|
 | eth_accounts|draft|
-| eth_blockNumber|ReDraft|
+| eth_blockNumber|draft|
 | eth_getBalance|ReDraft|
 | eth_getStorageAt|data collection|
 | eth_getTransactionCount|data collection|
