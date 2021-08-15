@@ -6,27 +6,27 @@ This is a progress report/checklist
 ---
 | endpoint | Status |
 |---|---|
-| web3_clientVersion|data collected|
+| web3_clientVersion|draft|
 | web3_sha3|draft|
-| net_version|draft|
+| net_version|ReDraft|
 | net_peerCount|data collection|
 | net_listening|data collection|
-| eth_protocolVersion|data collection|
+| eth_protocolVersion|draft|
 | eth_syncing|draft|
 | eth_coinbase|draft|
-| eth_mining|draft|
+| eth_mining|ReDraft|
 | eth_hashrate|data collection|
-| eth_gasPrice|draft|
+| eth_gasPrice|ReDraft|
 | eth_accounts|draft|
-| eth_blockNumber|draft|
-| eth_getBalance|draft|
+| eth_blockNumber|ReDraft|
+| eth_getBalance|ReDraft|
 | eth_getStorageAt|data collection|
 | eth_getTransactionCount|data collection|
 | eth_getBlockTransactionCountByHash|draft|
 | eth_getBlockTransactionCountByNumber|draft|
-| eth_getUncleCountByHash|data collected|
-| eth_getUncleCountByNumber|data collected|
-| eth_getCode|draft|
+| eth_getUncleCountByHash|draft|
+| eth_getUncleCountByNumber|draft|
+| eth_getCode|ReDraft|
 | eth_sign|data collection|
 | eth_signTransaction|data collected|
 | eth_sendTransaction|data collected|
@@ -41,10 +41,10 @@ This is a progress report/checklist
 | eth_getTransactinRecipt|data collection|
 | eth_getUncleByBlockHashAndIndex|data collected|
 | eth_getUncleByBlockNumberAndIndex|data collected|
-| eth_getCompilers|data collection|
-| eth_compileLLL|data collection|
-| eth_compileSolidity|data collection|
-| eth_compileSerpent|data collection|
+| eth_getCompilers|deprecated|
+| eth_compileLLL|deprecated|
+| eth_compileSolidity|deprecated|
+| eth_compileSerpent|deprecated|
 | eth_newFilter|data collection|
 | eth_newBlockFilter|data collection|
 | eth_newPendingTransactinFilter|data collection|
