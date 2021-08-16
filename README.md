@@ -14,14 +14,14 @@ This is a progress report/checklist
 | eth_protocolVersion|draft|
 | eth_syncing|draft|
 | eth_coinbase|draft|
-| eth_mining|ReDraft|
+| eth_mining|draft|
 | eth_hashrate|data collection|
 | eth_gasPrice|ReDraft|
 | eth_accounts|draft|
 | eth_blockNumber|draft|
-| eth_getBalance|ReDraft|
+| eth_getBalance|draft|
 | eth_getStorageAt|data collection|
-| eth_getTransactionCount|data collection|
+| eth_getTransactionCount|draft|
 | eth_getBlockTransactionCountByHash|draft|
 | eth_getBlockTransactionCountByNumber|draft|
 | eth_getUncleCountByHash|draft|
@@ -35,10 +35,10 @@ This is a progress report/checklist
 | eth_estimateGas|data collected|
 | eth_getBlockByHash|draft|
 | eth_getBlockByNumber|draft|
-| eth_getTransactionByHash|data collected|
-| eth_getTransactionByBlockHashAndIndex|data collected|
-| eth_getTransactionByBlockNumberAndIndex|data collected|
-| eth_getTransactinRecipt|data collection|
+| eth_getTransactionByHash|draft|
+| eth_getTransactionByBlockHashAndIndex|draft|
+| eth_getTransactionByBlockNumberAndIndex|draft|
+| eth_getTransactinRecipt|draft|
 | eth_getUncleByBlockHashAndIndex|data collected|
 | eth_getUncleByBlockNumberAndIndex|data collected|
 | eth_getCompilers|deprecated|
