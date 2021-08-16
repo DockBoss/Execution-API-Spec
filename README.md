@@ -15,8 +15,8 @@ This is a progress report/checklist
 | eth_syncing|draft|
 | eth_coinbase|draft|
 | eth_mining|draft|
-| eth_hashrate|data collection|
-| eth_gasPrice|ReDraft|
+| eth_hashrate|draft|
+| eth_gasPrice|draft|
 | eth_accounts|draft|
 | eth_blockNumber|draft|
 | eth_getBalance|draft|
@@ -39,8 +39,8 @@ This is a progress report/checklist
 | eth_getTransactionByBlockHashAndIndex|draft|
 | eth_getTransactionByBlockNumberAndIndex|draft|
 | eth_getTransactinRecipt|draft|
-| eth_getUncleByBlockHashAndIndex|data collected|
-| eth_getUncleByBlockNumberAndIndex|data collected|
+| eth_getUncleByBlockHashAndIndex|draft|
+| eth_getUncleByBlockNumberAndIndex|draft|
 | eth_getCompilers|deprecated|
 | eth_compileLLL|deprecated|
 | eth_compileSolidity|deprecated|

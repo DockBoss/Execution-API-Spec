@@ -19,7 +19,11 @@ geth --http --dev
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 71,
+    "result": "0x0"
+}
 ``
 
 ### Notes
@@ -46,7 +50,11 @@ geth --http --dev --mine
 ### Return
 
 ``
-
+{
+    "jsonrpc": "2.0",
+    "id": 71,
+    "result": "0x0"
+}
 ``
 
 ### Notes
@@ -72,39 +80,16 @@ geth --http --ropsten --mine
 ### Return
 
 ``
-
-``
-
-### Notes
-
- 
- 
----
-## Case
-  
-geth --http --dev --mine
-
-on linux vm
-  
-### Call
-
-``
 {
-	"jsonrpc":"2.0",
-	"method":"eth_hashrate",
-	"params":[],
-	"id":71
+    "jsonrpc": "2.0",
+    "id": 71,
+    "result": "0x0"
 }
-`` 
-
-### Return
-
-``
-
 ``
 
 ### Notes
 
- 
+I was never mining so I only had 0x0S
  
 ---
+
