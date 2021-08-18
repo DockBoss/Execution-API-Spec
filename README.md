@@ -49,7 +49,7 @@ This is a progress report/checklist
 | eth_newBlockFilter|draft|
 | eth_newPendingTransactinFilter|draft|
 | eth_uninstallFilter|draft|
-| eth_getFilterChanges|draft|
+| eth_getFilterChanges|data collected|
 | eth_getFilterLogs|data collection|
 | eth_getLogs|data collection|
 | eth_getWork|data collection|
