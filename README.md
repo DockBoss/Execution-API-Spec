@@ -20,17 +20,17 @@ This is a progress report/checklist
 | eth_accounts|draft|
 | eth_blockNumber|draft|
 | eth_getBalance|draft|
-| eth_getStorageAt|data collection|
+| eth_getStorageAt|draft|
 | eth_getTransactionCount|draft|
 | eth_getBlockTransactionCountByHash|draft|
 | eth_getBlockTransactionCountByNumber|draft|
 | eth_getUncleCountByHash|draft|
 | eth_getUncleCountByNumber|draft|
-| eth_getCode|ReDraft|
-| eth_sign|data collection|
-| eth_signTransaction|data collected|
+| eth_getCode|draft|
+| eth_sign|draft|
+| eth_signTransaction|draft|
 | eth_sendTransaction|data collected|
-| eth_sendRawTransaction|data collected|
+| eth_sendRawTransaction|draft|
 | eth_call|draft|
 | eth_estimateGas|data collected|
 | eth_getBlockByHash|draft|
