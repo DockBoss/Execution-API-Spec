@@ -46,10 +46,10 @@ This is a progress report/checklist
 | eth_compileSolidity|deprecated|
 | eth_compileSerpent|deprecated|
 | eth_newFilter|data collection|
-| eth_newBlockFilter|data collection|
-| eth_newPendingTransactinFilter|data collection|
-| eth_uninstallFilter|data collectiona|
-| eth_getFilterChanges|data collection|
+| eth_newBlockFilter|draft|
+| eth_newPendingTransactinFilter|draft|
+| eth_uninstallFilter|draft|
+| eth_getFilterChanges|draft|
 | eth_getFilterLogs|data collection|
 | eth_getLogs|data collection|
 | eth_getWork|data collection|
