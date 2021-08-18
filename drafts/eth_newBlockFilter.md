@@ -1,9 +1,8 @@
-# Draft
 # `eth_newBlockFilter`
 
-The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC-2119](https://www.ietf.org/rfc/rfc2119.txt).
-Speciation | Description
----|---
-1 | 
-# Copyright
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+* If the client is connected to the netwotk it **MUST** return the filter id.
+
+# Notes
+
+* filter id is an int that is used for all ids and the id gets incremented each time one is created. Or at least that is how geth does it
+* I don't know if it is a global or local variable.
