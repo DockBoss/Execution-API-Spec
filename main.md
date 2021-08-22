@@ -71,46 +71,57 @@
 * If the address asociated with the `address` parameter is unlocked it **MUST** return the ethereum specific signature of the `message` parameter, otherwise it must throw an exception.
 
 ## eth_signTransaction
+* The address in the `from` parameter **MUST** be unlocked for the call to return.
+* The call **MUST** have the `gas`, `gasPrice`, and `to` and/or `data` parameters for the call to return.
 
 ## eth_sendTransaction
 
+
 ## eth_sendRawTransaction
+* If the values in the raw transaction gets sent it **MUST** return the transaction hash, otherwise it **MUST** error.
 
 ## eth_call
 
 ## eth_estimateGas
 
 ## eth_getBlockByHash
+* If the client has a block assosiated with the hash in the `block_hash` parameter it **MUST** return it, otherwise it **MUST** return null.
+
+* If the `full_transaction` parameter is true, **MUST** include the full transaction deatails for every transaction in the block, otherwise it **MUST** return only the transcation hash for every transaction in the block.
 
 ## eth_getBlockByNumber
+* If the client has a block equal to the block in the `block_number` parameter it **MUST** return it, otherwise it **MUST** return null.
+
+* If the `full_transaction` parameter is true, **MUST** include the full transaction deatails for every transaction in the block, otherwise it **MUST** return only the transcation hash for every transaction in the block.
 
 ## eth_getTransactionByHash
+* If the client has a transaction assosiated with the hash in the `transactionHash` parameter it **MUST** return it.
 
 ## eth_getTransactionByBlockHashAndIndex
+* If the client has a block associated with the `block_hash` parameter it **MUST** return the trasnaction equal to the `transaction_index` parameter, otherwise it **MUST** return null if the transaction or block hash does not exist.
 
 ## eth_getTransactionByBlockNumberAndIndex
+* If the client has a block equal to the `block_number` parameter it **MUST** return the number of transactions the block conatins, otherwise it **MUST** return null.
 
 ## eth_getTransactinRecipt
+* If the client has a transaction associated with the `transaction_hash` parameter it **MUST** return the receipt of the transaction, otherwise it **MUST** return null.
 
 ## eth_getUncleByBlockHashAndIndex
+* If the client has a block associated with the `block_hash` parameter it **MUST** return the uncle block associated with `uncle_index` parameter, otherwise it **MUST** return null if the block does not have an uncle at the given index.
 
 ## eth_getUncleByBlockNumberAndIndex
-
-## eth_getCompilers
-
-## eth_compileLLL
-
-## eth_compileSolidity
-
-## eth_compileSerpent
+* If the client has a block equal to the `block_number` parameter it **MUST** return the uncle block associated with `uncle_index` parameter, otherwise it **MUST** return null if the block does not have an uncle at the given index.
 
 ## eth_newFilter
 
 ## eth_newBlockFilter
+* If the client is connected to the netwotk it **MUST** return the filter id.
 
 ## eth_newPendingTransactinFilter
+* If the client is connected to the netwotk it **MUST** return the filter id.
 
 ## eth_uninstallFilter
+* If the client has a filter equal to the `filter` parameter it **MUST** return true, otherwise false.
 
 ## eth_getFilterChanges
 
