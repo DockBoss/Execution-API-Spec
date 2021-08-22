@@ -77,7 +77,7 @@
 * The call **MUST** have the `gas`, `gasPrice`, and `to` and/or `data` parameters for the call to return.
 
 ## eth_sendTransaction
-
+* If the user has the private key for the `from` parameter and has at least the `to` or the `data` parameter it **MUST** return the transaction hash, otherwise it **MUST** error if the transaction does not go through.
 
 ## eth_sendRawTransaction
 * If the values in the raw transaction gets sent it **MUST** return the transaction hash, otherwise it **MUST** error.
@@ -113,23 +113,6 @@
 
 ## eth_getUncleByBlockNumberAndIndex
 * If the client has a block equal to the `block_number` parameter it **MUST** return the uncle block associated with `uncle_index` parameter, otherwise it **MUST** return null if the block does not have an uncle at the given index.
-
-## eth_newFilter
-
-## eth_newBlockFilter
-* If the client is connected to the netwotk it **MUST** return the filter id.
-
-## eth_newPendingTransactinFilter
-* If the client is connected to the netwotk it **MUST** return the filter id.
-
-## eth_uninstallFilter
-* If the client has a filter equal to the `filter` parameter it **MUST** return true, otherwise false.
-
-## eth_getFilterChanges
-
-## eth_getFilterLogs
-
-## eth_getLogs
 
 ## eth_getWork
 * If the client is currently mining it **MUST** return mining information, otherwise it **MUST** error.
