@@ -25,6 +25,7 @@
 
 ## eth_accounts
 * If the cleint owns any ethereum addresses it **MUST** return them, otherwise it **MUST** return an empty array.
+
 [previous conversaction, where it was deemed unnecessary](https://github.com/ethereum/execution-apis/pull/47)
 
 ## eth_blockNumber
