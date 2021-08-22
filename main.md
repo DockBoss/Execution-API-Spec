@@ -1,5 +1,3 @@
-# This will have all of the endpoint edge cases on one page
----
 ## web3_clientVersion
 ---
 ## web3_sha3
@@ -26,6 +24,8 @@
 ---
 ## eth_blockNumber
 ---
+* The client **MUST** return the latest fully validated/verified block on the best known canonical chain.
+
 ## eth_getBalance
 ---
 ## eth_getStorageAt
