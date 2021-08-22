@@ -83,6 +83,7 @@
 * If the values in the raw transaction gets sent it **MUST** return the transaction hash, otherwise it **MUST** error.
 
 ## eth_call
+[current discussion](https://github.com/ethereum/execution-apis/pull/55/files#diff-e2875973a47cc1a26af45b262efe96c6a5b88e73cf36b5e30f6f1d6dae988742)
 
 ## eth_estimateGas
 * After the user enters the as many of the transaction parameters they would like to estimate it **MUST** return the estimated ammount of gas the transaction will use.
