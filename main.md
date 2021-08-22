@@ -85,6 +85,7 @@
 ## eth_call
 
 ## eth_estimateGas
+* After the user enters the as many of the transaction parameters they would like to estimate it **MUST** return the estimated ammount of gas the transaction will use.
 
 ## eth_getBlockByHash
 * If the client has a block assosiated with the hash in the `block_hash` parameter it **MUST** return it, otherwise it **MUST** return null.
