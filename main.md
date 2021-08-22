@@ -12,6 +12,8 @@
 ---
 ## eth_syncing
 ---
+* If the client is syncing it **MUST** return the current status of the sync, otherwise it **MUST** return false.
+
 ## eth_coinbase
 ---
 * The client **MUST** return the first account it has the private key for, otherwise it **MUST** throw an exception.
