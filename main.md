@@ -1,12 +1,17 @@
 ## web3_clientVersion
+* **MUST**  return the current version of the client along with the operating system type and language version
 
 ## web3_sha3
+* **MUST** return the Keccak-256 hash of `inputData` parameter
 
 ## net_version
+* If the client is connected to a network it **MUST** return the ID of the network
 
 ## net_peerCount
+* If the client is connected to a network it **MUST** return the number of peers currently connected to the client
 
 ## net_listening
+* If the client is currently listening for network connections it **MUST** return true, otherwise it **MUST** return false.
 
 ## eth_protocolVersion
 
@@ -18,6 +23,7 @@
 * The client **MUST** return the first account it has the private key for, otherwise it **MUST** throw an exception.
 
 ## eth_mining
+* If the client is actively mining new blocks it **MUST** return true, otherwise it **MUST** return false.
 
 ## eth_hashrate
 
