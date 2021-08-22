@@ -52,9 +52,9 @@ This is a progress report/checklist
 | eth_getFilterChanges|data collected|
 | eth_getFilterLogs|data collection|
 | eth_getLogs|data collection|
-| eth_getWork|data collection|
-| eth_submitWork|data collection|
-| eth_submitHashrate|data collection|
+| eth_getWork|draft|
+| eth_submitWork|draft|
+| eth_submitHashrate|draft|
 | db_putString|deprecated|
 | db_getString|deprecated|
 | db_putHex|deprecated|
