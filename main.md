@@ -14,6 +14,7 @@
 * If the client is currently listening for network connections it **MUST** return true, otherwise it **MUST** return false.
 
 ## eth_protocolVersion
+* If the client is connected to a network it **MUST** return the ethereum protocal version of that network, otherwise it **MUST** error if the client is not connected.
 
 ## eth_syncing
 * If the client is syncing it **MUST** return the current status of the sync, otherwise it **MUST** return false.
