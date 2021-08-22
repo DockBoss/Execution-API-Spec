@@ -26,8 +26,12 @@
 * If the client is actively mining new blocks it **MUST** return true, otherwise it **MUST** return false.
 
 ## eth_hashrate
+* **MUST** return the number of hashes per second the client is using to mine.
 
 ## eth_gasPrice
+* If the client is connected to a network it **MUST** return the price per unit of gas, otherwise it **MUST** return `0x3b9aca00`.
+
+* `0x3b9aca00` might be geth only, geth dev returns `0x3b9aca01`
 
 ## eth_accounts
 * If the cleint owns any ethereum addresses it **MUST** return them, otherwise it **MUST** return an empty array.
@@ -39,24 +43,32 @@
 * The client **MUST** return the latest fully validated/verified block on the best known canonical chain.
 
 ## eth_getBalance
+* If the `address` parameter exists on chain it **MUST** reuturn the Eth balance of that address at the block specified in the `block` parameter.
+* If address does not exist or has no Eth it **MUST** return `0x0`
 
 ## eth_getStorageAt
 
 ## eth_getTransactionCount
+* If the `address` parameter exists on chain it **MUST** return the nonce of that address at the block specified in the `block` parameter, otherwise it **MUST** return `0x0` if the address does not exist on chain.
 
 ## eth_getBlockTransactionCountByHash
+* If the client has a block assosiated with the hash in the `block_hash` parameter it **MUST** return the number of transactions the block conatins, otherwise it **MUST** return null.
 
 ## eth_getBlockTransactionCountByNumber
 * If the client has a block equal to the `block_number` parameter it **MUST** return the number of transactions the block conatins, otherwise it **MUST** return null.
 
 [previous conversation](https://github.com/ethereum/execution-apis/pull/54)
-## eth_getUncleCountByHash
+## eth_getUncleCountByBlockHash
+* If the client has a block associated with the block hash in the `block_hash` parameter it **MUST** return the number of uncles the block has, otherwise it **MUST** return null.
 
 ## eth_getUncleCountByNumber
+* If the client has a block equal to the `block_number` parameter it **MUST** return the number of uncles the block has, otherwise it **MUST** return null.
 
 ## eth_getCode
+* If the `address` parameter exists on chain it **MUST** return the bytecode representation of the contracts functions, otherwise it **MUST** return `0x0`
 
 ## eth_sign
+* If the address asociated with the `address` parameter is unlocked it **MUST** return the ethereum specific signature of the `message` parameter, otherwise it must throw an exception.
 
 ## eth_signTransaction
 
