@@ -23,6 +23,8 @@
 
 * The client **MUST** return the first account it has the private key for, otherwise it **MUST** throw an exception.
 
+[current discussion](https://github.com/ethereum/execution-apis/pull/48#pullrequestreview-735542620)
+
 ## eth_mining
 * If the client is actively mining new blocks it **MUST** return true, otherwise it **MUST** return false.
 
@@ -33,6 +35,10 @@
 * If the client is connected to a network it **MUST** return the price per unit of gas, otherwise it **MUST** return `0x3b9aca00`.
 
 * `0x3b9aca00` might be geth only, geth dev returns `0x3b9aca01`
+
+## eth_feeHistory
+
+* will be testing soon
 
 ## eth_accounts
 * If the cleint owns any ethereum addresses it **MUST** return them, otherwise it **MUST** return an empty array.
