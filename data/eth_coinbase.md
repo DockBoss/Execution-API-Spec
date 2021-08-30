@@ -2,6 +2,18 @@
 ---
 ## Case
 
+geth --http --dev 
+
+vetsion 1.10.8
+
+* when no address it errors
+* with one address it returns the address in the folder
+* with two addresses it returns the first address in the keystore folder
+* when the file is renamed to be ahead of current coinbase while running it still returns the first coinbase
+* when restarted after renameing the account it uses the first specified address that is unlocked
+
+## Case
+
 geth --http --dev  
   
 ### Call
