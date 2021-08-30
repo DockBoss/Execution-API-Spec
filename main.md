@@ -54,7 +54,7 @@
 * If address does not exist or has no Eth it **MUST** return `0x0`
 
 ## eth_getStorageAt
-* If the `address` parameter points to a contract it **MUST** return the value stored in the contracts storage at the `storage_slot` parameter, otherwise it **MUST** return (I seem to have lost my data for this case, I will test it and update when I am home on Wednesday) but probably `0x0`
+* If the `address` parameter points to a contract it **MUST** return the value stored in the contracts storage at the `storage_slot` parameter, otherwise it **MUST** return `0x0000000000000000000000000000000000000000000000000000000000000000` if the contract does not exist or the storage slot is empty.
 
 ## eth_getTransactionCount
 * If the `address` parameter exists on chain it **MUST** return the nonce of that address at the block specified in the `block` parameter, otherwise it **MUST** return `0x0` if the address does not exist on chain.
