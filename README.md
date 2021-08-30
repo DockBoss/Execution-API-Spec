@@ -2,6 +2,7 @@
 Edge cases of Ethereum JSON RPC endpoints
 
 This is a progress report/checklist 
+All clients share the same 46 endpoints. listed below.
 
 ---
 | endpoint | Status |
@@ -27,6 +28,7 @@ This is a progress report/checklist
 | eth_getUncleCountByHash|draft|
 | eth_getUncleCountByNumber|draft|
 | eth_getCode|draft|
+| eth_feeHistory| data collection|
 | eth_sign|draft|
 | eth_signTransaction|draft|
 | eth_sendTransaction|data collected|
@@ -41,10 +43,6 @@ This is a progress report/checklist
 | eth_getTransactinRecipt|draft|
 | eth_getUncleByBlockHashAndIndex|draft|
 | eth_getUncleByBlockNumberAndIndex|draft|
-| eth_getCompilers|deprecated|
-| eth_compileLLL|deprecated|
-| eth_compileSolidity|deprecated|
-| eth_compileSerpent|deprecated|
 | eth_newFilter|data collection|
 | eth_newBlockFilter|draft|
 | eth_newPendingTransactinFilter|draft|
@@ -55,6 +53,10 @@ This is a progress report/checklist
 | eth_getWork|draft|
 | eth_submitWork|draft|
 | eth_submitHashrate|draft|
+
+---
+| endpoint | Status |
+|---|---|
 | db_putString|deprecated|
 | db_getString|deprecated|
 | db_putHex|deprecated|
@@ -68,4 +70,7 @@ This is a progress report/checklist
 | shh_uninstallFilter|deprecated|
 | shh_getFilterChanges|deprecated|
 | shh_getMessages |deprecated|
----
+| eth_getCompilers|deprecated|
+| eth_compileLLL|deprecated|
+| eth_compileSolidity|deprecated|
+| eth_compileSerpent|deprecated|

@@ -89,4 +89,5 @@ test with many different rewards
 * list 0-99 works, 0-100 works returns 101 points per, 0-99,99,99,99 returns 105 points
 
 * Does not work in the array is not in accending order, but allows repeats and adds duplicates to the return value 
-    * got 140 returns so far
+    * got 140 returns so far probably no upper limit
+    * only works with numbers less than 101
