@@ -1,8 +1,11 @@
-# EdgeCases
-Edge cases of Ethereum JSON RPC endpoints
+# Edge cases of Ethereum JSON RPC endpoints 2.0(where shit gets real)
 
-This is a progress report/checklist 
-Clients I am testing
+This is a progress report/checklist
+
+---
+
+## What I am testing
+
 * geth
 * nethermind
 * besu
@@ -14,72 +17,73 @@ Clients I am testing
 All clients share the same 46 endpoints. listed below.
 
 ---
-| endpoint | Status |
-|---|---|
-| web3_clientVersion|draft|
-| web3_sha3|draft|
-| net_version|draft|
-| net_peerCount|draft|
-| net_listening|draft|
-| eth_protocolVersion|draft|
-| eth_syncing|draft|
-| eth_coinbase|draft|
-| eth_mining|draft|
-| eth_hashrate|draft|
-| eth_gasPrice|draft|
-| eth_accounts|draft|
-| eth_blockNumber|draft|
-| eth_getBalance|draft|
-| eth_getStorageAt|draft|
-| eth_getTransactionCount|draft|
-| eth_getBlockTransactionCountByHash|draft|
-| eth_getBlockTransactionCountByNumber|draft|
-| eth_getUncleCountByHash|draft|
-| eth_getUncleCountByNumber|draft|
-| eth_getCode|draft|
-| eth_feeHistory| data collection|
-| eth_sign|draft|
-| eth_signTransaction|draft|
-| eth_sendTransaction|data collected|
-| eth_sendRawTransaction|draft|
-| eth_call|draft|
-| eth_estimateGas|data collected|
-| eth_getBlockByHash|draft|
-| eth_getBlockByNumber|draft|
-| eth_getTransactionByHash|draft|
-| eth_getTransactionByBlockHashAndIndex|draft|
-| eth_getTransactionByBlockNumberAndIndex|draft|
-| eth_getTransactinRecipt|draft|
-| eth_getUncleByBlockHashAndIndex|draft|
-| eth_getUncleByBlockNumberAndIndex|draft|
-| eth_newFilter|data collection|
-| eth_newBlockFilter|draft|
-| eth_newPendingTransactinFilter|draft|
-| eth_uninstallFilter|draft|
-| eth_getFilterChanges|data collected|
-| eth_getFilterLogs|data collection|
-| eth_getLogs|data collection|
-| eth_getWork|draft|
-| eth_submitWork|draft|
-| eth_submitHashrate|draft|
+## Endpoints
 
----
-| endpoint | Status |
-|---|---|
-| db_putString|deprecated|
-| db_getString|deprecated|
-| db_putHex|deprecated|
-| db_getHex|deprecated|
-| shh_version|deprecated|
-| shh_newIdentity|deprecated|
-| shh_hasIdentity|deprecated|
-| shh_newGroup|deprecated|
-| shh_addToGroup|deprecated|
-| shh_newFilter|deprecated|
-| shh_uninstallFilter|deprecated|
-| shh_getFilterChanges|deprecated|
-| shh_getMessages |deprecated|
-| eth_getCompilers|deprecated|
-| eth_compileLLL|deprecated|
-| eth_compileSolidity|deprecated|
-| eth_compileSerpent|deprecated|
+ endpoint  Status 
+------
+* web3_clientVersion
+* web3_sha3
+* net_version
+* net_peerCount
+* net_listening
+* eth_protocolVersion
+* eth_syncing
+* eth_coinbase
+* eth_mining
+* eth_hashrate
+* eth_gasPrice
+* eth_accounts
+* eth_blockNumber
+* eth_getBalance
+* eth_getStorageAt
+* eth_getTransactionCount
+* eth_getBlockTransactionCountByHash
+* eth_getBlockTransactionCountByNumber
+* eth_getUncleCountByHash
+* eth_getUncleCountByNumber
+* eth_getCode
+* eth_feeHistory data collection
+* eth_sign
+* eth_signTransaction
+* eth_sendTransactiondata collected
+* eth_sendRawTransaction
+* eth_call
+* eth_estimateGasdata collected
+* eth_getBlockByHash
+* eth_getBlockByNumber
+* eth_getTransactionByHash
+* eth_getTransactionByBlockHashAndIndex
+* eth_getTransactionByBlockNumberAndIndex
+* eth_getTransactinRecipt
+* eth_getUncleByBlockHashAndIndex
+* eth_getUncleByBlockNumberAndIndex
+* eth_newFilterdata collection
+* eth_newBlockFilter
+* eth_newPendingTransactinFilter
+* eth_uninstallFilter
+* eth_getFilterChangesdata collected
+* eth_getFilterLogsdata collection
+* eth_getLogsdata collection
+* eth_getWork
+* eth_submitWork
+* eth_submitHashrate
+___
+
+## I think these are all deprecated (at least in geth they are)
+* db_putString
+* db_getString
+* db_putHex
+* db_getHex
+* shh_version
+* shh_newIdentity
+* shh_hasIdentity
+* shh_newGroup
+* shh_addToGroup
+* shh_newFilter
+* shh_uninstallFilter
+* shh_getFilterChanges
+* shh_getMessages 
+* eth_getCompilers
+* eth_compileLLL
+* eth_compileSolidity
+* eth_compileSerpent
