@@ -2,6 +2,15 @@
 Edge cases of Ethereum JSON RPC endpoints
 
 This is a progress report/checklist 
+Clients I am testing
+* geth
+* nethermind
+* besu
+* openethereum
+* erigon
+* gancahe
+* hardhat
+
 All clients share the same 46 endpoints. listed below.
 
 ---
