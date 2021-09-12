@@ -1,7 +1,7 @@
 # Edge cases of Ethereum JSON RPC endpoints 2.0(where shit gets real)
 
 This is a progress report/checklist
-
+All clients share the same 46 endpoints. listed below.
 ---
 
 ## What I am testing
@@ -13,8 +13,6 @@ This is a progress report/checklist
 * erigon
 * gancahe
 * hardhat
-
-All clients share the same 46 endpoints. listed below.
 
 ---
 ## Endpoints
