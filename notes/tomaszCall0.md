@@ -36,13 +36,13 @@ Tomasz Stańczak12:56 PM
 
 a set of deployed contracts
 
-a contract that returns BALANCE
+a contract that returns BALANCE 1
 
-a contract that returns ORIGIN
+a contract that returns ORIGIN 1
 
-a contract that return VALUE
+a contract that return VALUE 1
 
-a contract that returns DIFFICULTY
+a contract that returns DIFFICULTY 1
 
 a contract that return BLOCKHASH for all the previous 256 blocks
 
