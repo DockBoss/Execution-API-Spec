@@ -1,8 +1,63 @@
-# eth_call
+# eth_call Spec
+```
+{
+    "jsonrpc": "2.0",
+    "method": "eth_call",
+    "params": [{
+        "type": "",
+        "from": "",
+        "to": "",
+        "data": "",
+        "value": "",
+        "gas": "",
+        "chainId": "",
+      Legacy 
+       "gasPrice": "",
+      OR EIP-1559
+      "maxFeePerGas": "",
+      "maxPriorityFeePerGas": "",
+      
+      EIP-2930 and EIP-1559
+      "accessList": ""
 
+    }, "latest"],
+    "id": 1
+}
+```
+* `type`
+  * **MUST** have correct parameters for each transaction type ??? not final!!
+* `from`
+  * **MUST** consider a default address for when `from` is NULL
+    * If that is decided to be the clients coinbase, 0x0..., or another decided upon address
+  * **MUST NOT** accept ____ (contract?) addresses but accept EOA and PRecompile addresses? 
+    * **SHOULD** allow random addresses(that is not externally owned) to make calls to a contract
+* `to` 
+  * **MUST** work with any `to` address
+    * **MUST** return `0x` when `to` is not a contract
+* `gas`
+  * **MUST NOT** be zero
+* `gasPrice`
+  * **MUST** work with all transaction types (TODO look into how/if it gets converted to MFPG and MPFPG)
+* `maxFeePerGas`
+  * **MUST** work with all transaction types (TODO look into how/if it gets converted)
+* `maxPriorityFeePerGas`
+  * **MUST** work with all transaction types (TODO look into how/if it gets converted)
+* `value`
+  * `value` + txt cost **MUST** be less than the `from` account balance
+  * **MAY** be null?? 
+* `data`
+  * **MUST** return the result of executing the code in data **IF** `to` is not used and not null
+  * **MUST** be ______ TODO!! (write about use for interacting with contracts)
+* `chainId`
+  * **MUST** use the chain id of current chain
+  * **MUST NOT** be allowed to modify
+* `accessList`
+  * TODO
+* `blockHeight`
+  * **MUST** specify the block that will be used in the call
 ## Tests
 
-1. `from` (origin contract)
+1. `from` (origin contract) check if it is a precompile contract(aka contract address)
    1. with no from 
    2. with from empty
    3. with invalid address length
