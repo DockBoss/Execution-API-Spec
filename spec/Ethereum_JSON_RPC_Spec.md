@@ -1,5 +1,5 @@
 # Ethereum Execution Layer JSON-RPC API
-## Technichal Specification
+## Technichal Specification V1.0
 ## Working Draft: Updated September 24
 
 #### Author:
@@ -9,6 +9,11 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 
 -----
 # Table of Contents
- 1. [test]()
-   1. [test]()
- 2. 
+ [1 Introduction](#1-introduction) \
+ [test]() \
+ 
+-----
+# 1 Introductison
+ blah blah blah test
+## 1.1 something else
+sefsefs
