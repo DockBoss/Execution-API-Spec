@@ -1,29 +1,5 @@
 # eth_call Spec
-```
-{
-    "jsonrpc": "2.0",
-    "method": "eth_call",
-    "params": [{
-        "type": "",
-        "from": "",
-        "to": "",
-        "data": "",
-        "value": "",
-        "gas": "",
-        "chainId": "",
-      Legacy 
-       "gasPrice": "",
-      OR EIP-1559
-      "maxFeePerGas": "",
-      "maxPriorityFeePerGas": "",
-      
-      EIP-2930 and EIP-1559
-      "accessList": ""
 
-    }, "latest"],
-    "id": 1
-}
-```
 * `type`
   * **MUST** have correct parameters for each transaction type ??? not final!!
 * `from`
