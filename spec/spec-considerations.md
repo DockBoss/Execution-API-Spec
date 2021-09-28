@@ -1,6 +1,6 @@
+# -WIP
 # Execution API Spec Considerations
 A list of points to discuss pertaining to the inconsistencies between the different implementations of the JSON-RPC API
-
 ---
 ## eth_call
 
@@ -34,3 +34,6 @@ A list of points to discuss pertaining to the inconsistencies between the differ
   
 * Address length?
   * Nethermind allows `to` to be 39 bits long without error
+* block identifier, Is it a must?
+  * some clients don't allow the specifying a specific block depending on pruning settings 
+    * is this okay? is there a use case for calling certain blocks or older versions of contracts? 
