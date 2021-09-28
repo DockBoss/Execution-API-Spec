@@ -146,7 +146,7 @@ ___
 
 ### **4.2.2 Interacting with contracts**
 ---
-Interacting with contracts is easy all you have to know is the contract address and its function selector, which is the first four bytes of the web3_sha3 === Keccak-256 hash of the function name and input parameters. for more info [see](https://docs.soliditylang.org/en/develop/abi-spec.html)
+Interacting with contracts is easy all you have to know is the contract address and its function selector, which is the first four bytes of the web3_sha3 (=== Keccak-256) hash of the function name and input parameters. for more info [see](https://docs.soliditylang.org/en/develop/abi-spec.html)
 
 [EC-3] **MUST** use default address of `0x0000000000000000000000000000000000000000` when the `from` parameter is null or not specified
 
