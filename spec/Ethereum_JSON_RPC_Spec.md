@@ -38,7 +38,7 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 
 -----
 # 1 Introduction
-blah blah blah test
+
 
 ## 1.1 Not Specified vs Null
 
@@ -71,7 +71,21 @@ when the term not specified is used, it is describing the case where the paramet
 ```
 ---
 # 2 Glossary
-see glossary.md for now
+* state
+* request
+* transaction
+* block chain
+* eth
+* wei
+* address
+* externally owned account
+* account
+* contract
+* message call
+* bytecode
+* function selector 
+* balance
+* client
 # HTTP
 ## timeouts
 # Web Sockets
