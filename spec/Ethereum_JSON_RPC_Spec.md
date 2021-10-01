@@ -1,7 +1,7 @@
-# WIP might use ReSpec this version might not get finished [link to ReSpec](https://jareddoro.me)
+# WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.1
-## Working Draft: Updated September 28
+## Technical Specification V0.1.1
+## Working Draft: Updated September 29
 ---
 ### **Author:**
 Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
@@ -10,7 +10,7 @@ Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
 nobody yet
 
 ### **Abstract:**
-This document provides an overview of what the minimum implementation standards are for the Ethereum Execution layer JSON-RPC API. The purpose of this documentation is twofold, firstly to give an in-depth description of how to use the API and secondly to provide information and tests allowing for easy implementation of the API.
+This document provides a detailed description of the minimum implementation of the Ethereum Execution layer JSON-RPC API.
 ### **Keywords:**
 The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **NOT RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [[RFC2119](http://www.ietf.org/rfc/rfc2119.txt)] when, and only when, they appear in all capitals, as shown here.
 
@@ -72,6 +72,9 @@ when the term not specified is used, it is describing the case where the paramet
 ---
 # 2 Glossary
 see glossary.md for now
+# HTTP
+## timeouts
+# Web Sockets
 # 3 Data types
 ## 3.1 String
 ## 3.2 DATA
