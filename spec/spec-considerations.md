@@ -1,6 +1,7 @@
 # -WIP
 # Execution API Spec Considerations
-A list of points to discuss pertaining to the inconsistencies between the different implementations of the JSON-RPC API
+A list of points to discuss pertaining the JSON-RPC API
+---
 ---
 ## eth_call
 
@@ -13,7 +14,9 @@ A list of points to discuss pertaining to the inconsistencies between the differ
   * Hardhat uses first generated address not generated coinbase
 * What accounts should be allowed to make a call?
   * I think both EOA and PRecompile?
+    * I can use my Metamask addresses to make calls to mainnet on infura 
   * should you be able to make calls from a unknown address?
+  * 
 * Should it error when `gas` is null and/or zero?
   * ganache allows it to be null
   * nethermind allows it to be zero
@@ -34,6 +37,19 @@ A list of points to discuss pertaining to the inconsistencies between the differ
   
 * Address length?
   * Nethermind allows `to` to be 39 bits long without error
-* block identifier, Is it a must?
-  * some clients don't allow the specifying a specific block depending on pruning settings 
-    * is this okay? is there a use case for calling certain blocks or older versions of contracts? 
+* defaultBlockParameter
+  * what should happen when the block the user wants to get the code from is note stored in the node?
+    * should it error
+    * or use latest block
+  
+## Error codes and messages
+It looks like that most clients use -32000 for every error that does not fit anyone of the predefined error messages.
+
+I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
+
+## defaultBlockParameter
+Is that the official parameter name? 
+
+Is it implmented on all clients, I am not up to date on the pruning discussion. Will it be relevant in the future?
+
+Is there going to be a source that is going to store block history so there is some historical source?

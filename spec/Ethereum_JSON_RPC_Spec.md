@@ -33,7 +33,7 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.3 Testing Contracts]() \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.4 gas, gasPrice, maxFeePerGas, and maxPriorityFeePerGas]() \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.5 Account Balance]() \
-[5 current implementations]() \
+
 [Appendix A]() 
 
 -----
@@ -74,7 +74,8 @@ when the term not specified is used, it is describing the case where the paramet
 * state
 * request
 * transaction
-* block chain
+* block
+* blockchain
 * eth
 * wei
 * address
@@ -105,7 +106,7 @@ I need to do some actual digging, but I assume that the tag is just an enum of S
 
 
 # 4 Endpoints
-## 4.1 list of Required endpoints --note not 100% on this list
+## 4.1 list of Required endpoints 
 * web3_clientVersion
 * web3_sha3
 * net_version
@@ -155,45 +156,41 @@ I need to do some actual digging, but I assume that the tag is just an enum of S
 ___
 
 ## 4.2 eth_call
-### **4.2.1 Network Considerations**
----
-[EC-1] **MUST NOT** create a transaction on the network.
+// CallContract executes a message call transaction, which is directly executed in the VM
+// of the node, but never mined into the blockchain.
 
-[EC-2] User **MUST**  specify which block they would like to interact with with by adding the `blockHeight` parameter after the transaction object. Some clients don't allow users to use a specific block, just "latest". This is determined by the clients pruning setting --note I need to look into this more
+* [EC-0] eth_call **MUST** create a transaction and execute it on node that received the transaction.
+* [EC-1] eth_call **MUST NOT** mine any transaction on the blockchain.
+* [EC-2] eth_call **MUST** use `defaultBlockParameter` to knoxw which block the code is being pulled from.
+  * [EC-2.1] eth_call **MUST** error with code -32000 when `defaultBlockParameter` is ahead of the chain
+  * [EC-2.2] eth_call **MUST** use the latest block when the `defaultBlockParameter` parameter is not specified 
+    * [EC-2.2.1] eth_call **MUST** error with code -32000 if `defaultBlockParameter` is null
+  * [EC-2.3] State pruning **MAY** be optional on clients, eth_call **MUST** error with code -32000 when state does not exist due to state pruning
+* [EC-3] eth_call **MUST** consider a default address for when the `from` parameter is null or not specified
+* [EC-4] eth_call **MUST NOT** allow a transaction send from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
+* [EC-5] eth_call **MUST** return transaction receipt of each call
+  * [EC-5.1] eth_call **MUST** return an empty transaction receipt `0x0` when no transaction is executed 
+* [EC-6] when the `to` parameter is not specified eth_call **MUST** treat it as contract creation and **MUST** return the deployed byte code of contract
+  * [EC-6.1] eth_call **MUST** error with code -32000 when there is an error creating the contract 
+* [EC-7] **MUST NOT** allow `gas` to be 0 
+* [EC-8] eth_call **MUST** work with all transaction types
+* [EC-9] eth_call **MUST** work with `gasPrice` parameter
+* [EC-10] eth_call **MUST** work with  `maxFeePerGas` and `maxPriorityFeePerGas` parameters  
+  * [EC-10.1] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
+  * [EC-10.2] eth_call **MUST** interpret either `maxFeePerGas` and `maxPriorityFeePerGas` when it is not specified in transaction
+* [EC-11] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
+  * [EC-11.1] eth_call **MUST** error with code -32000 account has insufficient funds 
+  * [EC-11.2] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance 
+# Errors
+Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32000 to -32099 are for Execution layer API errors
 
-### **4.2.2 Interacting with contracts**
----
-Interacting with contracts is easy all you have to know is the contract's address and its function selector, which is the first four bytes of the web3_sha3 (=== Keccak-256) hash of the function's name and input parameters. for more info [see](https://docs.soliditylang.org/en/develop/abi-spec.html) --note will add an example
-
-[EC-3] **MUST** use default address of `0x0000000000000000000000000000000000000000` when the `from` parameter is null or not specified
-
-[EC-4] **MUST NOT** allow a message call to be sent by a contract or account owned by someone else. --note I will fix wording here
-
-[EC-5] **MUST** return `0x0` when the call does not error, but is not interacting with a contract.
-
-### **4.2.3 Testing Contracts**
----
-[EC-6] when the the `to` parameter is not specified eth_call **MUST** execute the byte code in the `data` parameter to allow users to test contract deployment. It **MUST** return the deployed contract byte code. Which can be decompiled [here](https://ethervm.io/decompile)
-
-### **4.2.4 `gas`, `gasPrice`, `maxFeePerGas`, and `maxPriorityFeePerGas`**
----
-[EC-7] **MUST NOT** allow `gas` to be 0 
-
-[EC-8] `gasPrice` **MUST** work with all transaction types --note I will look and find how they are converted
-
-[EC-9] `maxFeePerGas` and `maxPriorityFeePerGas` **MUST** work with all transaction types --note I will look and find how they are converted
-
-[EC-10] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
-
-### **4.2.5 Account Balance** 
----
-[EC-11] Client **MUST** check the balance of the `from` address to determine if the account has enough eth to execute the call. 
-This follows the same logic as eth_sendTransaction, eth_sendRawTransaction where it considers the `value` + (the `gas` * `gasPrice`  || `gas` * `maxFeePerGas` + `maxPriorityFeePerGas` ) --note I do not think the second situation is 100% correct. I need to look into it
-
-[EC-12] eth_call **MUST NOT** use or transfer any eth even though it checks the account balance 
-
-# 5 current implementations
-a list of different implementations of the JSON-RPC API for reference and testing purposes.
-Listed implementations **MUST** pass all tests before being added to the list
+| code | message | meaning |
+| --- | --- |--- |
+| -32700 | Parse error | 	Invalid JSON was received by the server.<br> An error occurred on the server while parsing the JSON text.
+| -32600 | Invalid Request | 	The JSON sent is not a valid Request object. 
+| -32601 | Method not found | 	The method does not exist / is not available.
+| -32602 | Invalid params | Invalid method parameter(s).
+| -32603 | Internal error | 	Internal JSON-RPC error.
+|-32000 | many messages | Multiple errors give this code probably should be fixed
 
 # Appendix A
