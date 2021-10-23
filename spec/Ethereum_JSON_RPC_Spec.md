@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.1.1
-## Working Draft: Updated September 29
+## Working Draft: Updated October 23 
 ---
 ### **Author:**
 Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
@@ -38,37 +38,38 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 
 -----
 # 1 Introduction
+## 1.1 Purpose
 
+The purpose of this document is to detail the basic necessary functionality and required specifications for the Ethereum execution layer JSON-RPC API.
+## 1.2 Intended Audience
 
-## 1.1 Not Specified vs Null
+The intended audience for this document is an individual or entity that is planning on implementing a version of the Ethereum execution layer JSON-RPC API.
+
+This document could also be used by but is not intended for anyone interested in learning how the user interacts with Ethereum clients and and the network at the most basic level. 
+## 1.3 Intended Use
+
+The intended use for this document is to describe what the most basic implementation of the Ethereum execution layer JSON-RPC API should have and how it should behave in all circumstances.
+## 1.4 Scope
+ 
+The Ethereum execution layer JSON-RPC API allows all users of Ethereum to interact with the network. The interactions that are made possible by the API are sending transactions, pulling transactions, block, and network information, and interacting with, creating, and testing smart contracts.
+## 1.5 Definitions and Terms
+### 1.5.1 Not Specified vs Null
 
 when the term not specified is used, it is describing the case where the parameter is not a part of the call vs when the term null is used it describes the case where the parameter is part of the call and has not been given a value
 
-`to` not specified
-```
-{
-    "jsonrpc": "2.0",
-    "method": "eth_call",
-    "params": [{
-        "from": "0x3a5509015e0193adf435a761a6ce160f900034b5"
-}, "latest"],
-    "id": 1
-}
-```
-
-
-`to` null
+An example where `to` is not specified and `value` is null
 ```
 {
     "jsonrpc": "2.0",
     "method": "eth_call",
     "params": [{
         "from": "0x3a5509015e0193adf435a761a6ce160f900034b5",
-        "to": ""
+        "value": ""
 }, "latest"],
     "id": 1
 }
 ```
+
 ---
 # 2 Glossary
 * state
