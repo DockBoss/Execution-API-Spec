@@ -156,6 +156,52 @@ I need to do some actual digging, but I assume that the tag is just an enum of S
 * eth_submitHashrate
 ___
 
+## web3_clientVersion
+## web3_sha3
+## net_version
+## net_peerCount
+## net_listening
+## eth_protocolVersion
+## eth_syncing
+## eth_coinbase
+## eth_mining
+## eth_hashrate
+## eth_gasPrice
+## eth_accounts
+## eth_blockNumber
+## eth_getBalance
+## eth_getStorageAt
+## eth_getTransactionCount
+## eth_getBlockTransactionCountByHash
+## eth_getBlockTransactionCountByNumber
+## eth_getUncleCountByHash
+## eth_getUncleCountByNumber
+## eth_getCode
+## eth_feeHistory
+## eth_sign
+## eth_signTransaction
+## eth_sendTransaction
+## eth_sendRawTransaction
+
+## eth_estimateGas
+## eth_getBlockByHash
+## eth_getBlockByNumber
+## eth_getTransactionByHash
+## eth_getTransactionByBlockHashAndIndex
+## eth_getTransactionByBlockNumberAndIndex
+## eth_getTransactionReceipt
+## eth_getUncleByBlockHashAndIndex
+## eth_getUncleByBlockNumberAndIndex
+## eth_newFilter
+## eth_newBlockFilter
+## eth_newPendingTransactionFilter
+## eth_uninstallFilter
+## eth_getFilterChanges
+## eth_getFilterLogs
+## eth_getLogs
+## eth_getWork
+## eth_submitWork
+## eth_submitHashrate
 ## 4.2 eth_call
 // CallContract executes a message call transaction, which is directly executed in the VM
 // of the node, but never mined into the blockchain.
@@ -195,3 +241,6 @@ Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32
 |-32000 | many messages | Multiple errors give this code probably should be fixed
 
 # Appendix A
+
+* [JSON-RPC 2.0](https://www.jsonrpc.org/specification)
+* [Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)

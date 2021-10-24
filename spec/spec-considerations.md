@@ -43,9 +43,9 @@ A list of points to discuss pertaining the JSON-RPC API
     * or use latest block
   
 ## Error codes and messages
-It looks like that most clients use -32000 for every error that does not fit anyone of the predefined error messages.
-
-I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
+* It looks like that most clients use -32000 for every error that does not fit anyone of the predefined error messages.
+  * I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
+* Is it necessary or overkill to format the error struct/obj so they are the same order not matter what client you use?
 
 ## defaultBlockParameter
 Is that the official parameter name? 

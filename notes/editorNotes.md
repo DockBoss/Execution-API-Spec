@@ -39,6 +39,13 @@
 }
 ```
 from geth transactions.go
+
+// Permit dumb empty requests for remote health-checks (AWS)
+	if r.Method == http.MethodGet && r.ContentLength == 0 && r.URL.RawQuery == "" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 ## errors
 
 Change error list before showing to tomasz because its JSON-RPC2 spec table
