@@ -1,11 +1,11 @@
-# Questions
-* dr
-
-
-* how are gasPrice an MFPG and MPFPG converted to each other when used in the wrong transaction
-  *  or if values are even converted
-
 # Notes
+
+* find what endpoints are being removed after the merge
+  * eth_mining?
+  * eth_hashrate
+  * eth_getWork
+  * eth_submitWork
+  * eth_submitHashrate 
 
 [EC-2.3] needs better wording
 
@@ -38,14 +38,6 @@
 	setSignatureValues(chainID, v, r, s *big.Int)
 }
 ```
-from geth transactions.go
-
-// Permit dumb empty requests for remote health-checks (AWS)
-	if r.Method == http.MethodGet && r.ContentLength == 0 && r.URL.RawQuery == "" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
 ## errors
 
 Change error list before showing to tomasz because its JSON-RPC2 spec table
@@ -60,8 +52,6 @@ I think infura is the only implementation that uses custom error codes. NOT cert
 * https://www.jsonrpc.org/specification 
 # Reference links 
 * https://github.com/eea-oasis/baseline-standard/blob/main/api/baseline-api-v1.0-psd01.md
-* https://github.com/eea-oasis/baseline-standard/blob/main/core/baseline-core-v1.0-psd01.md
-* https://github.com/eea-oasis/baseline-standard/blob/main/core/baseline-core-v1.0-psd01.md#12-glossary
 * https://github.com/eea-oasis/baseline-standard/blob/main/core/baseline-core-v1.0-psd01.md
 * https://drive.google.com/file/d/1F8LVcLz3XZiXEGvLhcBXNYD2Z5QjfEEQ/view
 * https://jelvix.com/blog/software-requirements-specification

@@ -18,13 +18,6 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 # Table of Contents
 [1 Introduction](https://stackoverflow.com/questions/51221730/markdown-link-to-header) \
 &nbsp;&nbsp;&nbsp;[1.1 Not Specified vs Null]() \
-[2 Glossary]() \
-[3 Data types]() \
-&nbsp;&nbsp;&nbsp;[3.1 String]() \
-&nbsp;&nbsp;&nbsp;[3.2 DATA]() \
-&nbsp;&nbsp;&nbsp;[3.3 Boolean]() \
-&nbsp;&nbsp;&nbsp;[3.4 QUANTITY]() \
-&nbsp;&nbsp;&nbsp;[3.5 Tag]() \
 [4 Endpoints]() \
 &nbsp;&nbsp;&nbsp;[4.1 Required Endpoints]() \
 &nbsp;&nbsp;&nbsp;[4.2 eth_call]() \
@@ -38,22 +31,29 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 
 -----
 # 1 Introduction
-## 1.1 Purpose
+breifly summarize and describe what is being developed and what it will be used for 
+## 1.1 Purpose and Intended Audience
 
-The purpose of this document is to detail the basic necessary functionality and required specifications for the Ethereum execution layer JSON-RPC API.
-## 1.2 Intended Audience
+The purpose of this document is to act as a centralized source of information regarding the functional and non-functional requirements for Ethereum's execution layer JSON-RPC API. This document is intended for development teams that are planning on implementing a version of the execution layer JSON-RPC API. This document would also be beneficial to but is not intended for anyone interested in learning how the user interacts with Ethereum clients and at the most basic level. 
 
-The intended audience for this document is an individual or entity that is planning on implementing a version of the Ethereum execution layer JSON-RPC API.
-
-This document could also be used by but is not intended for anyone interested in learning how the user interacts with Ethereum clients and and the network at the most basic level. 
-## 1.3 Intended Use
-
-The intended use for this document is to describe what the most basic implementation of the Ethereum execution layer JSON-RPC API should have and how it should behave in all circumstances.
-## 1.4 Scope
+## 1.2 Scope
  
-The Ethereum execution layer JSON-RPC API allows all users of Ethereum to interact with the network. The interactions that are made possible by the API are sending transactions, pulling transactions, block, and network information, and interacting with, creating, and testing smart contracts.
-## 1.5 Definitions and Terms
-### 1.5.1 Not Specified vs Null
+The Ethereum execution layer JSON-RPC API provides the basis for all external interactions with the Ethereum blockchain. The interactions with the Ethereum network can be divided into four categories. Transferring ETH, deploy contracts, executing contracts, and administrative tasks. The API also provides endpoints that returns historical network and block data. 
+
+## 1.3 Definitions and Terms
+just listing them here for now not sure exactly what ones I need or don't.
+I would rather have a long list that I trim than having too little
+* ETH
+* ERC token?
+* Smart contracts
+* user
+* client
+* EVM
+* Account
+* block
+* block-chain
+
+### 1.3.1 Not Specified vs Null
 
 when the term not specified is used, it is describing the case where the parameter is not a part of the call vs when the term null is used it describes the case where the parameter is part of the call and has not been given a value
 
@@ -69,41 +69,11 @@ An example where `to` is not specified and `value` is null
     "id": 1
 }
 ```
+## 1.4 References
 
+* [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
+* [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)
 ---
-# 2 Glossary
-* state
-* request
-* transaction
-* block
-* blockchain
-* eth
-* wei
-* address
-* externally owned account
-* account
-* contract
-* message call
-* bytecode
-* function selector 
-* balance
-* client
-# HTTP
-## timeouts
-# Web Sockets
-# 3 Data types
-## 3.1 String
-## 3.2 DATA
-## 3.3 Boolean
-## 3.4 QUANTITY
-## 3.5 Tag
-I need to do some actual digging, but I assume that the tag is just an enum of Strings with each of the block states
-* `"latest"`
-  * uses the most recent finalized block 
-* `"earliest"`
-  * uses the earliest block that the client has a state for
-* `"pending"`
-  * uses the current that is being filled with transactions
 
 
 # 4 Endpoints
@@ -152,12 +122,18 @@ I need to do some actual digging, but I assume that the tag is just an enum of S
 * eth_getFilterLogs
 * eth_getLogs
 * eth_getWork
-* eth_submitWork
-* eth_submitHashrate
 ___
 
 ## web3_clientVersion
+
+* [] web3_clientVersion **MUST** return a string containing information about the client version.
+  * [] web3_clientVersion **SHOULD** return client version in the following format "ClientName/ClientVesrion/CurrentOpperatingSystem/LanguageUsed"
 ## web3_sha3
+
+* [] web3_sha3 **MUST** return the Keccak256 hash of the given hex encoded string.
+  * [] web3_sha3 **MUST** error with code -32000 when the given string is not hex encoded. 
+  * [] web3_sha3 **MUST** use null when given "0x"
+  
 ## net_version
 ## net_peerCount
 ## net_listening
@@ -182,7 +158,6 @@ ___
 ## eth_signTransaction
 ## eth_sendTransaction
 ## eth_sendRawTransaction
-
 ## eth_estimateGas
 ## eth_getBlockByHash
 ## eth_getBlockByNumber
@@ -200,8 +175,7 @@ ___
 ## eth_getFilterLogs
 ## eth_getLogs
 ## eth_getWork
-## eth_submitWork
-## eth_submitHashrate
+
 ## 4.2 eth_call
 // CallContract executes a message call transaction, which is directly executed in the VM
 // of the node, but never mined into the blockchain.
@@ -240,7 +214,4 @@ Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32
 | -32603 | Internal error | 	Internal JSON-RPC error.
 |-32000 | many messages | Multiple errors give this code probably should be fixed
 
-# Appendix A
-
-* [JSON-RPC 2.0](https://www.jsonrpc.org/specification)
-* [Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)
+# Appendix

@@ -41,7 +41,7 @@ A list of points to discuss pertaining the JSON-RPC API
   * what should happen when the block the user wants to get the code from is note stored in the node?
     * should it error
     * or use latest block
-  
+
 ## Error codes and messages
 * It looks like that most clients use -32000 for every error that does not fit anyone of the predefined error messages.
   * I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
