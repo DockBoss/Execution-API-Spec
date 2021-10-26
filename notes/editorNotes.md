@@ -1,22 +1,10 @@
 # Notes
 
-* find what endpoints are being removed after the merge
-  * eth_mining?
-  * eth_hashrate
-  * eth_getWork
-  * eth_submitWork
-  * eth_submitHashrate 
-
 [EC-2.3] needs better wording
-
-[EC-4] I know Eip isn't final, but I know it's implemented in geth and on track to final 
-
-* 11.2  Make sure you don't have to have eth to be able to "deploy" a contract with eth_call not certain of current implementation
-
 [EC-10.2] is this more of a parser issue than eth_call?
 
 
-* data type information 
+## data type information 
   
 ```
   type TxData interface {
@@ -39,25 +27,23 @@
 }
 ```
 ## errors
-
-Change error list before showing to tomasz because its JSON-RPC2 spec table
+Right now this table is copied from JSON-RPC 2.0 spec
 
 I think infura is the only implementation that uses custom error codes. NOT certain on this though
 
 # Testing considerations
-* Make sure you have tests to check every parser edge case 
+* Make sure you have tests to check every parser edge case
+  * to find situations like where Nethermind allows an address of address.length()-1 without error 
 
 
-# Spec Links
+# Reference Links
 * https://www.jsonrpc.org/specification 
-# Reference links 
+* https://ethereum.github.io/yellowpaper/paper.pdf
+# SRS links 
 * https://github.com/eea-oasis/baseline-standard/blob/main/api/baseline-api-v1.0-psd01.md
 * https://github.com/eea-oasis/baseline-standard/blob/main/core/baseline-core-v1.0-psd01.md
 * https://drive.google.com/file/d/1F8LVcLz3XZiXEGvLhcBXNYD2Z5QjfEEQ/view
 * https://jelvix.com/blog/software-requirements-specification
-
-
-
 # Spec notes notes
 
 Look at screenshots for information
@@ -67,7 +53,7 @@ Look at screenshots for information
 * Imagine this person is new to ethereum, but knows how to code  
 * Cover and note all risks and edge cases 
 * Use diagrams to visualize information if needed.
-* Maybe have to-be info? with post merge and l2 upgrades to the API
+* Maybe have to-be info with L2 upgrades to the API?
 
 ## SRS describes
 * Systems Purpose
@@ -88,7 +74,7 @@ Look at screenshots for information
   * user classes and characteristics
   * operating environment
   * design and implementation constraints
-  * user doccumentation
+  * user documentation
   * assumptions and dependencies
 * System features and requirements
   * functional requirements

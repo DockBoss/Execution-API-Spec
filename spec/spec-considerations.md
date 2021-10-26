@@ -5,6 +5,9 @@ A list of points to discuss pertaining the JSON-RPC API
 ---
 ## eth_call
 
+* Address length?
+  * Nethermind allows `to` to be 39 bits long without error
+    * Is there any reason for this or is it a bug?
 * when the `from` parameter is not specified what address should be used?
   * Geth uses 0x0...
   * Nethermind uses 0x0...fffffffffffffffffffffffffffffffffffffffe
@@ -27,29 +30,28 @@ A list of points to discuss pertaining the JSON-RPC API
   * Geth and Ganache allow it 
 * Do we need to check `from` balance when using eth_call?
   * I Think all clients implement this, but I am not sure why
-  * Can you send eth with call?
+  * I am assuming that it is to ensure that you can't mass "computationally" expensive calls that could possibly flood a node?
+    * but wouldn't worst case it just take one node down?
+    * also if we make it a **MUST** that EIP-3607 is implemented on eth_call as well then this should'nt be as necessary right?
 * should GP, MFPG, and MPFPG be allowed to be null?
   * Geth interpreted as 0 for GP and (MFPG and MPFPG)
   * Geth errors when just MFPG is null
   * Ganache interpreted as 0 for type 1 and 4a817c800 for type 2
 * should MFPG be allowed to be zero?
-  * Nethermind allows it
-  
-* Address length?
-  * Nethermind allows `to` to be 39 bits long without error
+  * Nethermind allows it  
 * defaultBlockParameter
   * what should happen when the block the user wants to get the code from is note stored in the node?
     * should it error
     * or use latest block
 
 ## Error codes and messages
-* It looks like that most clients use -32000 for every error that does not fit anyone of the predefined error messages.
+* It looks like most clients use -32000 for every error that does not fit anyone of the predefined error messages.
   * I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
 * Is it necessary or overkill to format the error struct/obj so they are the same order not matter what client you use?
 
 ## defaultBlockParameter
 Is that the official parameter name? 
 
-Is it implmented on all clients, I am not up to date on the pruning discussion. Will it be relevant in the future?
+Is it implemented on all clients, I am not up to date on the pruning discussion. Will it be relevant in the future?
 
 Is there going to be a source that is going to store block history so there is some historical source?

@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.1.1
-## Working Draft: Updated October 23 
+## Working Draft: Updated October 26 
 ---
 ### **Author:**
 Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
@@ -177,28 +177,29 @@ ___
 ## eth_getWork
 
 ## 4.2 eth_call
-// CallContract executes a message call transaction, which is directly executed in the VM
-// of the node, but never mined into the blockchain.
 
 * [EC-0] eth_call **MUST** create a transaction and execute it on node that received the transaction.
 * [EC-1] eth_call **MUST NOT** mine any transaction on the blockchain.
-* [EC-2] eth_call **MUST** use `defaultBlockParameter` to knoxw which block the code is being pulled from.
-  * [EC-2.1] eth_call **MUST** error with code -32000 when `defaultBlockParameter` is ahead of the chain
+* [EC-2] eth_call **MUST** use the `defaultBlockParameter` to know which block the code is being pulled from.
+  * [EC-2.1] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain
   * [EC-2.2] eth_call **MUST** use the latest block when the `defaultBlockParameter` parameter is not specified 
     * [EC-2.2.1] eth_call **MUST** error with code -32000 if `defaultBlockParameter` is null
-  * [EC-2.3] State pruning **MAY** be optional on clients, eth_call **MUST** error with code -32000 when state does not exist due to state pruning
+  * [EC-2.3] State pruning **MAY** be an option on clients, eth_call **MUST** error with code -32000 when the requested state does not exist due to state pruning
 * [EC-3] eth_call **MUST** consider a default address for when the `from` parameter is null or not specified
-* [EC-4] eth_call **MUST NOT** allow a transaction send from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
+* [EC-4] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
 * [EC-5] eth_call **MUST** return transaction receipt of each call
   * [EC-5.1] eth_call **MUST** return an empty transaction receipt `0x0` when no transaction is executed 
-* [EC-6] when the `to` parameter is not specified eth_call **MUST** treat it as contract creation and **MUST** return the deployed byte code of contract
+* [EC-6] when the `to` parameter is not specified eth_call **MUST** treat it as contract creation and **MUST** return the deployed byte code of the contract
   * [EC-6.1] eth_call **MUST** error with code -32000 when there is an error creating the contract 
 * [EC-7] **MUST NOT** allow `gas` to be 0 
 * [EC-8] eth_call **MUST** work with all transaction types
 * [EC-9] eth_call **MUST** work with `gasPrice` parameter
 * [EC-10] eth_call **MUST** work with  `maxFeePerGas` and `maxPriorityFeePerGas` parameters  
   * [EC-10.1] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
-  * [EC-10.2] eth_call **MUST** interpret either `maxFeePerGas` and `maxPriorityFeePerGas` when it is not specified in transaction
+  * [EC-10.2] eth_call **MUST** calculate `maxFeePerGas` or `maxPriorityFeePerGas` when only one is specified.
+
+
+Just testing this again geth must have removed this feature, but I am not sure if that **SHOULD** be the case though I personally agree with removing it
 * [EC-11] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
   * [EC-11.1] eth_call **MUST** error with code -32000 account has insufficient funds 
   * [EC-11.2] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance 
