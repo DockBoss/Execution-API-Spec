@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.1.1
-## Working Draft: Updated October 26 
+## Working Draft: Updated October 27 
 ---
 ### **Author:**
 Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
@@ -69,25 +69,36 @@ An example where `to` is not specified and `value` is null
     "id": 1
 }
 ```
+## 1.3.2 Input Parameters IDk WHERE THIS should go
+ Input parameters for functions will be denoted by using the inline code feature of markdown and will look like `this`
 ## 1.4 References
 
 * [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
 * [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)
 ---
 
+# 2 Overall Description
 
-# 4 Endpoints
-## 4.1 list of Required endpoints 
+## 2.1 Product Perspective
+
+
+## 2.2 Product Features 
+For the JSON-RPC API to meet the MVP requirements it **MUST** contain the following endpoints:
+
+### Web3
 * web3_clientVersion
 * web3_sha3
+
+### Net
 * net_version
 * net_peerCount
 * net_listening
+  
+### Eth
 * eth_protocolVersion
 * eth_syncing
 * eth_coinbase
-* eth_mining
-* eth_hashrate
+* eth_mining ??
 * eth_gasPrice
 * eth_accounts
 * eth_blockNumber
@@ -121,8 +132,20 @@ An example where `to` is not specified and `value` is null
 * eth_getFilterChanges
 * eth_getFilterLogs
 * eth_getLogs
-* eth_getWork
 ___
+## 2.3 User Classes and Characteristics
+
+* DAPP developers
+* Everyday people interested in owning Eth, ERC-20 tokens, and ERC-721 tokens
+* Ethereum node 
+
+## 2.4 Operating Environment how, where, under what conditions the system would be used.
+
+An instance of the API **SHOULD** be running with each execution client 
+## 2.5 Design Implementations and constraints
+
+## 2.6 Assumptions and dependencies
+
 
 ## web3_clientVersion
 
@@ -135,23 +158,41 @@ ___
   * [] web3_sha3 **MUST** use null when given "0x"
   
 ## net_version
+  * [] net_version **MUST** return a string describing which network the client is currently connected to.
+    * [] net_version **SHOULD** return the numeric Id of the network.
+    * [] net_version **MAY** return the name of the network.
 ## net_peerCount
 ## net_listening
+are clients always listening 
+I know Get is
 ## eth_protocolVersion
 ## eth_syncing
 ## eth_coinbase
 ## eth_mining
-## eth_hashrate
+* might get deprecated?
 ## eth_gasPrice
 ## eth_accounts
 ## eth_blockNumber
+* [] eth_blockNumber **MUST** return the block number for the most recent finalized block as a hex encoded string.
+  * [] eth_blockNumber **MUST** return "0x0" when the client is not synced to the network.
+
 ## eth_getBalance
+* [] eth_getBalance **MUST** return the account balance of the `address` at the given `defaultBlockParameter`.
+  * [] eth_getBalance **MUST** return "0x0" when the client is not synced to the network
 ## eth_getStorageAt
 ## eth_getTransactionCount
 ## eth_getBlockTransactionCountByHash
+* [] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash` as a hex encoded string.
+  * [] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a finalized block.
+  * [] eth_getBlockTransactionCountByHash **MUST** return null when the client has not finished syncing to the network.
 ## eth_getBlockTransactionCountByNumber
+* [] eth_getBlockTransactionCountByNumber **MUST** return the number of transactions within the block with the given `block number` as a hex encoded string.
+  * [] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` does not correspond to a finalized block.
+  * [] eth_getBlockTransactionCountByNumber **MUST** return null when the client has not finished syncing to the network.
 ## eth_getUncleCountByHash
+* might get deprecated?
 ## eth_getUncleCountByNumber
+* might get deprecated?
 ## eth_getCode
 ## eth_feeHistory
 ## eth_sign
@@ -160,13 +201,39 @@ ___
 ## eth_sendRawTransaction
 ## eth_estimateGas
 ## eth_getBlockByHash
+* [] eth_getBlockByHash **MUST** return the block information for the block with the given `block hash`.
+  * [] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a finalized block.
+  * [] eth_getBlockByHash **MUST** error with code -32000 when the block information is not available due to state pruning.
+* [] eth_getBlockByHash **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+---
 ## eth_getBlockByNumber
+* [] eth_getBlockByNumber **MUST** return the block information for the block with the given `block number`.
+  * [] eth_getBlockByNumber **MUST** return null when the given `block number` is ahead of the current finalized block. 
+  * [] eth_getBlockByNumber **MUST** error with code -32000 when the block information is not available due to state pruning.
+* [] eth_getBlockByNumber **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+---
 ## eth_getTransactionByHash
+* [] eth_getTransactionByHash **MUST** return the transaction object for the transaction with the given `transaction hash`.
+  * [] eth_getTransactionByHash **MUST** return null when the given `transaction hash` does not correspond to a transaction. 
+  * [] eth_getTransactionByHash **MUST** error with code -32000 when the transaction information is not available due to state pruning.
 ## eth_getTransactionByBlockHashAndIndex
+* [] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object with the given `block hash` and `transaction index` within the block.
+  * [] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `block hash` does not does correspond to a finalized block.
+  * [] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
+  * [] eth_getTransactionByBlockHashAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 ## eth_getTransactionByBlockNumberAndIndex
+* [] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object with the given `block number` and `transaction index` within the block.
+  * [] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `block number` is ahead of the current finalized block.
+  * [] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
+  * [] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 ## eth_getTransactionReceipt
+* [] eth_getTransactionReceipt **MUST** return the transaction object with the given `transaction hash`.
+  * [] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` does not correspond to a transaction.
+  * [] eth_getTransactionReceipt **MUST** return null when the client is not fully synced to the network. 
 ## eth_getUncleByBlockHashAndIndex
-## eth_getUncleByBlockNumberAndIndex
+* might get deprecated?
+* ## eth_getUncleByBlockNumberAndIndex
+* might get deprecated?
 ## eth_newFilter
 ## eth_newBlockFilter
 ## eth_newPendingTransactionFilter
@@ -175,6 +242,7 @@ ___
 ## eth_getFilterLogs
 ## eth_getLogs
 ## eth_getWork
+* might get deprecated?
 
 ## 4.2 eth_call
 
@@ -214,5 +282,5 @@ Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32
 | -32602 | Invalid params | Invalid method parameter(s).
 | -32603 | Internal error | 	Internal JSON-RPC error.
 |-32000 | many messages | Multiple errors give this code probably should be fixed
-
+[table source](https://www.jsonrpc.org/specification)
 # Appendix
