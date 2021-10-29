@@ -4,6 +4,28 @@
 [EC-10.2] is this more of a parser issue than eth_call?
 
 
+## golang info
+
+* functions var name comes before type, go functions can return more than one item
+
+// ChainID retrieves the current chain ID for transaction replay protection.
+func (ec *Client) ChainID(ctx context.Context) (*big.Int, error) {
+	var result hexutil.Big
+	err := ec.c.CallContext(ctx, &result, "eth_chainId")
+	if err != nil {
+		return nil, err
+	}
+	return (*big.Int)(&result), err
+}
+
+:= allows you to define the vars type indirectally by setting itself to the type it is given.
+you can directly use the . operator on pointers of structs without derefrencing them to modify their values
+
+ec is the type  pointer of Client. so whatever is in the memory block refrenced by Client
+c IS the pointer to the rpc client
+ctx is contex.context.Context
+&result is the refrence of results location in memory
+returns a pointer to big.Int || error ??
 ## data type information 
   
 ```
@@ -46,6 +68,9 @@ I think infura is the only implementation that uses custom error codes. NOT cert
 * https://jelvix.com/blog/software-requirements-specification
 # Spec notes notes
 
+API requirements include functional requirements (what your API should do) and nonfunctional requirements (how your API should perform in terms of service level agreements). On top of that, API requirements also include a third type — the way your system implements requirements.
+https://www.akana.com/blog/api-requirements-what-consider
+
 Look at screenshots for information
 
 * communicate what is needed
@@ -54,6 +79,15 @@ Look at screenshots for information
 * Cover and note all risks and edge cases 
 * Use diagrams to visualize information if needed.
 * Maybe have to-be info with L2 upgrades to the API?
+
+
+Deliver EIP-1474 spec of all JSON RPC endpoints used by Ethereum clients
+Deliver OpenRPC format spec of all JSON RPC endpoints used by Ethereum 
+clients
+Deliver edge cases description that can be used for testing for all JSON RPC 
+endpoints used by Ethereum clients
+https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md
+https://github.com/ethereum/pm/blob/master/Merge/mainnet-readiness.md
 
 ## SRS describes
 * Systems Purpose
