@@ -83,6 +83,11 @@ This was also a exercise in writing my first user story. Not to brag but I am a 
   * returns null when in situations above and when the given index is out of range
     * I do think this is should error, because that index will never exist in the requested finalized block. Where I understand the hash's might one day be valid
 
+## eth_feeHistory
+* fee history allows you to enter the same percentile multiply times and it will return it more than once.
+  * I don't see this causing many issues
+    * Though if a user was using eth_feeHistory for recording some fee statistics, a simple user mistake could skew the results without the user knowing what they did.
+
 ## Filters 
 In theory you can delete filters other people generated and are currently using, right?
 how long is the timeout? I looked for the implementation and I thought it was a globally incremented int is that true?
@@ -90,10 +95,10 @@ how long is the timeout? I looked for the implementation and I thought it was a 
 ## Error codes and messages
 * It looks like most clients use -32000 for every error that does not fit anyone of the predefined error messages.
   * I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
-* Is it necessary or overkill to format the error struct/obj so they are the same order not matter what client you use?
+
 
 ## defaultBlockParameter
-Is that the official parameter name? 
+Is it `default block parameter` or `block tag` or `block` as the official name?
 
 # Questions
 

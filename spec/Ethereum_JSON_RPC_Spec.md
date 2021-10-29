@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.1.1
-## Working Draft: Updated October 27 
+## Working Draft: Updated October 28 
 ---
 ### **Author:**
 Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
@@ -163,24 +163,42 @@ An instance of the API **SHOULD** be running with each execution client
     * [] net_version **MAY** return the name of the network.
 ## net_peerCount
 ## net_listening
-are clients always listening 
-I know Get is
+* [] net_listening **MUST** return a boolean indicating whether the client is currently listening for network connections.
 ## eth_protocolVersion
+* [] eth_protocolVersion **MUST** return the current Ethereum protocol version.
 ## eth_syncing
+* [] eth_syncing **MUST** return the syncing status of the client to the network.
+  *  [] eth_syncing **MUST** return false when the client is not syncing or already synced to the network.
+  *  [] eth_syncing **MUST** return the{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+        "currentBlock": "0xcef2",
+        "highestBlock": "0xce2230",
+        "knownStates": "0x0",
+        "pulledStates": "0x0",
+        "startingBlock": "0xc9ae"
+    }
+}
 ## eth_coinbase
+* [] eth_coinbase **MUST** return the the ethereum address that the block reward is sent to.
 ## eth_mining
 * might get deprecated?
 ## eth_gasPrice
+* [] eth_gasPrice **MUST** return the current price per unit of gas in wei
 ## eth_accounts
+* [] eth_accounts **MUST** return the public addresses for each Ethereum account that the client has the private key for.
 ## eth_blockNumber
 * [] eth_blockNumber **MUST** return the block number for the most recent finalized block as a hex encoded string.
   * [] eth_blockNumber **MUST** return "0x0" when the client is not synced to the network.
-
 ## eth_getBalance
 * [] eth_getBalance **MUST** return the account balance of the `address` at the given `defaultBlockParameter`.
   * [] eth_getBalance **MUST** return "0x0" when the client is not synced to the network
 ## eth_getStorageAt
+* [] eth_getStorageAt **MUST** return the value stored in the storage slot at the given `storage slot` within the smart contract at the given `address` from the requested `block`
+  * [] eth_getStorageAt **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data
 ## eth_getTransactionCount
+* [] eth_getTransactionCount **MUST** return the number of transactions made by the given `address` within the requested `block`. 
 ## eth_getBlockTransactionCountByHash
 * [] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash` as a hex encoded string.
   * [] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a finalized block.
@@ -194,7 +212,10 @@ I know Get is
 ## eth_getUncleCountByNumber
 * might get deprecated?
 ## eth_getCode
+* [] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
+  *  [] eth_getCode **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data.
 ## eth_feeHistory
+* [] eth_feeHistory **MUST** return the 
 ## eth_sign
 ## eth_signTransaction
 ## eth_sendTransaction
