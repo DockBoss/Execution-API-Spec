@@ -4,6 +4,13 @@
 [EC-10.2] is this more of a parser issue than eth_call?
 
 
+## definitions
+An Ethereum account is an entity that can send transactions and has a balance.
+
+An Ethereum account has an Ethereum address, like an inbox has an email address. You can use this to send funds to an account.
+
+A wallet is a product that lets you manage your Ethereum account. It allows you to view your account balance, send transactions, and more.[source](https://ethereum.org/en/wallets/#:~:text=Ethereum%20wallets%20are%20applications%20that,transactions%20and%20connect%20to%20applications.&text=Your%20wallet%20is%20only%20a%20tool%20for%20managing%20your%20Ethereum%20account.)
+
 ## golang info
 
 * functions var name comes before type, go functions can return more than one item
@@ -86,7 +93,7 @@ Deliver OpenRPC format spec of all JSON RPC endpoints used by Ethereum
 clients
 Deliver edge cases description that can be used for testing for all JSON RPC 
 endpoints used by Ethereum clients
-https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md
+https://eips.ethereum.org/EIPS/eip-1474
 https://github.com/ethereum/pm/blob/master/Merge/mainnet-readiness.md
 
 ## SRS describes

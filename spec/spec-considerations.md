@@ -12,6 +12,24 @@ A list of points to discuss pertaining the JSON-RPC API
 * Error codes
 ---
 
+## What kind of API classes do we want to define?
+There are going to be a number of different versions of the API as time goes on and it would be smart to define them in some sense.
+I assume that there is going to be a lot of *"Read-only"*  APIs like Infura where you are not allowed to send transactions.
+Then there will probably be some  *"Standard"* APIs that Implement only the required endpoints to allow full use.
+And I assume this will be the biggest type we will see are *"Standard+"* APIs that have all the required endpoints and implement their own custom endpoints for some client specific tasks or other useful functionality. 
+
+## What are we calling the different groups of endpoints?
+ * modules
+ * libraries
+ * classes
+ * ect..
+
+## JSON-RPC vs RESTful HTTP vs WebSockets vs gRPC
+* what are the perks or bidirectional communication?
+  * Do we really need it for the execution layer API
+* I have done a little digging and I found gRPC
+  * From what I have seen it is not useful for an external API
+    * But I did see an article about someone making one, If we could do it we should consider it IMO
 ## network syncing
 
 Should we have the same behaviors for endpoints when they are not synced to the network.
@@ -22,6 +40,7 @@ All because the client was not synced to the network fully and returns with the 
 ```
 This is why I think we should make sure that endpoints that require network data error when using them while not fully synced to the network.
 This was also a exercise in writing my first user story. Not to brag but I am a regular ol Shakespeare with my user story tragedies.
+
 
 ## Deprecated endpoints
 * What endpoints are going to be deprecated after The Merge. The only endpoints I can think of are:
@@ -35,7 +54,8 @@ This was also a exercise in writing my first user story. Not to brag but I am a 
     * **OR** "yes I am actively receiving new transactions to be mined"?
        * *Every transaction is mined (included in a new block and propagated for the first time) once, but executed and verified by every participant in the process of advancing the canonical EVM state. This highlights one of the central mantras of blockchain: Don’t trust, verify.*
        * ^ I got this from[Ethereum.org](https://ethereum.org/en/developers/docs/consensus-mechanisms/pow/mining/) and if this is the definition of mining then I don't think it should be deprecated after The Merge
-  
+
+# Endpoint Considerations  
 ## eth_call
 
 * Address length?
@@ -116,6 +136,7 @@ These are a list of questions that I personally have about the project, eth, or 
   * Then anyone with a consensus client also has to run an execution to actually do anything? 
     * Can anyone run an execution client without a consensus client?
     * or vise versa?
+      * Answer!! Yes you need to have 32 eth and run both clients to be able to do anything.[info](https://www.coindesk.com/learn/2021/08/11/how-does-ethereum-staking-work/)
   * If this is the case will the clients ever converge? 
 * General Dev/API question. When should something error and when shouldn't it
   * I see some but very few situations where null is returned but it just feels out of place.

@@ -1,16 +1,16 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.1.1
-## Working Draft: Updated October 28 
+## Technical Specification V0.5.1
+## Working Draft: Updated October 31 
 ---
 ### **Author:**
-Jared Doro(absurdcreationsllc@gmail.com) [AbsurdCreations](jareddoro.me)
+Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
 
 ### **Editors:**
 nobody yet
 
 ### **Abstract:**
-This document provides a detailed description of the minimum implementation of the Ethereum Execution layer JSON-RPC API.
+This document provides a detailed description of the different types of Ethereum's Execution Layer API. This document also provides the minimum requirements and functionality that is needed for a piece of software to be considered a valid Ethereum Execution Layer API.
 ### **Keywords:**
 The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **NOT RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [[RFC2119](http://www.ietf.org/rfc/rfc2119.txt)] when, and only when, they appear in all capitals, as shown here.
 
@@ -30,8 +30,10 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 [Appendix A]() 
 
 -----
-# 1 Introduction
-breifly summarize and describe what is being developed and what it will be used for 
+# 1 Introduction 
+
+The Ethereum execution layer API is one of the key components of Ethereum. It creates a simple standard way to interact with the Ethereum network.
+It enables the development of many clients 
 ## 1.1 Purpose and Intended Audience
 
 The purpose of this document is to act as a centralized source of information regarding the functional and non-functional requirements for Ethereum's execution layer JSON-RPC API. This document is intended for development teams that are planning on implementing a version of the execution layer JSON-RPC API. This document would also be beneficial to but is not intended for anyone interested in learning how the user interacts with Ethereum clients and at the most basic level. 
@@ -72,19 +74,71 @@ An example where `to` is not specified and `value` is null
 ## 1.3.2 Input Parameters IDk WHERE THIS should go
  Input parameters for functions will be denoted by using the inline code feature of markdown and will look like `this`
 ## 1.4 References
-
 * [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
 * [Ethereum Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf)
+* [JSON Standard](https://www.json.org/json-en.html)
+* [HTTP/2](https://http2.github.io/)
 ---
 
 # 2 Overall Description
 
 ## 2.1 Product Perspective
+This is an open/public api 
+the JSON -RPC API is part of a bigger program.
+The JSON-RPC API must interface with an ethereum execution client to send and and receive data to the Ethereum network
+The users of the API will interact with the api through HTTP requests or through a web socket connection
 
-
+## API Types
+There are currently three different types of Execution Layer APIs.
+|API Type| Description |
+|---|---|
+|Read-only| Does not support any calls that require a fee|
+|Standard | Supports all standard endpoints needed for basic interactions|
+|Standard+| Supports all standard endpoints with the addition of custom endpoint/modules|
 ## 2.2 Product Features 
-For the JSON-RPC API to meet the MVP requirements it **MUST** contain the following endpoints:
+For the Execution Layer API to meet the Read-only definition it **MUST** contain the following endpoints:
+### Web3
+* web3_clientVersion
+* web3_sha3
 
+### Net
+* net_version
+* net_peerCount
+* net_listening
+  
+### Eth
+* eth_protocolVersion
+* eth_syncing // I don't think it is necessary to provide this 
+* eth_gasPrice
+* eth_blockNumber
+* eth_getBalance
+* eth_getStorageAt
+* eth_getTransactionCount
+* eth_getBlockTransactionCountByHash
+* eth_getBlockTransactionCountByNumber
+* eth_getUncleCountByHash //might not exist after The Merge
+* eth_getUncleCountByNumber //might not exist after The Merge
+* eth_getCode
+* eth_feeHistory
+* eth_call
+* eth_estimateGas
+* eth_getBlockByHash
+* eth_getBlockByNumber
+* eth_getTransactionByHash
+* eth_getTransactionByBlockHashAndIndex
+* eth_getTransactionByBlockNumberAndIndex
+* eth_getTransactionReceipt
+* eth_getUncleByBlockHashAndIndex  //might not exist after The Merge
+* eth_getUncleByBlockNumberAndIndex //might not exist after The Merge
+* eth_newFilter
+* eth_newBlockFilter
+* eth_newPendingTransactionFilter  //maybe not have this one? I am using Infura as the Read-only template
+* eth_uninstallFilter
+* eth_getFilterChanges
+* eth_getFilterLogs
+* eth_getLogs
+___
+For the Execution Layer API to meet the Standard definition it **MUST** contain the following endpoints:
 ### Web3
 * web3_clientVersion
 * web3_sha3
@@ -107,8 +161,8 @@ For the JSON-RPC API to meet the MVP requirements it **MUST** contain the follow
 * eth_getTransactionCount
 * eth_getBlockTransactionCountByHash
 * eth_getBlockTransactionCountByNumber
-* eth_getUncleCountByHash
-* eth_getUncleCountByNumber
+* eth_getUncleCountByHash //might not exist after The Merge
+* eth_getUncleCountByNumber //might not exist after The Merge
 * eth_getCode
 * eth_feeHistory
 * eth_sign
@@ -123,8 +177,8 @@ For the JSON-RPC API to meet the MVP requirements it **MUST** contain the follow
 * eth_getTransactionByBlockHashAndIndex
 * eth_getTransactionByBlockNumberAndIndex
 * eth_getTransactionReceipt
-* eth_getUncleByBlockHashAndIndex
-* eth_getUncleByBlockNumberAndIndex
+* eth_getUncleByBlockHashAndIndex //might not exist after The Merge
+* eth_getUncleByBlockNumberAndIndex //might not exist after The Merge
 * eth_newFilter
 * eth_newBlockFilter
 * eth_newPendingTransactionFilter
@@ -140,13 +194,19 @@ ___
 * Ethereum node 
 
 ## 2.4 Operating Environment how, where, under what conditions the system would be used.
+a version of the Execution layer API **MUST** be implemented with each Ethereum Execution Client.
+This means that there can be multiple versions of the execution layer JSON-RPC API with different features.
+This also means that for each Ethereum node running there **SHOULD** be an instance of the Execution layer API running with it to allow users to interact with it.
 
-An instance of the API **SHOULD** be running with each execution client 
+
+This is what makes this document so important. This will detail what minium features are needed to be considered a useable API implementation.
+
 ## 2.5 Design Implementations and constraints
-
+As of writing this document the Execution layer API is currently using the JSON-RPC 2.0 standard. 
+The execution layer API also supports interaction using both HTTP2.0 and WebSockets. 
 ## 2.6 Assumptions and dependencies
 
-
+# 3 System Features
 ## web3_clientVersion
 
 * [] web3_clientVersion **MUST** return a string containing information about the client version.
@@ -257,9 +317,19 @@ An instance of the API **SHOULD** be running with each execution client
 * might get deprecated?
 ## eth_newFilter
 ## eth_newBlockFilter
+* [] eth_newBlockFilter **MUST** create a new filter on the node that tracks when new blocks are received.
+* [] eth_newBlockFilter **MUST** return the filter id 
 ## eth_newPendingTransactionFilter
+* [] eth_newPendingTransactionFilter **MUST** create a new filter on the node that tracks when new pending transaction are received.
+* [] eth_newPendingTransactionFilter **MUST** return the filter id.
 ## eth_uninstallFilter
+* [] eth_uninstallFilter **MUST** uninstall the filter with the given `filter id`.
+  * [] eth_uninstallFilter **MUST** return true when a filter has been successfully uninstalled, otherwise it **MUST** return false.
 ## eth_getFilterChanges
+* [] eth_getFilterChanges **MUST** work with all filter types.
+  * [] If the `filter id` corresponds to a newBlockFilter eth_getFilterChanges **MUST** return an array containing the block hashes for each new block received since the filter was called last or first created.
+  * [] If the `filter id` corresponds to a newPendingTransactionFilter eth_getFilterChanges **MUST** return an array containing the transaction hashes for each pending transaction received since the filter was last called or first created.
+  *  [] If the `filter id` corresponds to a newFilter eth_getFilterChanges **MUST** return an array containing the
 ## eth_getFilterLogs
 ## eth_getLogs
 ## eth_getWork
