@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.5.1
-## Working Draft: Updated October 31 
+## Technical Specification V0.5.8
+## Working Draft: Updated November 1st 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -36,11 +36,11 @@ The Ethereum execution layer API is one of the key components of Ethereum. It cr
 It enables the development of many clients 
 ## 1.1 Purpose and Intended Audience
 
-The purpose of this document is to act as a centralized source of information regarding the functional and non-functional requirements for Ethereum's execution layer JSON-RPC API. This document is intended for development teams that are planning on implementing a version of the execution layer JSON-RPC API. This document would also be beneficial to but is not intended for anyone interested in learning how the user interacts with Ethereum clients and at the most basic level. 
+The purpose of this document is to act as a centralized source of information regarding the functional and non-functional requirements for Ethereum's execution layer API. This document is intended for development teams that are planning on implementing a version of the execution layer API. This document would also be beneficial to but is not intended for anyone interested in learning how the user interacts with Ethereum clients and at the most basic level. 
 
 ## 1.2 Scope
  
-The Ethereum execution layer JSON-RPC API provides the basis for all external interactions with the Ethereum blockchain. The interactions with the Ethereum network can be divided into four categories. Transferring ETH, deploy contracts, executing contracts, and administrative tasks. The API also provides endpoints that returns historical network and block data. 
+The Ethereum execution layer API provides the basis for all external interactions with the Ethereum blockchain. The interactions with the Ethereum network can be divided into four categories. Transferring ETH, deploy contracts, executing contracts, and administrative tasks. The API also provides endpoints that returns historical network and block data. 
 
 ## 1.3 Definitions and Terms
 just listing them here for now not sure exactly what ones I need or don't.
@@ -71,7 +71,7 @@ An example where `to` is not specified and `value` is null
     "id": 1
 }
 ```
-## 1.3.2 Input Parameters IDk WHERE THIS should go
+## 1.3.2 Input Parameters
  Input parameters for functions will be denoted by using the inline code feature of markdown and will look like `this`
 ## 1.4 References
 * [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
@@ -229,17 +229,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_syncing
 * [] eth_syncing **MUST** return the syncing status of the client to the network.
   *  [] eth_syncing **MUST** return false when the client is not syncing or already synced to the network.
-  *  [] eth_syncing **MUST** return the{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "result": {
-        "currentBlock": "0xcef2",
-        "highestBlock": "0xce2230",
-        "knownStates": "0x0",
-        "pulledStates": "0x0",
-        "startingBlock": "0xc9ae"
-    }
-}
+  *  [] eth_syncing **MUST** return an object containing the following: the current block being synced on the client, the current highest block known by the client, the known states, and the pulled states, and the block number that the client started syncing from.
 ## eth_coinbase
 * [] eth_coinbase **MUST** return the the ethereum address that the block reward is sent to.
 ## eth_mining

@@ -25,13 +25,13 @@ func (ec *Client) ChainID(ctx context.Context) (*big.Int, error) {
 	return (*big.Int)(&result), err
 }
 
-:= allows you to define the vars type indirectally by setting itself to the type it is given.
-you can directly use the . operator on pointers of structs without derefrencing them to modify their values
+:= allows you to define the vars type indirectly by setting itself to the type it is given.
+you can directly use the . operator on pointers of structs without dereferencing them to modify their values
 
-ec is the type  pointer of Client. so whatever is in the memory block refrenced by Client
+ec is the type  pointer of Client. so whatever is in the memory block referenced by Client
 c IS the pointer to the rpc client
-ctx is contex.context.Context
-&result is the refrence of results location in memory
+ctx is context.context.Context
+&result is the reference of results location in memory
 returns a pointer to big.Int || error ??
 ## data type information 
   
