@@ -99,10 +99,11 @@ Because at the end of the day aren't we building this for the people?
 ## network syncing
 Should we have the same behaviors for endpoints when they are not synced to the network.
 EX
-```
+
 A user just had their parents send them 128,000$ from their "rainy day" fund so they can run their own validator node. This user has no background with ethereum or running nodes. Now as a disclaimer what this user does have is a background/addiction to finishing lines(and no this isn't the same addiction to finishing lines as you Devs have or maybe it is, what do I know) They start their the geth client for the first time with "geth --http" and starts making requests for information about the network before geth is finished syncing to the network. To prove to their parents that this is more that just a economic fad the user decided to showcase what ethereum can do. Their parents not understanding the future are not impressed and demand to see where their money is, so the user with his minimal knowledge of Ethereum places the call to the endpoint eth_getBalance with his account and receives "0x0"! His parents are furious they demand to know what he did with the money. The user distraught tries to reassure his parents that he got eth and it was in the account. The fighting does not stop for a whole day, and the already emotionally unfit the user kills himself out of rage and depression.
 All because the client was not synced to the network fully and returns with the same confidence as when it is synced to the network.
-```
+
+
 This is why I think we should make sure that endpoints that require network data error when using them while not fully synced to the network.
 This was also a exercise in writing my first user story. Not to brag but I am a regular ol Shakespeare with my user story tragedies.
 ## Filters 
