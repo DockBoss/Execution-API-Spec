@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.5.9
-## Working Draft: Updated November 10th 
+## Working Draft: Updated November 11th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -168,7 +168,6 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 
 * [WS] web3_sha3 **MUST** return the Keccak256 hash of the given.
 * [WS] web3_sha3 **MUST** return the Keccak256 hash of null when given "0x"
-  
 ## net_version
 * [NV] net_version **MUST** return a string containing the network id of the network the client is currently connected to.
 ## net_peerCount
@@ -227,13 +226,15 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** return the uncle block information at the `Uncle index` of the block corresponding to the given `block number` or `block tag`.
 * [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** return null when the `block number` does not correspond to a mined block. [I tried 3 different public APIs all running geth and got 3 different results, one error -3200 "Geth/v1.10.6-stable-576681f2/linux-amd64/go1.15.2" LinkPool, one null infura, and one with literally no response obj "Geth/v1.10.12-stable-6c4dc6c3/linux-amd64/go1.17.2" https://api.mycryptoapi.com/eth]
 * [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** return null when the client does not have the state information about the block because it is not synced to the network or currently syncing.
-*  [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
+* [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
 * [EGUNI] eth_getUncleByBlockNumberAndIndex **MUST** used the latest known block when using the "latest" tag while syncing.
 ## eth_getCode
 * [EGC] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
 *  [EGC] eth_getCode **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data.
 ## eth_feeHistory
 * [EFH] eth_feeHistory **MUST** return the 
+* returns 1 more result than requested assuming this is a looping error
+* also allows repeats in the reward percentile array
 ## eth_sign
 * [ESN]
 ## eth_signTransaction
@@ -243,6 +244,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_sendRawTransaction
 * [ESRT]
 ## eth_estimateGas
+* [EEG]
 ## eth_getBlockByHash
 * [EGBH] eth_getBlockByHash **MUST** return the block information for the block with the given `block hash`.
 * [EGBH] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a block.
@@ -301,37 +303,42 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 
 * [EC] eth_call **MUST** create a transaction and execute it on node that received the transaction.
 * [EC] eth_call **MUST NOT** mine any transaction on the blockchain.
+  
+  work
 * [EC] eth_call **MUST** use the `defaultBlockParameter` to know which block the code is being pulled from.
 * [EC] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain
 * [EC] eth_call **MUST** use the latest block when the `defaultBlockParameter` parameter is not specified 
 * [EC] eth_call **MUST** error with code -32000 if `defaultBlockParameter` is null
+  good
 * [EC] State pruning **MAY** be an option on clients, eth_call **MUST** error with code -32000 when the requested state does not exist due to state pruning
-* [EC] eth_call **MUST** consider a default address for when the `from` parameter is null or not specified
+* [EC] eth_call **MUST** use a default address for when the `from` parameter is null or not specified [geth uses 0x0...0] [Nethermind uses 0xf...fe] 
 * [EC] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
-* [EC] eth_call **MUST** return transaction receipt of each call
+  work
+* [EC] eth_call **MUST** return the result of each call
 * [EC] eth_call **MUST** return an empty transaction receipt `0x0` when no transaction is executed 
-* [EC] when the `to` parameter is not specified eth_call **MUST** treat it as contract creation and **MUST** return the deployed byte code of the contract
-* [EC] eth_call **MUST** error with code -32000 when there is an error creating the contract 
+* [EC] eth_call **MUST** error with code -32000 when there is an error creating the contract <Not 100% right need to look into it more, does might be error caused in VM not contract>
 * [EC] **MUST NOT** allow `gas` to be 0 
+  
 * [EC] eth_call **MUST** work with all transaction types
 * [EC] eth_call **MUST** work with `gasPrice` parameter
 * [EC] eth_call **MUST** work with  `maxFeePerGas` and `maxPriorityFeePerGas` parameters  
 * [EC] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
 * [EC] eth_call **MUST** calculate `maxFeePerGas` or `maxPriorityFeePerGas` when only one is specified.
-Just testing this again geth must have removed this feature, but I am not sure if that **SHOULD** be the case though I personally agree with removing it
+  good
 * [EC] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
 * [EC] eth_call **MUST** error with code -32000 account has insufficient funds 
 * [EC] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance 
 
 ## eth_hashrate
-* [EH]
+* [EH] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
+* [EH] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
 ## eth_submitHashrate
 * [ESH]
 ## eth_submitWork
 * [ESW]
 # Errors
 Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32000 to -32099 are for Execution layer API errors
-This table has been taken from the inital version of the JSON-RPC API spec that was never finalized. 
+This table has been taken from the initial version of the JSON-RPC API spec that was never finalized. 
 I was told this is what **SHOULD** have ben implemented across each client. Will revise it with the actual codes once I test them all
 |Code|Message|Meaning|Category|
 |-|-|-|-|
@@ -344,7 +351,7 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 |-32001|Resource not found|Requested resource not found|non-standard|
 |-32002|Resource unavailable|Requested resource not available|non-standard|
 |-32003|Transaction rejected|Transaction creation failed|non-standard|
-|-32004|Method not supported|Method is not implemented|non-standard|
+|-32004|Method not supported|Method is not implemented|non-standard| [looks like -32601 catches these errors]
 |-32005|Limit exceeded|Request exceeds defined limit|non-standard|
 |-32006|JSON-RPC version not supported|Version of JSON-RPC protocol is not supported|non-standard|
 
