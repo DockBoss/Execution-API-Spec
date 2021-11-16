@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.5.9
-## Working Draft: Updated November 11th 
+## Technical Specification V0.6.2
+## Working Draft: Updated November 15th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -236,9 +236,20 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * returns 1 more result than requested assuming this is a looping error
 * also allows repeats in the reward percentile array
 ## eth_sign
-* [ESN]
+* [ESN] eth_sign **MUST** return the [EIP-191]()
 ## eth_signTransaction
-* [ESNT]
+* [ESNT] eth_signTransaction **MUST** return the RLP encoded transaction and the unencoded transaction object for the `transaction` given.
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `transaction` does not contain a `from` address.
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `from` address is not unlocked.
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `gas` is not specified.
+* [ESNT] eth_signTransaction **MUST** use 0x0 for `gas` when parameter is null.
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
+* [ESNT] eth_signTransaction **MUST** use 0x0 for `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` when the parameter is null. 
+* [ESNT] eth_signTransaction **MUST** use null for `gasPrice` when using an [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction. 
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
+* [ESNT] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
+* [ESNT] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
+* geth --http --sepolia --datadir C:\Eth --allow-insecure-unlock --unlock 0xea1b261fb7ec1c4f2beea2476f17017537b4b507
 ## eth_sendTransaction
 * [EST]
 ## eth_sendRawTransaction
@@ -357,3 +368,9 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 
 [table source](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md)
 # Appendix
+
+
+## Questions
+
+* I think I should add parameters for endpoint and label which ones are required and which ones are not. Not regex schema but maybe? 
+  * I am assuming this is going to have to eventually become an EIP once it is funalized and wouldn't it look bad if we don't have all necessary information on this document?
