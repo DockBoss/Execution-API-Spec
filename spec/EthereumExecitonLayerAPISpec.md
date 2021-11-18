@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.6.2
-## Working Draft: Updated November 15th 
+## Technical Specification V0.6.3 
+## Working Draft: Updated November 17th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -180,6 +180,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESY] eth_syncing **MUST** return the syncing status of the client to the network.
 *  [ESY] eth_syncing **MUST** return false when the client is not syncing or already synced to the network.
 *  [ESY] eth_syncing **MUST** return an object containing the following: the current block being synced on the client, the current highest block known by the client, the known states, and the pulled states, and the block number that the client started syncing from.
+*  ^Maybe turn this into a table 
 ## eth_coinbase
 * [ECB] eth_coinbase **MUST** return an Ethereum address that the reward for successfully mining a block is sent to.
 * [ECB] eth_coinbase **MUST** error with code -32000 when the client does not have an address for the block reward to be sent to or when the client being interacted with does not support mining.
@@ -193,13 +194,14 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EBN] eth_blockNumber **MUST** return the block number for the most recent block mined.
 * [EBN] eth_blockNumber **MUST** return "0x0" when the client is not synced to the network.
 ## eth_getBalance
-* [EGB] eth_getBalance **MUST** return the account balance of the `address` at the given `defaultBlockParameter`.
+* [EGB] eth_getBalance **MUST** return the account balance of the `address` at the given `defaultBlockParameter`. <<-- Is this the right block item?? tag/tag or hash ect..
 * [EGB] eth_getBalance **MUST** return "0x0" when the client is not synced to the network
 ## eth_getStorageAt
 * [EGS] eth_getStorageAt **MUST** return the data stored within the `storage slot` of the given `address` at the time of the requested `block`
 * [EGS] eth_getStorageAt **MUST**  error with code -32000 when the `block` requested is not within the 128 most recent blocks and is considered historical data, or when the client does not have the current state of the `block` requested.
 ## eth_getTransactionCount
 * [EGTC] eth_getTransactionCount **MUST** return the nonce of the account with the given `address` at the `block` requested. 
+* ^What happens when it is syncing?
 ## eth_getBlockTransactionCountByHash
 * [EGTCH] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
@@ -231,12 +233,15 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_getCode
 * [EGC] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
 *  [EGC] eth_getCode **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data.
+*  ^What about syncing?
 ## eth_feeHistory
 * [EFH] eth_feeHistory **MUST** return the 
 * returns 1 more result than requested assuming this is a looping error
 * also allows repeats in the reward percentile array
 ## eth_sign
-* [ESN] eth_sign **MUST** return the [EIP-191]()
+* [ESN] eth_sign **MUST** return the ethereum specific signature detailed in [EIP-191](https://eips.ethereum.org/EIPS/eip-191) of the given unlocked `address` and `message`.
+* [ESN] eth_sign **MUST** error with code -32000 when when the account corresponding to the `address` is not unlocked.
+* [ESN] eth_sign **MUST** error with code -32000 when when the account corresponding to the `address` is not owned by the client.
 ## eth_signTransaction
 * [ESNT] eth_signTransaction **MUST** return the RLP encoded transaction and the unencoded transaction object for the `transaction` given.
 * [ESNT] eth_signTransaction **MUST** error with code -32000 when the `transaction` does not contain a `from` address.
@@ -249,7 +254,6 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
 * [ESNT] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
 * [ESNT] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
-* geth --http --sepolia --datadir C:\Eth --allow-insecure-unlock --unlock 0xea1b261fb7ec1c4f2beea2476f17017537b4b507
 ## eth_sendTransaction
 * [EST]
 ## eth_sendRawTransaction
@@ -261,27 +265,32 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGBH] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a block.
 * [EGBH] eth_getBlockByHash **MUST** error with code -32000 when the block information is not available due to state pruning.
 * [EGBH] eth_getBlockByHash **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+* ^what about syncing?
 ---
 ## eth_getBlockByNumber
 * [EGBN] eth_getBlockByNumber **MUST** return the block information for the block with the given `block number`.
 * [EGBN] eth_getBlockByNumber **MUST** return null when the given `block number` does not correspond to a block. 
 * [EGBN] eth_getBlockByNumber **MUST** error with code -32000 when the block information is not available due to state pruning.
 * [EGBN] eth_getBlockByNumber **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+* ^what about syncing?
 ---
 ## eth_getTransactionByHash
 * [EGTH] eth_getTransactionByHash **MUST** return the transaction object for the transaction with the given `transaction hash`.
 * [EGTH] eth_getTransactionByHash **MUST** return null when the given `transaction hash` does not correspond to a transaction. 
 * [EGTH] eth_getTransactionByHash **MUST** error with code -32000 when the transaction information is not available due to state pruning.
+* ^what about syncing?
 ## eth_getTransactionByBlockHashAndIndex
 * [EGTHI] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object with the given `block hash` and `transaction index` within the block.
 * [EGTHI] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `block hash` does not does correspond to a block.
 * [EGTHI] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
 * [EGTHI] eth_getTransactionByBlockHashAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
+* ^what about syncing?
 ## eth_getTransactionByBlockNumberAndIndex
 * [EGTNI] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object with the given `block number` and `transaction index` within the block.
 * [EGTNI] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `block number` does not correspond to a block.
 * [EGTNI] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
 * [EGTNI] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
+* ^what about syncing?
 ## eth_getTransactionReceipt
 * [EGTR] eth_getTransactionReceipt **MUST** return the transaction object with the given `transaction hash`.
 * [EGTR] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` does not correspond to a transaction.
@@ -373,4 +382,7 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 ## Questions
 
 * I think I should add parameters for endpoint and label which ones are required and which ones are not. Not regex schema but maybe? 
-  * I am assuming this is going to have to eventually become an EIP once it is funalized and wouldn't it look bad if we don't have all necessary information on this document?
+  * I am assuming this is going to have to eventually become an EIP once it is finalized and wouldn't it look bad if we don't have all necessary information on this document?
+* I found more endpoints that are shared amongst all clients. What is the scope of this doc?
+  * Is it just eth, web3, and net endpoints?
+  * Or all shared endpoints like txpool, admin, personal, etc?
