@@ -279,15 +279,53 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT-7] eth_signTransaction **MUST** error with code -32000 when the `gas` is not specified.
 * [ESNT-8] eth_signTransaction **MUST** use 0x0 for `gas` when parameter is null.
 * [ESNT-9] eth_signTransaction **MUST** error with code -32000 when the `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
-* [ESNT-10] eth_signTransaction **MUST** use 0x0 for `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` when the parameter is null. 
-* [ESNT-11] eth_signTransaction **MUST** use null for `gasPrice` when using an [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction. 
-* [ESNT-12] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
-* [ESNT-13] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
-* [ESNT-14] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
+* [ESNT-10] eth_signTransaction **MUST** error with code -32000 when `gasPrice` is used with `maxFeePerGas` and/or `maxPriorityFeePerGas`.
+* [ESNT-11] eth_signTransaction **MUST** use 0x0 for `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` when the parameter is null. 
+* [ESNT-12] eth_signTransaction **MUST** use null for `gasPrice` when using an [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction. 
+* [ESNT-13] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
+* [ESNT-14] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
+* [ESNT-15] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
+* * not sure how I should go about testing accessList
 ## eth_sendTransaction
-* [EST]
+* [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
+* [EST] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
+* when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
+* to and contract data
+* to contract data + value
+* contract data + value
+* gas too low
+* gas too high
+* gas price too low
+* gas price too high
+* MFPG too low
+* MFPG too high
+* MPFPG too low
+* MPFPG too high
+* gasprice on type 2
+* MFPG  and MPFPG on legacy
+* gp and ^ 
+* not sure how I should go about testing accessList
 ## eth_sendRawTransaction
-* [ESRT]
+* [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
+* [ESRT] eth_sendRawTransaction **MUST**  allow `to` address to be the same as `from` address
+* when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
+* to and contract data
+* to contract data + value
+* contract data + value
+* gas too low
+* gas too high
+* gas price too low
+* gas price too high
+* MFPG too low
+* MFPG too high
+* MPFPG too low
+* MPFPG too high
+* gas price on type 2
+* MFPG and MPFPG on legacy
+* gp and ^ 
+* not sure how I should go about testing accessList
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
 * [EEG-2] eth_estimateGas **MUST** check the `from` account balance when `value` is used to see if the account has enough Ether to execute the given `transaction`.
@@ -388,7 +426,46 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
 ## eth_submitHashrate
-* [ESH]
+* [ESH] submitting hashrate in infura
+  * high as long as it is less than 64 bits
+  * low yes
+  * 0 yes
+  * nil yes assuming it uses 0
+  submitting hashrate while not mining buy synced 
+  * high as long as it is less than 64 bits
+  * low yes
+  * 0 yes
+  * nil yes assuming it uses 0
+* submitting hashrate while mining 
+  * high
+  * low
+  * 0
+  * null
+* submitting while not connected to a network(no peers)
+  * high
+  * low
+  * 0
+  * null
+* submitting while syncing returned true for all
+    * high
+  * low
+  * 0
+  * null
+* Try random ids not mining
+  * too short
+  * too longe
+  * random 
+  * fffff
+  * 000
+  * then try Id of besu node on sepolia
+* Try random ids mining
+  * too short
+  * too longe
+  * random 
+  * fffff
+  * 000
+  * then try Id of besu node on sepolia
+
 ## eth_submitWork
 * [ESW]
 # Errors
