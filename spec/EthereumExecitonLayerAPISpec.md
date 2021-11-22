@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.6.4 
-## Working Draft: Updated November 21th 
+## Working Draft: Updated November 22th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -217,12 +217,12 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGTC-2] eth_getTransactionCount **MUST NOT** return the nonce of the given address. The nonce starts at 0x0 so the transaction count **MUST** be account nonce + 1.
 * [EGTC-3] eth_getTransactionCount **MUST** error with code -32000 when using a block hash for the `defaultBlockParameter` that does not correspond to a block. 
 * [EGTC-4] eth_getTransactionCount **MUST** error with code -32000 when using a block number for the `defaultBlockParameter` that is ahead of the chain.
-* [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when the client cannot pull or recreate the state required when using a block number or block hash for the `defaultBlockParameter` due to the client currently syncing or as a result of the chosen sync type when synced to the network. 
-* ^What happens when it is syncing?
-* What happnes when you are using pending while syncing
-* latest while syncing 
-* earliest while syncing
-* DOES NOT COUNT PENDING TX
+* [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash for the `defaultBlockParameter` when syncing to the network.
+* [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when the client cannot pull or recreate the state required when using a block number or block hash for the `defaultBlockParameter` as a result of the chosen sync type when synced to the network. 
+* [EGTC] eth_getTransactionCount **MUST** use the latest synced block when using block tag "latest" for the `defaultBlockParameter` when syncing to the network.
+* [EGTC] eth_getTransactionCount **MUST** must return the actual number of transactions made by the `address` while syncing to the network when available, otherwise it **MUST** return 0x0.
+* What happens when you are using pending while syncing 0x0 not sure what block its using
+* Need to test block number and block hash return value for when sync is almost finished.
 ## eth_getBlockTransactionCountByHash
 * [EGTCH-1] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH-2] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
@@ -293,6 +293,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
   * gasprice on type 2 converts to legacy tx
   * * MFPG and MPFPG on legacy: converts to type 2
 ## eth_sendTransaction
+* [EST] eth_sendTransaction **MUST** return the transaction hash of the `transaction` when the transaction is successfully sent to the network.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
 * [EST] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
@@ -318,10 +319,10 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST** use type 2 transaction when `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
 * [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract.
 * [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract
-* [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`.
+* [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`, and **MUST** use 0x0 for `value`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
-* [EST] eth_sendTransaction **MUST NOT** replace pending transactions sending transactions without specifying the `nonce`.
+* [EST] eth_sendTransaction **MUST NOT** replace pending transactions when sending transactions without specifying the `nonce`.
   
 * [EST] eth_sendTransaction **MUST** use ___ for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
 * [EST] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
@@ -336,11 +337,6 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 ## eth_sendRawTransaction
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
-* [ESRT] eth_sendRawTransaction **MUST**  allow `to` address to be the same as `from` address
-* when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
-* Deleted second tx from pool? 
-Try to send tx with nonce of 0x7 Didn’t send Try tx with nonce of 0x6 and same gas price Worked, didn't make me pay extra to resubmit the tx
-* to(non contract) and contract data: works shows contract data as `input`
 
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
@@ -348,7 +344,7 @@ Try to send tx with nonce of 0x7 Didn’t send Try tx with nonce of 0x6 and same
 * [EEG-3] eth_estimateGas **MUST** error with code -32000 when the `from` address does not contain enough Ether to execute the given `transaction`.
 * [EEG-4] eth_estimateGas **MUST** use 0x0000000000000000000000000000000000000000 for `from` when it is not specified.
 * [EEG-5] eth_estimateGas **MUST** error with code -32000 when invalid opcodes are used while estimating contract deployment.
-* GOt execution reverted with -32000 when estimating contract creation?
+* Got execution reverted with -32000 when estimating contract creation?
   *  codes like 0x25, or using codes that require other values, cause stack underflow.
   *  need to test this more to figure out scope of what is happening.
 ## eth_getBlockByHash
@@ -386,9 +382,10 @@ Try to send tx with nonce of 0x7 Didn’t send Try tx with nonce of 0x6 and same
 * [EGTNI-5] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
 * [EGTNI-6] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 ## eth_getTransactionReceipt
-* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction object with the given `transaction hash`.
+* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt with the given `transaction hash`.
 * [EGTR-2] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` does not correspond to a transaction.
-* [EGTR-3] eth_getTransactionReceipt **MUST** return null when the requested information is not available due to the client is syncing to the network.
+* [EGTR-3] eth_getTransactionReceipt **MUST** return null when the transaction is still pending.
+* [EGTR-4] eth_getTransactionReceipt **MUST** return null when the requested information is not available due to the client is syncing to the network.
 ## eth_newFilter
 * [ENF]
 ## eth_newBlockFilter
@@ -414,32 +411,33 @@ Try to send tx with nonce of 0x7 Didn’t send Try tx with nonce of 0x6 and same
 
 * [EC] eth_call **MUST** create a transaction and execute it on node that received the transaction.
 * [EC] eth_call **MUST NOT** mine any transaction on the blockchain.
-  
-  work
-* [EC] eth_call **MUST** use the `defaultBlockParameter` to know which block the code is being pulled from.
-* [EC] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain
-* [EC] eth_call **MUST** use the latest block when the `defaultBlockParameter` parameter is not specified 
+* [EC] eth_call **MUST** require the `defaultBlockParameter` for all network calls.
+* [EC] eth_call **MUST** use the block requested by the `defaultBlockParameter` when interacting with contracts.
+* [EC] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain.
+* [EC] eth_call **MUST** use the latest block when the `defaultBlockParameter` parameter is not specified.
 * [EC] eth_call **MUST** error with code -32000 if `defaultBlockParameter` is null
-  good
-* [EC] State pruning **MAY** be an option on clients, eth_call **MUST** error with code -32000 when the requested state does not exist due to state pruning
+* [EC] eth_call **MUST** error with code -32000 when the requested state does not exist due to state pruning
 * [EC] eth_call **MUST** use a default address for when the `from` parameter is null or not specified [geth uses 0x0...0] [Nethermind uses 0xf...fe] 
 * [EC] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
+* [EC] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
+* [EC] eth_call **MUST** error with code -32000 account has insufficient funds 
+* [EC] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance   
+
+
   work
 * [EC] eth_call **MUST** return the result of each call
 * [EC] eth_call **MUST** return an empty transaction receipt `0x0` when no transaction is executed 
 * [EC] eth_call **MUST** error with code -32000 when there is an error creating the contract <Not 100% right need to look into it more, does might be error caused in VM not contract>
 * [EC] **MUST NOT** allow `gas` to be 0 
-  
+  * Why, what does that mean?
 * [EC] eth_call **MUST** work with all transaction types
 * [EC] eth_call **MUST** work with `gasPrice` parameter
 * [EC] eth_call **MUST** work with  `maxFeePerGas` and `maxPriorityFeePerGas` parameters  
 * [EC] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
 * [EC] eth_call **MUST** calculate `maxFeePerGas` or `maxPriorityFeePerGas` when only one is specified.
-  good
-* [EC] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
-* [EC] eth_call **MUST** error with code -32000 account has insufficient funds 
-* [EC] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance 
 
+Syncing?
+need to test this more
 ## eth_hashrate
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
@@ -505,3 +503,9 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
   * 30?
   * 45?
   * 60?
+* estimateGas
+* sign
+* SignTx
+* SendRawTs
+* SendTx
+* TransactionCount
