@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.6.4 
-## Working Draft: Updated November 19th 
+## Working Draft: Updated November 21th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -196,7 +196,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
    * And the block number that the client started syncing from.
 ## eth_coinbase
 * [ECB-1] eth_coinbase **MUST** return an Ethereum address that the reward for successfully mining a block is sent to.
-* [ECB-2] eth_coinbase **MUST** error with code -32000 when the client does not have an address for the block reward to be sent to or when the client being interacted with does not support mining.
+* [ECB-2] eth_coinbase **MUST** error with code -32000 when the client does not have an address for the block reward to be sent to.
 ## eth_mining
 * [EM-1] eth_mining **MUST** return true when the client is actively mining for block rewards, otherwise it **MUST** return false.
 ## eth_gasPrice
@@ -222,7 +222,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * What happnes when you are using pending while syncing
 * latest while syncing 
 * earliest while syncing
-* 
+* DOES NOT COUNT PENDING TX
 ## eth_getBlockTransactionCountByHash
 * [EGTCH-1] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH-2] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
@@ -286,51 +286,71 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT-14] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
 * [ESNT-15] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
 * * not sure how I should go about testing accessList
+  * allows any fake key value pair to be added into the transaction, does not get turned int the signed tx though
+* allows use of data or input as params
+* error -32000 when `data` and `input` are both used and do not match
+* allows `data` and `input` to be used if equal
+  * gasprice on type 2 converts to legacy tx
+  * * MFPG and MPFPG on legacy: converts to type 2
 ## eth_sendTransaction
 * [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
 * [EST] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
+* [EST] eth_sendTransaction **MUST** allow user to enter extra key value pairs within the `transaction` object that are not used by the selected transaction.
+* [EST] eth_sendTransaction **MUST NOT** add any extra key value pairs sent by the user to the signed transaction sent to the network.
+* [EST] eth_sendTransaction **MUST** allow user to use duplicate parameters in the `transaction` object and **MUST** use the last of the duplicate parameters.
+* [EST] eth_sendTransaction **MUST** allow user to use `value` parameter when deploying a contract.
+* [EST] eth_sendTransaction **MUST NOT** send `value` to created contract when used during contract deployment
+* [EST] eth_sendTransaction **MUST NOT** cost any extra when `value` is added during contract deployment.
+* [EST] eth_sendTransaction **MUST** allow user to use `data` or `input` for contract deployment or contract interactions.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to compleat the transaction.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and **MAY** never be executed.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and **MAY** never be executed.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and **MAY** never be executed.
+* [EST] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is used.
+* [EST] eth_sendTransaction **MUST** use type 2 transaction anytime `maxFeePerGas` or `maxPriorityFeePerGas` is used.
+* [EST] eth_sendTransaction **MUST** use type 2 transaction when `accessList` is used without `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas`.
+* [EST] eth_sendTransaction **MUST** use type 2 transaction when `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
+* [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract.
+* [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract
+* [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
+* [EST] eth_sendTransaction **MUST NOT** replace pending transactions sending transactions without specifying the `nonce`.
+  
+* [EST] eth_sendTransaction **MUST** use ___ for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
+* [EST] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
+  * Need to test these more, just tried on geth --dev and got different results.
+* what happnes when MFPG and/or MPFPG is missing?: works for both, sets MPFPG to eth_gasPrice - 7? Sets MFPG to MPFPG + e?
+  
 * when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
-* to and contract data
-* to contract data + value
-* contract data + value
-* gas too low
-* gas too high
-* gas price too low
-* gas price too high
-* MFPG too low
-* MFPG too high
-* MPFPG too low
-* MPFPG too high
-* gasprice on type 2
-* MFPG  and MPFPG on legacy
-* gp and ^ 
+  * Removes second tx from pool without having to pay extra to cancel it.
+
+I might have got it to use incorrect nonce, but not sure how. same behavior gave different response. I think I tried sending tx with 2 GP    
 * not sure how I should go about testing accessList
 ## eth_sendRawTransaction
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
 * [ESRT] eth_sendRawTransaction **MUST**  allow `to` address to be the same as `from` address
 * when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
-* to and contract data
-* to contract data + value
-* contract data + value
-* gas too low
-* gas too high
-* gas price too low
-* gas price too high
-* MFPG too low
-* MFPG too high
-* MPFPG too low
-* MPFPG too high
-* gas price on type 2
-* MFPG and MPFPG on legacy
-* gp and ^ 
-* not sure how I should go about testing accessList
+* Deleted second tx from pool? 
+Try to send tx with nonce of 0x7 Didn’t send Try tx with nonce of 0x6 and same gas price Worked, didn't make me pay extra to resubmit the tx
+* to(non contract) and contract data: works shows contract data as `input`
+
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
 * [EEG-2] eth_estimateGas **MUST** check the `from` account balance when `value` is used to see if the account has enough Ether to execute the given `transaction`.
 * [EEG-3] eth_estimateGas **MUST** error with code -32000 when the `from` address does not contain enough Ether to execute the given `transaction`.
 * [EEG-4] eth_estimateGas **MUST** use 0x0000000000000000000000000000000000000000 for `from` when it is not specified.
+* [EEG-5] eth_estimateGas **MUST** error with code -32000 when invalid opcodes are used while estimating contract deployment.
+* GOt execution reverted with -32000 when estimating contract creation?
+  *  codes like 0x25, or using codes that require other values, cause stack underflow.
+  *  need to test this more to figure out scope of what is happening.
 ## eth_getBlockByHash
 * [EGBH-1] eth_getBlockByHash **MUST** return the block information for the block with the given `block hash`.
 * [EGBH-2] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a block.
@@ -389,8 +409,6 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGFL]
 ## eth_getLogs
 * [EGL]
-## eth_getWork
-* [EGW]
 
 ## 4.2 eth_call
 
@@ -426,46 +444,22 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
 ## eth_submitHashrate
-* [ESH] submitting hashrate in infura
-  * high as long as it is less than 64 bits
-  * low yes
-  * 0 yes
-  * nil yes assuming it uses 0
-  submitting hashrate while not mining buy synced 
-  * high as long as it is less than 64 bits
-  * low yes
-  * 0 yes
-  * nil yes assuming it uses 0
+* [ESH] eth_submitHashrate **MUST** return true when the client successfully submits a `hashrate` and an `id`.  Where is it submitted?
+* [ESH] eth_submitHashrate **MUST** return true when the client submits their hashrate while not mining.
+* [ESH] eth_submitHashrate **MUST** return true when the client submit their hashrate while syncing to the network.
+* [ESH] eth_submitHashrate **MUST** return use 0x0 when `hashrate` is null.
+* does not effect the result of eth_hashrate, is this because I am not mining? 
 * submitting hashrate while mining 
   * high
   * low
   * 0
   * null
-* submitting while not connected to a network(no peers)
-  * high
-  * low
-  * 0
-  * null
-* submitting while syncing returned true for all
-    * high
-  * low
-  * 0
-  * null
-* Try random ids not mining
-  * too short
-  * too longe
-  * random 
-  * fffff
-  * 000
-  * then try Id of besu node on sepolia
-* Try random ids mining
-  * too short
-  * too longe
-  * random 
-  * fffff
-  * 000
-  * then try Id of besu node on sepolia
+* Try ids other clients that are mining are using.
+  * I assume this errors
 
+## eth_getWork
+* [EGW] eth_getWork **MUST** error with code -32000 when mining is not enabled.
+* 
 ## eth_submitWork
 * [ESW]
 # Errors
@@ -493,11 +487,21 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 
 ## Questions
 
-* I think I should add parameters for endpoint and label which ones are required and which ones are not. Not regex schema but maybe? 
+* I think I should add parameters for endpoint and label which ones are required and which ones are not. Not regex schema
   * I am assuming this is going to have to eventually become an EIP once it is finalized and wouldn't it look bad if we don't have all necessary information on this document?
+  * I am thinking something like a parameter table with type and optional or not
+  * maybe a return table with type
+  * still keeping the spec we have
 * I found more endpoints that are shared amongst all clients. What is the scope of this doc?
   * Is it just eth, web3, and net endpoints?
   * Or all shared endpoints like txpool, admin, personal, etc?
 * Its not plagiarism if I copied the description for the block tags word for word from the eth wiki?
   * I assume not I just want to check.
 * Considering re-writing the mentions of state pruning to look more like eth_getTransactionCount. 
+* Would you like me to send a brief synopsis when I am done for the day?
+* when I get around to testing other clients, can I create an inconsistencies doc?
+  * I have a feeling that this doc is going to get messy.
+* How long would you like our call on Friday to be?
+  * 30?
+  * 45?
+  * 60?
