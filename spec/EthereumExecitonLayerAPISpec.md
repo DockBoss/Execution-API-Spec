@@ -189,20 +189,20 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_syncing
 * [ESY-1] eth_syncing **MUST** return the syncing status of the client to the network.
 * [ESY-2] eth_syncing **MUST** return false when the client is not syncing or already synced to the network.
-* [ESY-3] eth_syncing **MUST** return an object containing the following:
+* [ESY-3] eth_syncing **MUST** return an object containing the following when syncing:
    * The current block being synced on the client.
    * The current highest block known by the client.
    * The known states, and the pulled states.
    * And the block number that the client started syncing from.
 ## eth_coinbase
-* [ECB-1] eth_coinbase **MUST** return an Ethereum address that the reward for successfully mining a block is sent to.
+* [ECB-1] eth_coinbase **MUST** return an Ethereum address owned by the client you are using to interact with the network that the reward for successfully mining a block is sent to.
 * [ECB-2] eth_coinbase **MUST** error with code -32000 when the client does not have an address for the block reward to be sent to.
 ## eth_mining
 * [EM-1] eth_mining **MUST** return true when the client is actively mining for block rewards, otherwise it **MUST** return false.
 ## eth_gasPrice
 * [EGP-1] eth_gasPrice **MUST** return the current price per unit of gas in wei
 ## eth_accounts
-* [EA-1] eth_accounts **MUST** return the public addresses for each Ethereum account that the client has the private key for.
+* [EA-1] eth_accounts **MUST** return the public addresses for each Ethereum account that the client you are using to interact with the network has the private key for.
 ## eth_blockNumber
 * [EBN-1] eth_blockNumber **MUST** return the block number for the most recent block mined.
 * [EBN-2] eth_blockNumber **MUST** return "0x0" when the client is not synced to the network.
@@ -210,47 +210,56 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGB-1] eth_getBalance **MUST** return the account balance of the `address` at the given `defaultBlockParameter`.
 * [EGB-2] eth_getBalance **MUST** return "0x0" when the client is not synced to the network.
 ## eth_getStorageAt
-* [EGS-1] eth_getStorageAt **MUST** return the data stored within the `storage slot` of the given `address` at the time of the requested `block`
-* [EGS-2] eth_getStorageAt **MUST**  error with code -32000 when the `block` requested is not within the 128 most recent blocks and is considered historical data, or when the client does not have the current state of the `block` requested.
+* [EGS-1] eth_getStorageAt **MUST** return the data stored within the `storage slot` of the given `address` at the time of the requested `block number` or `block tag`.
+* [EGS-2] eth_getStorageAt **MUST**  error with code -32000 when the client does not have the state of the `block number` or `block tag` requested.
+* [EGS-3] eth_getStorageAt **MUST** return 0x00...0 when using `block tag` is uesed while syncing to the network.
+* [EGS-4] eth_getStorageAt **MUST** error with code -32000 when using `block number` while syncing to the network.
+* ^ I would like to test what happens when you use `block number` while syncing, but during the late stages.
+  * I think it might actually return the correct results, but I can't test this ATM because I don't have enough storage space
+  * I can try with sepolia, but it's down ATM and it syncs so fast it might be hard to test, but I will when back up
 ## eth_getTransactionCount
-* [EGTC-1] eth_getTransactionCount **MUST** return the number of transactions that the account with the given `address` has made at the block requested by the `defaultBlockParameter`. 
-* [EGTC-2] eth_getTransactionCount **MUST NOT** return the nonce of the given address. The nonce starts at 0x0 so the transaction count **MUST** be account nonce + 1.
-* [EGTC-3] eth_getTransactionCount **MUST** error with code -32000 when using a block hash for the `defaultBlockParameter` that does not correspond to a block. 
-* [EGTC-4] eth_getTransactionCount **MUST** error with code -32000 when using a block number for the `defaultBlockParameter` that is ahead of the chain.
-* [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash for the `defaultBlockParameter` when syncing to the network.
+* [EGTC-1] eth_getTransactionCount **MUST** return the nonce of the account with the given `address` has made at the block requested by the `defaultBlockParameter`. 
+* [EGTC-2] eth_getTransactionCount **MUST** error with code -32000 when using a block hash for the `defaultBlockParameter` that does not correspond to a block. 
+* [EGTC-3] eth_getTransactionCount **MUST** error with code -32000 when using a block number for the `defaultBlockParameter` that is ahead of the chain.
+* [EGTC-4] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash for the `defaultBlockParameter` when syncing to the network.
 * [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when the client cannot pull or recreate the state required when using a block number or block hash for the `defaultBlockParameter` as a result of the chosen sync type when synced to the network. 
-* [EGTC] eth_getTransactionCount **MUST** use the latest synced block when using block tag "latest" for the `defaultBlockParameter` when syncing to the network.
-* [EGTC] eth_getTransactionCount **MUST** must return the actual number of transactions made by the `address` while syncing to the network when available, otherwise it **MUST** return 0x0.
+* [EGTC-6] eth_getTransactionCount **MUST** use the latest synced block when using block tag "latest" for the `defaultBlockParameter` when syncing to the network.
+* [EGTC-7] eth_getTransactionCount **MUST** must return the actual number of transactions made by the `address` while syncing to the network when available, otherwise it **MUST** return 0x0.
+
 * What happens when you are using pending while syncing 0x0 not sure what block its using
 * Need to test block number and block hash return value for when sync is almost finished.
+
 ## eth_getBlockTransactionCountByHash
 * [EGTCH-1] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH-2] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
-* [EGTCH-3] eth_getBlockTransactionCountByHash **MUST** return null when the client has not finished syncing to the network.
+* [EGTCH-3] eth_getBlockTransactionCountByHash **MUST** return null when the client is currently syncing to the network.
 ## eth_getBlockTransactionCountByNumber
-* [EGTCN-1] eth_getBlockTransactionCountByNumber **MUST** return the number of transactions within the block with the given `block number`.
+* [EGTCN-1] eth_getBlockTransactionCountByNumber **MUST** return the number of transactions within the block with the given `block number` or `block tag`.
 * [EGTCN-2] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` does not correspond to a block.
-* [EGTCN-3] eth_getBlockTransactionCountByNumber **MUST** return null when the client has not finished syncing to the network.
+* [EGTCN-3] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` is ahead of the synced blocks when the client is currently syncing to the network.
+* [EGTCN-4] eth_getBlockTransactionCount **MUST** return 0x0 when using `block tag` when the client is currently syncing to the network.
 ## eth_getUncleCountByHash
 * [EGUCH-1] eth_getUncleCountByHash **MUST** return number of uncle blocks that the block corresponding to the given `block hash` has.
 * [EGUCH-2] eth_getUncleCountByHash **MUST** return null when the `block hash` does not correspond to a mined block.
-* [EGUCH-3] eth_getUncleCountByHash **MUST** return null when the client does not have the state information about the block because it is not synced to the network or currently syncing.
+* [EGUCH-3] eth_getUncleCountByHash **MUST** return the number of uncle blocks that the block corresponding to the given `block hash` has when available while syncing to the network, otherwise it **MUST** return null.
 ## eth_getUncleCountByNumber
 * [EGUCN-1] eth_getUncleCountByNumber **MUST** return number of uncle blocks that the block corresponding to the given `block number` or `block tag` has.
 * [EGUCN-2] eth_getUncleCountByNumber **MUST** return null when the `block number` does not correspond to a mined block.
-* [EGUCN-3] eth_getUncleCountByNumber **MUST** return null when the client does not have the state information about the block because it is not synced to the network or currently syncing.
-* [EGUCN-4] eth_getUncleCountByNumber **MUST** used the latest known block when using the "latest" tag while syncing. 
-## eth_getUncleByBlockHashAndIndex 
-* [EGUHI-1] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information at the `Uncle index` of the block corresponding to the given `block hash`.
+* [EGUCN-3] eth_getUncleCountByNumber **MUST** return the number of uncle blocks that the block corresponding to the given `block number` or `block tag` has when available while syncing to the network, otherwise it **MUST** return null.
+* [EGUCN-4] eth_getUncleCountByNumber **MUST** used the latest known block when using the "latest" tag while syncing.
+* [EGUCN-5] eth_getUncleCountByNumber **MUST** return 0x0 when using `block tag` "pending".
+## eth_getUncleByBlockHashAndIndex
+* [EGUHI-1] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information at the `uncle index` of the block corresponding to the given `block hash`.
 * [EGUHI-2] eth_getUncleCountByHashAndIndex **MUST** return null when the `block hash` does not correspond to a mined block.
 * [EGUHI-3] eth_getUncleCountByHashAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
-* [EGUHI-4] eth_getUncleCountByHashAndIndex **MUST** return null when the requested information is not available due to the client is syncing to the network.
+* [EGUHI-4] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information requested when available while syncing to the network, otherwise it **MUST** return null.
 ## eth_getUncleByBlockNumberAndIndex 
 * [EGUNI-1] eth_getUncleByBlockNumberAndIndex **MUST** return the uncle block information at the `Uncle index` of the block corresponding to the given `block number` or `block tag`.
-* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the `block number` does not correspond to a mined block. [I tried 3 different public APIs all running geth and got 3 different results, one error -3200 "Geth/v1.10.6-stable-576681f2/linux-amd64/go1.15.2" LinkPool, one null infura, and one with literally no response obj "Geth/v1.10.12-stable-6c4dc6c3/linux-amd64/go1.17.2" https://api.mycryptoapi.com/eth]
-* [EGUNI-3] eth_getUncleByBlockNumberAndIndex **MUST** return null when the client does not have requested information due to the client syncing to the network. 
+* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the `block number` does not correspond to a mined block.
+* [EGUNI-3] eth_getUncleByBlockNumberAndIndex **MUST** return uncle block information requested when available while syncing to the network, otherwise it **MUST** return null. 
 * [EGUNI-4] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
 * [EGUNI-5] eth_getUncleByBlockNumberAndIndex **MUST** used the latest known block when using the "latest" tag while syncing.
+* [EGUNI-6] eth_getUncleByBlockNumberAndIndex **MUST** return null when `block tag` "pending" is used.
 ## eth_getCode
 * [EGC] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
 *  [EGC] eth_getCode **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data.
@@ -263,8 +272,8 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
   * An array containing arrays with the requested `rewardPercentiles` for each block.
   * The oldest block used for the the request.
 * [EFH] eth_feeHistory **MUST** ues the information of available blocks when the range requested by the `blockCount` parameter is not available.
-* returns 1 more result than requested assuming this is a looping error
-* also allows repeats in the reward percentile array
+* base fee per gas [] returns an extra number on purpose, its the block after last block. used for when using "latest" or "pending" so you can know the base fee for future blocks.??
+* see if geth supports pending blocks
 ## eth_sign
 * [ESN-1] eth_sign **MUST** return the ethereum specific signature detailed in [EIP-191](https://eips.ethereum.org/EIPS/eip-191) for the given unlocked `address` and `message`.
 * [ESN-2] eth_sign **MUST** error with code -32000 when when the account corresponding to the `address` is not unlocked.
@@ -305,25 +314,26 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST NOT** cost any extra when `value` is added during contract deployment.
 * [EST] eth_sendTransaction **MUST** allow user to use `data` or `input` for contract deployment or contract interactions.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to compleat the transaction.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to complete the transaction.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
 * [EST] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and **MAY** never be executed.
-* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and **MAY** never be executed.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and MAY** never be executed. fix may
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
 * [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and **MAY** never be executed.
 * [EST] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is used.
-* [EST] eth_sendTransaction **MUST** use type 2 transaction anytime `maxFeePerGas` or `maxPriorityFeePerGas` is used.
+* [EST] eth_sendTransaction **MUST** use type 2 transaction anytime `maxFeePerGas` or `maxPriorityFeePerGas` is used. fix these one is wrong
 * [EST] eth_sendTransaction **MUST** use type 2 transaction when `accessList` is used without `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas`.
 * [EST] eth_sendTransaction **MUST** use type 2 transaction when `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
-* [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract.
-* [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract
+* [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract. not needed
+* [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract not in scope of JSON-RPC
 * [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`, and **MUST** use 0x0 for `value`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
 * [EST] eth_sendTransaction **MUST NOT** replace pending transactions when sending transactions without specifying the `nonce`.
-  
+    Describe it better auto increment
+
 * [EST] eth_sendTransaction **MUST** use ___ for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
 * [EST] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
   * Need to test these more, just tried on geth --dev and got different results.
@@ -333,7 +343,8 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
   * Removes second tx from pool without having to pay extra to cancel it.
 
 I might have got it to use incorrect nonce, but not sure how. same behavior gave different response. I think I tried sending tx with 2 GP    
-* not sure how I should go about testing accessList
+* not sure how I should go about testing accessList Marcin from Nethermind
+  * ^ see what I mean by this
 ## eth_sendRawTransaction
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
@@ -347,40 +358,46 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 * Got execution reverted with -32000 when estimating contract creation?
   *  codes like 0x25, or using codes that require other values, cause stack underflow.
   *  need to test this more to figure out scope of what is happening.
+  *  just note EVM error case
 ## eth_getBlockByHash
 * [EGBH-1] eth_getBlockByHash **MUST** return the block information for the block with the given `block hash`.
 * [EGBH-2] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a block.
 * [EGBH-3] eth_getBlockByHash **MUST** error with code -32000 when the block information is not available due to state pruning.
-* [EGBH-4] eth_getBlockByHash **MUST** return null when the block associated with the given `block hash` is not available due to the client is syncing to the network.
+* [EGBH-4] eth_getBlockByHash **MUST** return block information requested when available while syncing to the network, otherwise it **MUST** return null.
 * [EGBH-5] eth_getBlockByHash **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
 ---
 ## eth_getBlockByNumber
 * [EGBN-1] eth_getBlockByNumber **MUST** return the block information for the block with the given `block number` or `block tag`.
 * [EGBN-2] eth_getBlockByNumber **MUST** return null when the given `block number` does not correspond to a block. 
 * [EGBN-3] eth_getBlockByNumber **MUST** error with code -32000 when the block information is not available due to state pruning.
-* [EGBN-4] eth_getBlockByHash **MUST** return null when the block associated with the given `block hash` is not available due to the client is syncing to the network.
-* [EGBN-5] eth_getBlockByHash **MUST** return the block information for the latest synced block when using `block tag` "latest" while the client is syncing to the network.
+* [EGBN-4] eth_getBlockByNumber **MUST** return block information requested when available while syncing to the network, otherwise it **MUST** return null.
+* [EGBN-5] eth_getBlockByNumber **MUST** return the block information for the latest synced block when using `block tag` "latest" while the client is syncing to the network.
 * [EGBN-6] eth_getBlockByNumber **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+  
+* Found that using pending while syncing behaves weird.
+  * Sent batch request one with latest and one with pending. pending was 44 blocks ahead or latest, but as I kept calling it pending stayed the same while latest kept getting bigger. 
 ---
 ## eth_getTransactionByHash
 * [EGTH-1] eth_getTransactionByHash **MUST** return the transaction object for the transaction with the given `transaction hash`.
 * [EGTH-2] eth_getTransactionByHash **MUST** return null when the given `transaction hash` does not correspond to a transaction.
-* [EGTH-3] eth_getTransactionByHash **MUST** return null when the requested transaction is not available due to the client is syncing to the network.
+* [EGTH-3] eth_getTransactionByHash **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
 * [EGTH-4] eth_getTransactionByHash **MUST** error with code -32000 when the transaction information is not available due to state pruning.
 ## eth_getTransactionByBlockHashAndIndex
 * [EGTHI-1] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object with the given `block hash` and `transaction index` within the block.
 * [EGTHI-2] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `block hash` does not does correspond to a block.
-* [EGTHI-3] eth_getTransactionByBlockHashAndIndex **MUST** return null when the client does not have the requested information while syncing to the network.
-* [EGTHI-4] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
+* [EGTHI-3] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
+* [EGTHI-4] eth_getTransactionByBlockHashAndIndex **MUST** return null when there is no transaction at the given `transaction index` in the requested block.
 * [EGTHI-5] eth_getTransactionByBlockHashAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 
 ## eth_getTransactionByBlockNumberAndIndex
 * [EGTNI-1] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object with the given `block number` or `block tag` and `transaction index` within the block.
 * [EGTNI-2] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `block number` does not correspond to a block.
-* [EGTNI-3] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the requested information is not available due to the client is syncing to the network.
-* [ESTNI-4] eth_getTransactionByBlockNumberAndIndex **MUST** use the latest synced block when using `block tag` "latest" while syncing to the network.
-* [EGTNI-5] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
-* [EGTNI-6] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
+* [EGTNI-3] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
+* [EGTNI-4] eth_getTransactionByBlockNumberAndIndex **MUST** use the latest synced block when using `block tag` "latest" while syncing to the network.
+* [EGTNI-5] eth_getTransactionByBlockNumberAndIndex **MUST** return null when using `block tag` "pending" while syncing to the network.
+* [EGTNI-6] eth_getTransactionByBlockNumberAndIndex **MUST** return null when using `block tag` "earliest" while syncing to the network.
+* [EGTNI-7] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
+* [EGTNI-8] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 ## eth_getTransactionReceipt
 * [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt with the given `transaction hash`.
 * [EGTR-2] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` does not correspond to a transaction.
