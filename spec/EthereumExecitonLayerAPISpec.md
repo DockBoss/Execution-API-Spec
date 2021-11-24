@@ -303,8 +303,6 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
   * * MFPG and MPFPG on legacy: converts to type 2
 ## eth_sendTransaction
 * [EST] eth_sendTransaction **MUST** return the transaction hash of the `transaction` when the transaction is successfully sent to the network.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
 * [EST] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
 * [EST] eth_sendTransaction **MUST** allow user to enter extra key value pairs within the `transaction` object that are not used by the selected transaction.
 * [EST] eth_sendTransaction **MUST NOT** add any extra key value pairs sent by the user to the signed transaction sent to the network.
@@ -313,15 +311,9 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST NOT** send `value` to created contract when used during contract deployment
 * [EST] eth_sendTransaction **MUST NOT** cost any extra when `value` is added during contract deployment.
 * [EST] eth_sendTransaction **MUST** allow user to use `data` or `input` for contract deployment or contract interactions.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to complete the transaction.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
-* [EST] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and **MAY** never be executed.
-* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and MAY** never be executed. fix may
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
-* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and **MAY** never be executed.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and may never be executed.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and may never be executed.
+* [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and may never be executed.
 * [EST] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is used.
 * [EST] eth_sendTransaction **MUST** use type 2 transaction anytime `maxFeePerGas` or `maxPriorityFeePerGas` is used. fix these one is wrong
 * [EST] eth_sendTransaction **MUST** use type 2 transaction when `accessList` is used without `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas`.
@@ -329,10 +321,19 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract. not needed
 * [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract not in scope of JSON-RPC
 * [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`, and **MUST** use 0x0 for `value`.
+* [EST] eth_sendTransaction **MUST** use the `from` address's nonce when `nonce` is not specified.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` and `maxFeePerGas` or `maxPriorityFeePerGas` are specified.S
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to complete the transaction.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
+* * [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
-* [EST] eth_sendTransaction **MUST NOT** replace pending transactions when sending transactions without specifying the `nonce`.
-    Describe it better auto increment
+
 
 * [EST] eth_sendTransaction **MUST** use ___ for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
 * [EST] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
@@ -399,10 +400,10 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 * [EGTNI-7] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
 * [EGTNI-8] eth_getTransactionByBlockNumberAndIndex **MUST** error with code -32000 when the transaction or block information is not available due to state pruning.
 ## eth_getTransactionReceipt
-* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt with the given `transaction hash`.
+* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt for the transaction with the given `transaction hash`.
 * [EGTR-2] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` does not correspond to a transaction.
 * [EGTR-3] eth_getTransactionReceipt **MUST** return null when the transaction is still pending.
-* [EGTR-4] eth_getTransactionReceipt **MUST** return null when the requested information is not available due to the client is syncing to the network.
+* [EGTR-4] eth_getTransactionReceipt **MUST** return the transaction receipt requested when available while syncing to the network, otherwise it **MUST** return null.
 ## eth_newFilter
 * [ENF]
 ## eth_newBlockFilter
@@ -462,7 +463,8 @@ need to test this more
 * [ESH] eth_submitHashrate **MUST** return true when the client successfully submits a `hashrate` and an `id`.  Where is it submitted?
 * [ESH] eth_submitHashrate **MUST** return true when the client submits their hashrate while not mining.
 * [ESH] eth_submitHashrate **MUST** return true when the client submit their hashrate while syncing to the network.
-* [ESH] eth_submitHashrate **MUST** return use 0x0 when `hashrate` is null.
+* [ESH] eth_submitHashrate **MUST** use 0x0 when `hashrate` is null.
+* [ESH] eth_submitHashrate **MUST NOT** error when `id` is equal to the `id` or another mining client.
 * does not effect the result of eth_hashrate, is this because I am not mining? 
 * submitting hashrate while mining 
   * high
