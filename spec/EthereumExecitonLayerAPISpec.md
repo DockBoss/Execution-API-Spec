@@ -172,9 +172,8 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 
 # 3 System Features
 ## web3_clientVersion
-
-* [WC] web3_clientVersion **MUST** return a string containing information about the client version.
-* [WC] web3_clientVersion **SHOULD** return client version in the following format "ClientName/ClientVersion-StableOrUnstableRelease-8charsOfCommitHash/CurrentOpperatingSystem-CurrentArchitecture/LanguageNameAndVersion" [Nethermind uses version number for language and adds the release date to the end of client version], [Ganache uses name only]
+* [WC-1] web3_clientVersion **MUST** return a string containing information about the client version.
+* [WC-2] web3_clientVersion **SHOULD** return client version in the following format "ClientName/ClientVersion-StableOrUnstableRelease-8charsOfCommitHash/CurrentOpperatingSystem-CurrentArchitecture/LanguageNameAndVersion" [Nethermind uses version number for language and adds the release date to the end of client version], [Ganache uses name only]
 ## web3_sha3
 * [WS-1] web3_sha3 **MUST** return the Keccak256 hash of the given.
 * [WS-2] web3_sha3 **MUST** return the Keccak256 hash of null when given "0x"
@@ -198,7 +197,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ECB-1] eth_coinbase **MUST** return an Ethereum address owned by the client you are using to interact with the network that the reward for successfully mining a block is sent to.
 * [ECB-2] eth_coinbase **MUST** error with code -32000 when the client does not have an address for the block reward to be sent to.
 ## eth_mining
-* [EM-1] eth_mining **MUST** return true when the client is actively mining for block rewards, otherwise it **MUST** return false.
+* [EM-1] eth_mining **MUST** return true when the client has mining enabled, otherwise it **MUST** return false.
 ## eth_gasPrice
 * [EGP-1] eth_gasPrice **MUST** return the current price per unit of gas in wei
 ## eth_accounts
@@ -214,9 +213,6 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGS-2] eth_getStorageAt **MUST**  error with code -32000 when the client does not have the state of the `block number` or `block tag` requested.
 * [EGS-3] eth_getStorageAt **MUST** return 0x00...0 when using `block tag` is uesed while syncing to the network.
 * [EGS-4] eth_getStorageAt **MUST** error with code -32000 when using `block number` while syncing to the network.
-* ^ I would like to test what happens when you use `block number` while syncing, but during the late stages.
-  * I think it might actually return the correct results, but I can't test this ATM because I don't have enough storage space
-  * I can try with sepolia, but it's down ATM and it syncs so fast it might be hard to test, but I will when back up
 ## eth_getTransactionCount
 * [EGTC-1] eth_getTransactionCount **MUST** return the nonce of the account with the given `address` has made at the block requested by the `defaultBlockParameter`. 
 * [EGTC-2] eth_getTransactionCount **MUST** error with code -32000 when using a block hash for the `defaultBlockParameter` that does not correspond to a block. 
@@ -224,11 +220,8 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGTC-4] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash for the `defaultBlockParameter` when syncing to the network.
 * [EGTC-5] eth_getTransactionCount **MUST** error with code -32000 when the client cannot pull or recreate the state required when using a block number or block hash for the `defaultBlockParameter` as a result of the chosen sync type when synced to the network. 
 * [EGTC-6] eth_getTransactionCount **MUST** use the latest synced block when using block tag "latest" for the `defaultBlockParameter` when syncing to the network.
-* [EGTC-7] eth_getTransactionCount **MUST** must return the actual number of transactions made by the `address` while syncing to the network when available, otherwise it **MUST** return 0x0.
-
-* What happens when you are using pending while syncing 0x0 not sure what block its using
-* Need to test block number and block hash return value for when sync is almost finished.
-
+* [EGTC-7] eth_getTransactionCount **MUST** return 0x0 when using block tag "pending" while syncing to the network.
+* [EGTC-8] eth_getTransactionCount **MUST** must return the actual number of transactions made by the `address` while syncing to the network when available, otherwise it **MUST** return 0x0.
 ## eth_getBlockTransactionCountByHash
 * [EGTCH-1] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH-2] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
@@ -261,19 +254,20 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGUNI-5] eth_getUncleByBlockNumberAndIndex **MUST** used the latest known block when using the "latest" tag while syncing.
 * [EGUNI-6] eth_getUncleByBlockNumberAndIndex **MUST** return null when `block tag` "pending" is used.
 ## eth_getCode
-* [EGC] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
-*  [EGC] eth_getCode **MUST**  error with code -32002 when the `block` requested is not within the 128 most recent blocks and is considered historical data.
-*  ^What about syncing?
+* [EGC-1] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `block`.
+* [EGC-2] eth_getCode **MUST**  error with code -32000 when the state information is not available for the requested `block`.
+* [EGC-3] eth_getCode **MUST** error with code -32000 when using block numbers while syncing to the network.
+* [EGC-4] eth_getCode **MUST** return 0x0 when using block tags when syncing to the network.
 ## eth_feeHistory
-* [EFH] eth_feeHistory **MUST** take the `blockCount`, `highestBlock`, and an array containing the desired `rewardPercentiles` as input parameters.
-* [EFH] eth_feeHistory **MUST** return following information for number of blocks specified by the `blockCount` parameter stopping at the `highestBlock` parameter.
+* [EFH-1] eth_feeHistory **MUST** take the `blockCount`, `highestBlock`, and an array containing the desired `rewardPercentiles` as input parameters.
+* [EFH-2] eth_feeHistory **MUST** return following information for number of blocks specified by the `blockCount` parameter stopping at the `highestBlock` parameter.
   * An array containing the base fee per gas for each block.
   * An array containing the ratio of the gas used by each block.
   * An array containing arrays with the requested `rewardPercentiles` for each block.
   * The oldest block used for the the request.
-* [EFH] eth_feeHistory **MUST** ues the information of available blocks when the range requested by the `blockCount` parameter is not available.
-* base fee per gas [] returns an extra number on purpose, its the block after last block. used for when using "latest" or "pending" so you can know the base fee for future blocks.??
-* see if geth supports pending blocks
+* [EFH-3] eth_feeHistory **MUST** ues the information of available blocks when the range requested by the `blockCount` parameter is not available.
+* [EFH-4] eth_feeHistory **MUST** allow block tags to be used for `highestBlock`.
+* [EFH-5] eth_feeHistory **MUST** error with code -32000 when `highestBlock` is ahead of the chain.
 ## eth_sign
 * [ESN-1] eth_sign **MUST** return the ethereum specific signature detailed in [EIP-191](https://eips.ethereum.org/EIPS/eip-191) for the given unlocked `address` and `message`.
 * [ESN-2] eth_sign **MUST** error with code -32000 when when the account corresponding to the `address` is not unlocked.
@@ -405,25 +399,48 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 * [EGTR-3] eth_getTransactionReceipt **MUST** return null when the transaction is still pending.
 * [EGTR-4] eth_getTransactionReceipt **MUST** return the transaction receipt requested when available while syncing to the network, otherwise it **MUST** return null.
 ## eth_newFilter
-* [ENF]
+* [ENF-1] eth_newFilter **MUST** return the filter id of the filter created on the node with the given parameters.
+* [ENF-2] eth_newFilter **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
+* [ENF-3] eth_newFilter **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
+* [ENF-4] eth_newFilter **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest.
+* [ENF-5] eth_newFilter **MUST** error with code -32000 when `blockhash` is used with `fromBlock` and or `toBlock`.
+* [ENF-6] eth_newFilter **MUST** allow `address` to be a single address or an array of addresses.
+* [ENF-7] eth_newFilter **MUST** use null for `address` when it is not specified or when it is an empty array.
+* [ENF-8] eth_newFilter **MUST** allow `topics` array to contain more than 4 values.
+ 
 ## eth_newBlockFilter
-* [ENBF] eth_newBlockFilter **MUST** create a new filter on the node that tracks when new blocks are received.
-* [ENBF] eth_newBlockFilter **MUST** return the filter id 
+* [ENBF-1] eth_newBlockFilter **MUST** return the id of the newly created block filter on the node. 
 ## eth_newPendingTransactionFilter
-* [ENPTF] eth_newPendingTransactionFilter **MUST** create a new filter on the node that tracks when new pending transaction are received.
-* [ENPTF] eth_newPendingTransactionFilter **MUST** return the filter id.
+* [ENPTF-1] eth_newPendingTransactionFilter **MUST** return the id of the newly created pending transaction filter on the node.
 ## eth_uninstallFilter
-* [EUF] eth_uninstallFilter **MUST** uninstall the filter with the given `filter id`.
-* [EUF] eth_uninstallFilter **MUST** return true when a filter has been successfully uninstalled, otherwise it **MUST** return false.
+* [EUF-1] eth_uninstallFilter **MUST** return true when the given filter has been successfully uninstalled, otherwise it **MUST** return false.
 ## eth_getFilterChanges
-* [EGFC] eth_getFilterChanges **MUST** work with all filter types.
-* [EGFC] If the `filter id` corresponds to a newBlockFilter eth_getFilterChanges **MUST** return an array containing the block hashes for each new block received since the filter was called last or first created.
-* [EGFC] If the `filter id` corresponds to a newPendingTransactionFilter eth_getFilterChanges **MUST** return an array containing the transaction hashes for each pending transaction received since the filter was last called or first created.
+* [EGFC-1] eth_getFilterChanges **MUST** return an array containing the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a BlockFilter.
+* [EGFC-2] eth_getFilterChanges **MUST** return an array containing the transaction hashes or each pending transaction received since the filter was last called or first created, when the `filter id` corresponds to a PendingTransactionFilter.
+  
 * [EGFC] If the `filter id` corresponds to a newFilter eth_getFilterChanges **MUST** return an array containing the
+* [EGFC-4] eth_getFilterChanges **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
+*  * getFilterlogs will only return the logs from that block 
+  * but eth_getFilterChanges returns all events since last called that meet the topics
 ## eth_getFilterLogs
-* [EGFL]
+* [EGFL-1] eth_getFilterLogs **MUST** return the logs matching the filters parameters.
+* [EGFL-4] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
+* [EGFL-3] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` corresponds to an active block filter or pending transaction filter on the node.
+* [EGFL-4] eth_getFilterLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
 ## eth_getLogs
-* [EGL]
+* [EGL-1] eth_getLogs **MUST** return all of the logs that meet the filter requirements.
+* [EGL-2] eth_getLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
+* [EGL-3] eth_getLogs **MUST** error with code -32602 when using `blockhash` with `fromBlock` and or `toBlock` in the same request.
+* [EGL-4] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
+* [EGL-5] eth_getLogs **MUST** allow `fromBlock` to be higher than `toBlock`.
+    * only use case is where you set fromBlock ahead of block number and to to latest, idk why.
+* [EGL-6] eth_getLogs **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
+* [EGL-7] eth_getLogs **MUST** allow `address` to be a single address or an array of addresses.
+* [EGL-8] eth_getLogs **MUST** use null for `address` when it is not specified or when it is an empty array.
+* [EGL-9] eth_getLogs **MUST** allow `topics` array to contain more than 4 values.
+  * This will never return anything because you cannot have that many values when logging events
+
+SYncing?
 
 ## 4.2 eth_call
 
@@ -459,6 +476,8 @@ need to test this more
 ## eth_hashrate
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
+* Currently mining on a testnet and eth_hashrate returns 0
+* returns any valu
 ## eth_submitHashrate
 * [ESH] eth_submitHashrate **MUST** return true when the client successfully submits a `hashrate` and an `id`.  Where is it submitted?
 * [ESH] eth_submitHashrate **MUST** return true when the client submits their hashrate while not mining.
@@ -471,14 +490,13 @@ need to test this more
   * low
   * 0
   * null
-* Try ids other clients that are mining are using.
-  * I assume this errors
+
 
 ## eth_getWork
-* [EGW] eth_getWork **MUST** error with code -32000 when mining is not enabled.
-* 
+* [EGW-1] eth_getWork **MUST** error with code -32000 when mining is not enabled.
+* [EGW-2] eth_getWork **MUST** return an array containing the block header POW-hash, the seed hash for the DAG, the target condition, and the block number for the block being mined.
 ## eth_submitWork
-* [ESW]
+* [ESW-1] eth_submitWork **MUST** return true when submitting the correct parameters to claim the block reward, otherwise false.
 # Errors
 Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32000 to -32099 are for Execution layer API errors
 This table has been taken from the initial version of the JSON-RPC API spec that was never finalized. 
@@ -495,7 +513,7 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 |-32002|Resource unavailable|Requested resource not available|non-standard|
 |-32003|Transaction rejected|Transaction creation failed|non-standard|
 |-32004|Method not supported|Method is not implemented|non-standard| [looks like -32601 catches these errors]
-|-32005|Limit exceeded|Request exceeds defined limit|non-standard|
+|-32005|Limit exceeded|Request exceeds defined limit|non-standard| Got this one once!!
 |-32006|JSON-RPC version not supported|Version of JSON-RPC protocol is not supported|non-standard|
 
 [table source](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md)
