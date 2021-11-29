@@ -1,7 +1,7 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.6.4 
-## Working Draft: Updated November 22th 
+## Technical Specification V0.9.5 
+## Working Draft: Updated November 28th 
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
@@ -173,7 +173,10 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 # 3 System Features
 ## web3_clientVersion
 * [WC-1] web3_clientVersion **MUST** return a string containing information about the client version.
-* [WC-2] web3_clientVersion **SHOULD** return client version in the following format "ClientName/ClientVersion-StableOrUnstableRelease-8charsOfCommitHash/CurrentOpperatingSystem-CurrentArchitecture/LanguageNameAndVersion" [Nethermind uses version number for language and adds the release date to the end of client version], [Ganache uses name only]
+* [WC-2] web3_clientVersion **MUST** start with the name of the client.
+* [WC-3] web3_clientVersion **MUST** return the client version after the name.
+* [WC-4] web3_clientVersion **MUST** return the operating system and architecture the client is running on.
+* [WC-5] web3_clientVersion **MUST** return the name of the language being used.
 ## web3_sha3
 * [WS-1] web3_sha3 **MUST** return the Keccak256 hash of the given.
 * [WS-2] web3_sha3 **MUST** return the Keccak256 hash of null when given "0x"
@@ -284,17 +287,25 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT-9] eth_signTransaction **MUST** error with code -32000 when the `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
 * [ESNT-10] eth_signTransaction **MUST** error with code -32000 when `gasPrice` is used with `maxFeePerGas` and/or `maxPriorityFeePerGas`.
 * [ESNT-11] eth_signTransaction **MUST** use 0x0 for `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` when the parameter is null. 
-* [ESNT-12] eth_signTransaction **MUST** use null for `gasPrice` when using an [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) transaction. 
+* [ESNT-12] eth_signTransaction **MUST** use null for `gasPrice` when using a type 2 transaction. 
 * [ESNT-13] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
 * [ESNT-14] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
 * [ESNT-15] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
+* [ESNT] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
+* [ESNT] eth_sendTransaction **MUST** allow user to enter extra key value pairs within the `transaction` object that are not used by the selected transaction.
+* [ESNT] eth_sendTransaction **MUST NOT** add any extra key value pairs sent by the user to the signed transaction sent to the network.
+* [ESNT] eth_sendTransaction **MUST** allow user to use duplicate parameters in the `transaction` object and **MUST** use the last of the duplicate parameters.
+* [ESNT] eth_sendTransaction **MUST** allow user to use `data` or `input` for contract deployment or contract interactions.
+* [ESNT] eth_sendTransaction **MUST** * [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
+* [ESNT] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
+* [ESNT] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
+* [ESNT] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
+* [ESNT] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
+
 * * not sure how I should go about testing accessList
-  * allows any fake key value pair to be added into the transaction, does not get turned int the signed tx though
-* allows use of data or input as params
+ 
 * error -32000 when `data` and `input` are both used and do not match
-* allows `data` and `input` to be used if equal
-  * gasprice on type 2 converts to legacy tx
-  * * MFPG and MPFPG on legacy: converts to type 2
+
 ## eth_sendTransaction
 * [EST] eth_sendTransaction **MUST** return the transaction hash of the `transaction` when the transaction is successfully sent to the network.
 * [EST] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
@@ -308,21 +319,17 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and may never be executed.
 * [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and may never be executed.
 * [EST] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and may never be executed.
-* [EST] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is used.
-* [EST] eth_sendTransaction **MUST** use type 2 transaction anytime `maxFeePerGas` or `maxPriorityFeePerGas` is used. fix these one is wrong
+* [EST] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is used without `maxFeePerGas` and `maxPriorityFeePerGas`, otherwise type 2 transaction is used.
 * [EST] eth_sendTransaction **MUST** use type 2 transaction when `accessList` is used without `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas`.
-* [EST] eth_sendTransaction **MUST** use type 2 transaction when `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` are not specified.
-* [EST] eth_sendTransaction **MUST** allow `data` to be used when `to` address is not a smart contract. not needed
-* [EST] eth_sendTransaction **MUST** calculate `data` into the gas estimate when `to` address is not a smart contract not in scope of JSON-RPC
-* [EST] eth_sendTransaction **MUST** allow a transaction that contains no `value`, and **MUST** use 0x0 for `value`.
+* [EST] eth_sendTransaction **MUST** use 0x0 for `value` when not specified in the transaction.
 * [EST] eth_sendTransaction **MUST** use the `from` address's nonce when `nonce` is not specified.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` and `maxFeePerGas` or `maxPriorityFeePerGas` are specified.S
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` and `maxFeePerGas` or `maxPriorityFeePerGas` are specified.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` is not enough to complete the transaction.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `gas` exceeds block gas limit.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `gasPrice` causes transaction to exceed the transaction fee cap.
 * * [EST] eth_sendTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
-* [EST] eth_sendTransaction **MUST** error with code -32000 when nonce is too low.
+* [EST] eth_sendTransaction **MUST** error with code -32000 when `nonce` is too low.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
 * [EST] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
@@ -333,27 +340,19 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
   * Need to test these more, just tried on geth --dev and got different results.
 * what happnes when MFPG and/or MPFPG is missing?: works for both, sets MPFPG to eth_gasPrice - 7? Sets MFPG to MPFPG + e?
-  
-* when submitting tx ahead of nonce then sending correct tx that also makes the second tx not possible because of insufficient funds
-  * Removes second tx from pool without having to pay extra to cancel it.
+ Marcin from Nethermind
 
-I might have got it to use incorrect nonce, but not sure how. same behavior gave different response. I think I tried sending tx with 2 GP    
-* not sure how I should go about testing accessList Marcin from Nethermind
-  * ^ see what I mean by this
 ## eth_sendRawTransaction
-* [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
-* [ESRT] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
-
+* [ESRT-1] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [ESRT-2] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
+* [ESRT-3] eth_sendRawTransaction **MUST** error with code -32000 when the `gas` is too low.
+* [ESRT-4] eth_sendRawTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
 * [EEG-2] eth_estimateGas **MUST** check the `from` account balance when `value` is used to see if the account has enough Ether to execute the given `transaction`.
 * [EEG-3] eth_estimateGas **MUST** error with code -32000 when the `from` address does not contain enough Ether to execute the given `transaction`.
 * [EEG-4] eth_estimateGas **MUST** use 0x0000000000000000000000000000000000000000 for `from` when it is not specified.
-* [EEG-5] eth_estimateGas **MUST** error with code -32000 when invalid opcodes are used while estimating contract deployment.
-* Got execution reverted with -32000 when estimating contract creation?
-  *  codes like 0x25, or using codes that require other values, cause stack underflow.
-  *  need to test this more to figure out scope of what is happening.
-  *  just note EVM error case
+* [EEG-5] eth_estimateGas **MUST** error with code -32000 when estimating a contract creation that causes an error within the EVM.
 ## eth_getBlockByHash
 * [EGBH-1] eth_getBlockByHash **MUST** return the block information for the block with the given `block hash`.
 * [EGBH-2] eth_getBlockByHash **MUST** return null when the given `block hash` does not correspond to a block.
@@ -367,10 +366,20 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 * [EGBN-3] eth_getBlockByNumber **MUST** error with code -32000 when the block information is not available due to state pruning.
 * [EGBN-4] eth_getBlockByNumber **MUST** return block information requested when available while syncing to the network, otherwise it **MUST** return null.
 * [EGBN-5] eth_getBlockByNumber **MUST** return the block information for the latest synced block when using `block tag` "latest" while the client is syncing to the network.
+* [EGBN-7] eth_getBlockByNumber **MUST** 
 * [EGBN-6] eth_getBlockByNumber **MUST** return block information with only transaction hashes when `hydrated transactions` is false. Otherwise, it should include full transaction objects.
+* When sending batch requests will ignore second request if it doesn't have an ID, but if first request has no ID it's a parse error.
   
 * Found that using pending while syncing behaves weird.
   * Sent batch request one with latest and one with pending. pending was 44 blocks ahead or latest, but as I kept calling it pending stayed the same while latest kept getting bigger. 
+  * 410436 pending without block hash or totalDifficulty
+  * 411868 latest with block hash and totalDifficulty
+  
+  * 482116 pending withoht hash miner nonce or ttd
+  * 482115 latest with everything
+  
+  * sometimes it will return latest +1 for pending and other times it will return a far behind the value latest returns without the hash ttd, miner, and nonce.
+
 ---
 ## eth_getTransactionByHash
 * [EGTH-1] eth_getTransactionByHash **MUST** return the transaction object for the transaction with the given `transaction hash`.
@@ -401,13 +410,15 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 ## eth_newFilter
 * [ENF-1] eth_newFilter **MUST** return the filter id of the filter created on the node with the given parameters.
 * [ENF-2] eth_newFilter **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
-* [ENF-3] eth_newFilter **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
-* [ENF-4] eth_newFilter **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest.
-* [ENF-5] eth_newFilter **MUST** error with code -32000 when `blockhash` is used with `fromBlock` and or `toBlock`.
-* [ENF-6] eth_newFilter **MUST** allow `address` to be a single address or an array of addresses.
-* [ENF-7] eth_newFilter **MUST** use null for `address` when it is not specified or when it is an empty array.
-* [ENF-8] eth_newFilter **MUST** allow `topics` array to contain more than 4 values.
- 
+* [ENF-3] eth_newFilter **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
+* [ENF-4] eth_newFilter **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
+* [ENF-5] eth_newFilter **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
+* [ENF-6] eth_newFilter **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest and `fromBlock` is ahead of the chain.
+* [ENF-7] eth_newFilter **MUST** allow `blockhash` to be used instead of `fromBlock` and `toBlock`.
+* [ENF-8] eth_newFilter **MUST** error with code -32000 when `blockhash` is used with `fromBlock` and or `toBlock` in the same request.
+* [ENF-9] eth_newFilter **MUST** allow `address` to be a single address or an array of addresses.
+* [ENF-10] eth_newFilter **MUST** use null for `address` when it is not specified or when it is an empty array.
+* [ENF-11] eth_newFilter **MUST** allow `topics` array to contain more than 4 values.
 ## eth_newBlockFilter
 * [ENBF-1] eth_newBlockFilter **MUST** return the id of the newly created block filter on the node. 
 ## eth_newPendingTransactionFilter
@@ -415,32 +426,34 @@ I might have got it to use incorrect nonce, but not sure how. same behavior gave
 ## eth_uninstallFilter
 * [EUF-1] eth_uninstallFilter **MUST** return true when the given filter has been successfully uninstalled, otherwise it **MUST** return false.
 ## eth_getFilterChanges
-* [EGFC-1] eth_getFilterChanges **MUST** return an array containing the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a BlockFilter.
-* [EGFC-2] eth_getFilterChanges **MUST** return an array containing the transaction hashes or each pending transaction received since the filter was last called or first created, when the `filter id` corresponds to a PendingTransactionFilter.
-  
-* [EGFC] If the `filter id` corresponds to a newFilter eth_getFilterChanges **MUST** return an array containing the
-* [EGFC-4] eth_getFilterChanges **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
-*  * getFilterlogs will only return the logs from that block 
-  * but eth_getFilterChanges returns all events since last called that meet the topics
+* [EGFC-1] eth_getFilterChanges **MUST** return the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a block filter.
+* [EGFC-2] eth_getFilterChanges **MUST** return each block synced to the client when syncing to the network.
+* [EGFC-3] eth_getFilterChanges **MUST** return the transaction hashes or each pending transaction received since the filter was last called or first created, when the `filter id` corresponds to a pending transaction filter.
+* [EGFC-4] eth_getFilterChanges **MUST** return an empty array when calling a pending transaction filter while syncing to the network.
+* [EGFC-5] eth-getFilterChanges **MUST** return all the logs that match the filters parameters since the filter was last called or first created, when the `filter id` corresponds to a regular filter.
+* [EGFC-6] eth_getFilterChanges **MUST** return all the logs that match the filters parameters within each synced block since the filter was last called or first created when syncing to the network.
+* [EGFC-7] eth_getFilterChanges **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
 ## eth_getFilterLogs
 * [EGFL-1] eth_getFilterLogs **MUST** return the logs matching the filters parameters.
-* [EGFL-4] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
-* [EGFL-3] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` corresponds to an active block filter or pending transaction filter on the node.
-* [EGFL-4] eth_getFilterLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
+* [EGFL-2] eth_getFilterLogs **MUST** return the logs that match the filters parameters for the latest synced block when syncing to the network.
+* [EGFL-3] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the node.
+* [EGFL-4] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` corresponds to an active block filter or pending transaction filter on the node.
+* [EGFL-5] eth_getFilterLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
 ## eth_getLogs
 * [EGL-1] eth_getLogs **MUST** return all of the logs that meet the filter requirements.
-* [EGL-2] eth_getLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
-* [EGL-3] eth_getLogs **MUST** error with code -32602 when using `blockhash` with `fromBlock` and or `toBlock` in the same request.
-* [EGL-4] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
-* [EGL-5] eth_getLogs **MUST** allow `fromBlock` to be higher than `toBlock`.
-    * only use case is where you set fromBlock ahead of block number and to to latest, idk why.
+* [EGL-2] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
+* [EGL-3] eth_getLogs **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
+* [EGL-4] eth_getLogs **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
+* [EGL-5] eth_getLogs **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest and `fromBlock` is ahead of the chain.
 * [EGL-6] eth_getLogs **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
-* [EGL-7] eth_getLogs **MUST** allow `address` to be a single address or an array of addresses.
-* [EGL-8] eth_getLogs **MUST** use null for `address` when it is not specified or when it is an empty array.
-* [EGL-9] eth_getLogs **MUST** allow `topics` array to contain more than 4 values.
-  * This will never return anything because you cannot have that many values when logging events
-
-SYncing?
+* [EGL-7] eth_getLogs **MUST** allow `blockhash` to be used in place of `toBlock` and `fromBlock`.
+* [EGL-8] eth_getLogs **MUST** error with code -32602 when using `blockhash` with `fromBlock` and or `toBlock` in the same request.
+* [EGL-9] eth_getLogs **MUST** allow `address` to be a single address or an array of addresses.
+* [EGL-10] eth_getLogs **MUST** use null for `address` when it is not specified or when it is an empty array.
+* [EGL-11] eth_getLogs **MUST** allow `topics` array to contain more than 4 values.
+  * Will never return anything.
+* [EGL-12] eth_getLogs **MUST** return logs that match the parameters from only the latest synced block when syncing to the network.
+* [EGL-13] eth_getLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
 
 ## 4.2 eth_call
 
@@ -476,22 +489,13 @@ need to test this more
 ## eth_hashrate
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
-* Currently mining on a testnet and eth_hashrate returns 0
-* returns any valu
+* only returns submitted value for a short time that returns 0x00...0
 ## eth_submitHashrate
-* [ESH] eth_submitHashrate **MUST** return true when the client successfully submits a `hashrate` and an `id`.  Where is it submitted?
-* [ESH] eth_submitHashrate **MUST** return true when the client submits their hashrate while not mining.
-* [ESH] eth_submitHashrate **MUST** return true when the client submit their hashrate while syncing to the network.
-* [ESH] eth_submitHashrate **MUST** use 0x0 when `hashrate` is null.
-* [ESH] eth_submitHashrate **MUST NOT** error when `id` is equal to the `id` or another mining client.
-* does not effect the result of eth_hashrate, is this because I am not mining? 
-* submitting hashrate while mining 
-  * high
-  * low
-  * 0
-  * null
-
-
+* [ESH-1] eth_submitHashrate **MUST** return true when the client successfully submits a `hashrate` and an `id`.
+* [ESH-2] eth_submitHashrate **MUST** return true when the client submits their hashrate while not mining.
+* [ESH-3] eth_submitHashrate **MUST** return true when the client submit their hashrate while syncing to the network.
+* [ESH-4] eth_submitHashrate **MUST** submit 0x0 when `hashrate` is null.
+* [ESH-5] eth_submitHashrate **MUST NOT** error when `id` is equal to the `id` or another mining client.
 ## eth_getWork
 * [EGW-1] eth_getWork **MUST** error with code -32000 when mining is not enabled.
 * [EGW-2] eth_getWork **MUST** return an array containing the block header POW-hash, the seed hash for the DAG, the target condition, and the block number for the block being mined.
@@ -518,31 +522,3 @@ I was told this is what **SHOULD** have ben implemented across each client. Will
 
 [table source](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1474.md)
 # Appendix
-
-
-## Questions
-
-* I think I should add parameters for endpoint and label which ones are required and which ones are not. Not regex schema
-  * I am assuming this is going to have to eventually become an EIP once it is finalized and wouldn't it look bad if we don't have all necessary information on this document?
-  * I am thinking something like a parameter table with type and optional or not
-  * maybe a return table with type
-  * still keeping the spec we have
-* I found more endpoints that are shared amongst all clients. What is the scope of this doc?
-  * Is it just eth, web3, and net endpoints?
-  * Or all shared endpoints like txpool, admin, personal, etc?
-* Its not plagiarism if I copied the description for the block tags word for word from the eth wiki?
-  * I assume not I just want to check.
-* Considering re-writing the mentions of state pruning to look more like eth_getTransactionCount. 
-* Would you like me to send a brief synopsis when I am done for the day?
-* when I get around to testing other clients, can I create an inconsistencies doc?
-  * I have a feeling that this doc is going to get messy.
-* How long would you like our call on Friday to be?
-  * 30?
-  * 45?
-  * 60?
-* estimateGas
-* sign
-* SignTx
-* SendRawTs
-* SendTx
-* TransactionCount
