@@ -288,7 +288,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT-10] eth_signTransaction **MUST** error with code -32000 when `gasPrice` is used with `maxFeePerGas` and/or `maxPriorityFeePerGas`.
 * [ESNT-11] eth_signTransaction **MUST** use 0x0 for `gasPrice` or `maxFeePerGas` and `maxPriorityFeePerGas` when the parameter is null. 
 * [ESNT-12] eth_signTransaction **MUST** use null for `gasPrice` when using a type 2 transaction. 
-* [ESNT-13] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`.
+* [ESNT-13] eth_signTransaction **MUST** error with code -32000 when the `maxPriorityFeePerGas` has a larger value than the `maxFeePerGas`
 * [ESNT-14] eth_signTransaction **MUST** error with code -32000 when the `nonce` is not specified.
 * [ESNT-15] eth_signTransaction **MUST** use 0x0 for `nonce` when parameter is null.
 * [ESNT-16] eth_signTransaction **MUST** allow `to` address to be the same as `from` address
@@ -302,8 +302,16 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESNT-24] eth_signTransaction **MUST** error with code -32000 when `maxFeePerGas` causes transaction to exceed the transaction fee cap.
 * [ESNT-25] eth_signTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * access list?
-* MFPG when not specified?
-* MPFPG when specified?
+
+## eth_sendRawTransaction
+* [ESRT-1] eth_sendRawTransaction **MUST** return the transaction hash after submitting an encoded signed transaction to the network.
+* [ESRT-2] eth_sendRawTransaction **MUST** allow users to send transaction where `gasPrice` or `maxFeePerGas` or `maxPriorityFeePerGas` are below network average and may never be executed.
+* [ESRT-3] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [ESRT-4] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
+* [ESRT-5] eth_sendRawTransaction **MUST** error with code -32000 when the `gas` is too low.
+* [ESRT-6] eth_sendRawTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
+* [ESRT-7] eth_sendRawTransaction **MUST** error with code -32000 when `transaction` is not properly encoded.
+* [ESRT-8] eth_sendRawTransaction **MUST** allow sending of contract creation transactions with code that causes the EVM to error. Resulting in a contract with no code. [this would error on eth_call and eth_estimateGas]
 ## eth_sendTransaction
 * [EST-1] eth_sendTransaction **MUST** return the transaction hash of the `transaction` when the transaction is successfully sent to the network.
 * [EST-2] eth_sendTransaction **MUST** allow `to` address to be the same as `from` address
@@ -315,9 +323,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST-8] eth_sendTransaction **MUST NOT** cost any extra when `value` is added during contract deployment.
 * [EST-9] eth_sendTransaction **MUST** allow user to use `data` or `input` for contract deployment or contract interactions.
 * [EST-18] eth_sendTransaction **MUST** error with code -32000 when `data` and `input` are both used and are not equal.
-* [EST-10] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` is below network average, and may never be executed.
-* [EST-11] eth_sendTransaction **MUST** allow users to send transaction where `maxFeePerGas` is below network average, and may never be executed.
-* [EST-12] eth_sendTransaction **MUST** allow users to send transaction where `maxPriorityFeePerGas` is below network average, and may never be executed.
+* [EST-10] eth_sendTransaction **MUST** allow users to send transaction where `gasPrice` or `maxFeePerGas` or `maxPriorityFeePerGas` are below network average and may never be executed.
 * [EST-13] eth_sendTransaction **MUST** use legacy transaction anytime `gasPrice` is specified without `maxFeePerGas` and `maxPriorityFeePerGas`, otherwise type 2 transaction is used.
 * [EST-15] eth_sendTransaction **MUST** use 0x0 for `value` when not specified in the transaction.
 * [EST-16] eth_sendTransaction **MUST** use the `from` address's nonce when `nonce` is not specified.
@@ -331,31 +337,20 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST-25] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
 * [EST-26] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * [EST-27] eth_sendTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
-* [EST-29] eth_sendTransaction **MUST** error with code -32000 when `data`/`input` that is trying to be deployed causes an EVM error.
+* [EST-29] eth_sendTransaction **MUST NOT** error when `data`/`input` that is trying to be deployed causes an EVM error.
 * [EST-30] eth_sendTransaction **MUST** estimate the amount of gas needed to complete the transaction and use that value for `gas` when not specified.
 * [EST-33] eth_sendTransaction **MUST** use 0x0 for `gas` when null.
 * [EST-32] eth_sendTransaction **MUST** use 0x0 for `gasPrice` when null.
-
-* [EST-31] eth_sendTransaction **MUST** use __ for ``
+* [EST-34] eth_sendTransaction **MUST NOT** check validity of `data`/`input` whenever `gas` is specified.
+* [EST-31] eth_sendTransaction **MUST** use __ for `maxFeePerGas`
 * [EST-28] eth_sendTransaction **MUST** use ___ for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
 * [EST-29] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + e for `maxFeePerGas` when only `maxPriorityFeePerGas` is specified.
   * Need to test these more, just tried on geth --dev and got different results.
 * what happnes when MFPG and/or MPFPG is missing?: works for both, sets MPFPG to eth_gasPrice - 7? Sets MFPG to MPFPG + e?
  Marcin from Nethermind
 
-
- * when Gp is not specified?
-   * uses the value returned by gasPrice.
  * what is used when both MFPG and MPFPG is not specified?
- * what happens when specfing nonce of a pending transaction without specifying GP
-   * Auto overrides gp or mfpg and mpfpg and replaces tx
- * what happens when using the nonce of a pending transaction with gp or mfpg and mpfpg are null
-   * error -32000 tx already known
-## eth_sendRawTransaction
-* [ESRT-1] eth_sendRawTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
-* [ESRT-2] eth_sendRawTransaction **MUST** error with code -32000 when nonce is too low.
-* [ESRT-3] eth_sendRawTransaction **MUST** error with code -32000 when the `gas` is too low.
-* [ESRT-4] eth_sendRawTransaction **MUST** error with code -32000 when the user did not raise the `maxFeePerGas` enough when trying to replace a pending transaction.
+
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
 * [EEG-2] eth_estimateGas **MUST** check the `from` account balance when `value` is used to see if the account has enough Ether to execute the given `transaction`.
@@ -466,32 +461,24 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 
 ## 4.2 eth_call
 
-* [EC-1] eth_call **MUST** create a transaction and execute it on node that received the transaction.
+* [EC-1] eth_call **MUST** return the result of the given transaction.
 * [EC-2] eth_call **MUST NOT** mine any transaction on the blockchain.
 * [EC] eth_call **MUST** use the block requested by the `defaultBlockParameter` when interacting with contracts.
 * [EC] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain.
-* [EC] eth_call **MUST** error with code -32000 when the requested state does not exist due to state pruning
-* [EC] eth_call **MUST** use a default address for when the `from` parameter is null or not specified [geth uses 0x0...0] [Nethermind uses 0xf...fe] 
+* [EC] eth_call **MUST** error with code -32000 when the requested state is not available.
+* [EC] eth_call **MUST** use 0x0000000000000000000000000000000000000000 as default `from` address when `from` is null or not specified. [Nethermind uses 0xf...fe] 
 * [EC] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
 * [EC] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction
 * [EC] eth_call **MUST** error with code -32000 account has insufficient funds 
-* [EC] eth_call **MUST NOT** calculate cost of deploying contracts when checking balance   
+* [EC] eth_call **MUST NOT** calculate cost of transactions when the `gas` and gas price are not specified.   
 * [EC] eth_call **MUST** allow `data` or `input` to be used when testing deployment or interacting with contracts.
 * [EC] eth_call **MUST** use `input` when both `input` and `data` are specified. 
 * [EC] eth_call **MUST** error with code -32000 when the `data`/`input` being deployed causes and error in the EVM.
-  
-work
-* [EC] eth_call **MUST** return the result of each call
-* [EC] eth_call **MUST** return an empty transaction receipt `0x0` when no transaction is executed 
-* [EC] **MUST NOT** allow `gas` to be 0 
-  * Why, what does that mean?
-* [EC] eth_call **MUST** work with all transaction types
+* [EC-] eth_call **MUST** error with code -32000 when the `gas` is too low to execute the call.
 * [EC] eth_call **MUST** work with `gasPrice` parameter
 * [EC] eth_call **MUST** work with  `maxFeePerGas` and `maxPriorityFeePerGas` parameters  
-* [EC] when `maxFeePerGas` and `maxPriorityFeePerGas` are used the byte code for GASPRICE **MUST** return ?????  
-* [EC] eth_call **MUST** calculate `maxFeePerGas` or `maxPriorityFeePerGas` when only one is specified.
+* [EC] eth_call **MUST** error with code -32000 when using `gasPrice` with `maxFeePerGas` or `maxPriorityFeePerGas`. 
 Syncing?
-need to test this more
 ## eth_hashrate
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
