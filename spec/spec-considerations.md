@@ -61,16 +61,7 @@ Here are some of my questions on the topic.
   * From what I have seen it is not useful for an external API.
     * But I did see an article about someone that used it for such purpose.
     * If it is as nice as it sounds and will have functionality for public APIs maybe we should consider it?
-## How do we keep Ethereum decentralized???
-I don't know too much about how wallets work and how the let you make transactions on the network. So they might be solving this problem, but I have no idea.
-I pretty much stated my case on this point above, but I will go into detail here.
 
-As Ethereum moves from POW to POS we are seeing a lot of improvements that are going to change Ethereum for the better, but I have noticed one downside that I haven't seen discussed yet (If it has please let me know as I would love to get informed and be a part of this process).
-This downside is that users will be loosing true decentralization in the Ethereum network once POS is implemented. Right now if I wanted to deploy a smart contract without going trough any third parties all I would have to do is download geth and have an ssd with enough space to sync to the data. Once I am connected to the network all I have to do is send one transaction and I am done. 
-Once POS is implemented myself and a majority of the people who use ethereum will lose out on this option. I would have to have an extra 100,000$ or so laying around that I could lock away for some amount of time. Download and setup a consensus client and an execution client just to do the same thing.
-
-If my understanding of how Ethereum works is correct and so are my statements above, then I see this as the #1 issue in Ethereum right now. I also know that a majority of users will never want to or need to interact directly with the network, but I think it is more about preserving **TRUE** decentralization.
-I think we need to figure out a way to allow any user that does not want to go through a third party a way to interact with the network. 
 
 # Endpoint Considerations and behavior
 ## Deprecated endpoints
@@ -100,15 +91,7 @@ Because at the end of the day aren't we building this for the people?
 Should we have the same behaviors for endpoints when they are not synced to the network.
 EX
 
-A user just had their parents send them 128,000$ from their "rainy day" fund so they can run their own validator node. This user has no background with ethereum or running nodes. Now as a disclaimer what this user does have is a background/addiction to finishing lines(and no this isn't the same addiction to finishing lines as you Devs have or maybe it is, what do I know) They start their the geth client for the first time with "geth --http" and starts making requests for information about the network before geth is finished syncing to the network. To prove to their parents that this is more that just a economic fad the user decided to showcase what ethereum can do. Their parents not understanding the future are not impressed and demand to see where their money is, so the user with his minimal knowledge of Ethereum places the call to the endpoint eth_getBalance with his account and receives "0x0"! His parents are furious they demand to know what he did with the money. The user distraught tries to reassure his parents that he got eth and it was in the account. The fighting does not stop for a whole day, and the already emotionally unfit the user kills himself out of rage and depression.
-All because the client was not synced to the network fully and returns with the same confidence as when it is synced to the network.
 
-
-This is why I think we should make sure that endpoints that require network data error when using them while not fully synced to the network.
-This was also a exercise in writing my first user story. Not to brag but I am a regular ol Shakespeare with my user story tragedies.
-## Filters 
-In theory you can delete filters other people generated and are currently using, right?
-how long is the timeout? I looked for the implementation and I thought it was a globally incremented int is that true?
 ## Error codes and messages
 * It looks like most clients use -32000 for every error that does not fit anyone of the predefined error messages.
   * I see that as an issue(but who the hell am I), there are 99 other error codes that can be used but are not. The messages are usually more helpful than the code
