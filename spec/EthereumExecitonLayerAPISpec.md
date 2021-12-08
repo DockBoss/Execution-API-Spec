@@ -396,11 +396,11 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGTR-2] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` is unavailable or does not correspond to a transaction.
 * [EGTR-3] eth_getTransactionReceipt **MUST** return null when the transaction has not been included in a block.
 ## eth_newFilter
-* [ENF-1] eth_newFilter **MUST** return the filter id of the filter created on the node with the given parameters.
+* [ENF-1] eth_newFilter **MUST** return the filter id of the filter created on the node with the given parameters. Explain more indeph. Filter goes through logs of blocks and returns ec.. detail what it the filter does and how it behaves for user.
 * [ENF-2] eth_newFilter **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
 * [ENF-3] eth_newFilter **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
 * [ENF-4] eth_newFilter **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
-* [ENF-5] eth_newFilter **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
+* [ENF-5] eth_newFilter **MUST** use "latest" for `fromBlock` and or `toBlock` when it is not specified.
 * [ENF-6] eth_newFilter **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest and `fromBlock` is ahead of the chain.
 * [ENF-7] eth_newFilter **MUST** allow `blockhash` to be used instead of `fromBlock` and `toBlock`.
 * [ENF-8] eth_newFilter **MUST** error with code -32000 when `blockhash` is used with `fromBlock` and or `toBlock` in the same request.
@@ -495,12 +495,12 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_maxPriorityFeePerGas
 * [MPFPG-1] eth_maxPriorityFeePerGas **MUST** return the suggested maxPriorityFeePerGas for a transaction to be included into a block.
 ## eth_getProof
-* [GP-1] eth_getProof **MUST** return the proof for the given `account` at the given `defaultBlockParameter`.
+* [GP-1] eth_getProof **MUST** return the proof for the given `account` at the given `defaultBlockParameter`. Explain IN detail use EIP WIP
 * [GP-2] eth_getProof **MUST** error with code -32000 when the requested block is unavailable.
 ## eth_createAccessList
 * [CAL-1] eth_createAccessList **MUST** return the access list and estimated gas cost when using the access list for the given `transaction`.
-* [CAL-2] eth_createAccessList **MUST** work with or without the `defaultBlockParameter`.
-* [CAL-3] eth_createAccessList **MUST** use estimate the `gas` when not specified.
+* [CAL-2] eth_createAccessList **MUST** work with or without the `defaultBlockParameter`. uses latest when not given.
+* [CAL-3] eth_createAccessList **MUST** use the estimated gas when the `gas` is not specified.
 * [CAL-4] eth_createAccessList **MUST** error with code -32000 when `gas` is too low.
 * [CAL-5] eth_createAccessList **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 ## eth_getHeaderByNumber
@@ -511,11 +511,11 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [GHH-2] eth_getHeaderByNumber **MUST** return null when the requested block in unavailable.
 ## eth_pendingTransactions
 * [PT-1] eth_pendingTransactions **MUST** return the transactions sent by accounts that are owned by the client that are currently in the transaction pool.
-* [PT-2] eth_pendingTransaction **MUST** return an empty array when syncing to the network.
+* [PT-2] eth_pendingTransactions **MUST** return an empty array when syncing to the network.
 ## eth_resend
 * [RS-1] eth_resend **MUST** error with code -32000 when given any transaction. [geth Issue](https://github.com/ethereum/go-ethereum/issues/23964)
 ## eth_fillTransaction
-* [FT-1] eth_fillTransaction **MUST** return the return the raw transaction and JSON transaction object for the `transaction arguments`.
+* [FT-1] eth_fillTransaction **MUST** return the return the raw transaction and JSON transaction object for the `transaction arguments`. FILL TRANSACTION
 * [FT-2] eth_filterTransaction **MUST NOT** sign the transaction.
 * [FT-3] eth_filterTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 * [FT-4] eth_filterTransaction **MUST** allow both `data` and `input` to be used for contract creation
