@@ -1,7 +1,6 @@
-# WIP 
 # Ethereum Execution Layer JSON-RPC API
-## Technical Specification V0.9.5 
-## Working Draft: Updated December 8th  
+## Technical Specification
+## Working Draft: Updated December 9th  
 ---
 ### **Author:**
 Jared Doro(jareddoro@gmail.com)
@@ -14,22 +13,6 @@ This document provides a detailed description of Ethereum's Execution Layer API.
 ### **Keywords:**
 The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **NOT RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [[RFC2119](http://www.ietf.org/rfc/rfc2119.txt)] when, and only when, they appear in all capitals, as shown here.
 
------
-# Table of Contents
-[1 Introduction]() \
-&nbsp;&nbsp;&nbsp;[1.1 Not Specified vs Null]() \
-[4 Endpoints]() \
-&nbsp;&nbsp;&nbsp;[4.1 Required Endpoints]() \
-&nbsp;&nbsp;&nbsp;[4.2 eth_call]() \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.1 Network Considerations]() \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.2 Interacting With Contracts]() \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.3 Testing Contracts]() \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.4 gas, gasPrice, maxFeePerGas, and maxPriorityFeePerGas]() \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4.2.5 Account Balance]() \
-
-[Appendix A]() 
-
------
 # 1 Introduction 
 
 The Ethereum execution layer API is one of the key components of Ethereum. It acts as an intermediary between the users of Ethereum and the execution layer where the transactions are received and executed. It provides a way for users to send transactions, request data, and execute smart contracts. 
@@ -67,7 +50,7 @@ An example where `to` is not specified and `value` is null
 	"id": 1
 }
 ```
-### 1.3. Default Block Parameter
+### 1.3.2 Default Block Parameter
 There are a few endpoints that need an extra `defaultBlockParameter` to specify the block that the data is being requested from.
 The `defaultBlockParameter` allows the following options to specify a block:
 * Block Number
@@ -77,12 +60,11 @@ The `defaultBlockParameter` allows the following options to specify a block:
   * latest: for the latest mined block
   * pending: for the pending state/transactions
 
-### 1.3. Unavailable information
- When the term unavailable is used it covers 
- not abviable due to syncing 
- not abviable due to not being in historical data structures
- other situation?
-## 1.3.2 Input Parameters
+### 1.3.3 Unavailable vs Does not exist
+Unavailable can be used to describe many situations where the client does not have the requested information. 
+An example of information being unavailable on the client is when the client is syncing to the network.
+When information does not exist it means that the requested information does not exist at all on the network.
+## 1.3.4 Input Parameters
  Input parameters for functions will be denoted by using the inline code feature of markdown and will look like `this`
 ## 1.4 References
 * [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
@@ -396,16 +378,16 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGFC-1] eth_getFilterChanges **MUST** return the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a block filter.
 * [EGFC-3] eth_getFilterChanges **MUST** return the transaction hashes or each pending transaction received since the filter was last called or first created, when the `filter id` corresponds to a pending transaction filter.
 * [EGFC-4] eth_getFilterChanges **MUST** return an empty array when calling a pending transaction filter while syncing to the network.
-* [EGFC-5] eth-getFilterChanges **MUST** return all the logs that match the filters parameters since the filter was last called or first created, when the `filter id` corresponds to a regular filter.
+* [EGFC-5] eth-getFilterChanges **MUST** return all the logs that match the filters topics since the filter was last called or first created, when the `filter id` corresponds to a regular filter.
 * [EGFC-7] eth_getFilterChanges **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the client.
 ## eth_getFilterLogs
-* [EGFL-1] eth_getFilterLogs **MUST** return the logs that match the filters parameters for the given `filter id`.
+* [EGFL-1] eth_getFilterLogs **MUST** return all the logs that match the filters topics for the given `filter id`'s specified range.
 * [EGFL-2] eth_getFilterLogs **MUST** only return the logs that match the filters parameters from the latest synced block when syncing to the network.
 * [EGFL-3] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the client.
 * [EGFL-4] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` corresponds to an active block filter or pending transaction filter on the client.
 * [EGFL-5] eth_getFilterLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
 ## eth_getLogs
-* [EGL-1] eth_getLogs **MUST** look through the specified range of block's transaction logs 
+* [EGL-1] eth_getLogs **MUST** look through all of the transaction logs of the client within the specified range.
 * [EGL-2] eth_getLogs **MUST** return all of the logs that meet the filter requirements.
 * [EGL-3] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
 * [EGL-4] eth_getLogs **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
@@ -466,26 +448,17 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_maxPriorityFeePerGas
 * [EMPFPG-1] eth_maxPriorityFeePerGas **MUST** return the clients price per unit of gas - 7.
 ## eth_getProof
- Parameters
-DATA, 20 Bytes - address of the account.
-ARRAY, 32 Bytes - array of storage-keys which should be proofed and included. See eth_getStorageAt
-QUANTITY|TAG - integer block number, or the string "latest" or "earliest", see the default block parameter
- Returns
-Object - A account object:
-
-balance: QUANTITY - the balance of the account. See eth_getBalance
-codeHash: DATA, 32 Bytes - hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
-nonce: QUANTITY, - nonce of the account. See eth_getTransactionCount
-storageHash: DATA, 32 Bytes - SHA3 of the StorageRoot. All storage will deliver a MerkleProof starting with this rootHash.
-accountProof: ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the stateRoot-Node, following the path of the SHA3 (address) as key.
-storageProof: ARRAY - Array of storage-entries as requested. Each entry is a object with these properties:
-
-key: QUANTITY - the requested storage key
-value: QUANTITY - the storage value
-proof: ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the storageHash-Node, following the path of the SHA3 (key) as path.
- Example
-* [EGPR-1] eth_getProof **MUST** return the proof for the given `account` at the given `defaultBlockParameter`. Explain IN detail use EIP WIP
-* [EGPR-2] eth_getProof **MUST** error with code -32000 when the requested block is unavailable.
+* [EGPR-1] eth_getProof **MUST** return information about the given `account` that allows the `account`'s information to be verified.
+* [EGPR-2] eth_getProof **MUST** return the following information about the given `account`.
+  * Address
+  * Account proof
+  * Balance
+  * Nonce
+  * Code hash
+  * Storage hash
+  * Storage proof
+* [EGPR-3] eth_getProof **MUST** return an array of RLP encoded MerkleTree-Nodes starting with the stateRoot following the given `account` to it's source for the account proof.
+* [EGPR-4] eth_getProof **MUST** error with code -32000 when the requested block is unavailable.
 ## eth_createAccessList
 * [ECAL-1] eth_createAccessList **MUST** return an [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) access list biased off the given `transaction` and estimated gas cost when using the access list in the `transaction`.
 * [ECAL-2] eth_createAccessList **MUST** use "latest" when the `defaultBlockParameter` is not specified.
@@ -526,7 +499,7 @@ This table has been taken from the initial version of the JSON-RPC API spec that
 |-32001|Resource not found|Requested resource not found|non-standard|
 |-32002|Resource unavailable|Requested resource not available|non-standard|
 |-32003|Transaction rejected|Transaction creation failed|non-standard|
-|-32004|Method not supported|Method is not implemented|non-standard| [looks like -32601 catches these errors]
+|-32004|Method not supported|Method is not implemented|non-standard|
 |-32005|Limit exceeded|Request exceeds defined limit|non-standard|
 |-32006|JSON-RPC version not supported|Version of JSON-RPC protocol is not supported|non-standard|
 
