@@ -1,10 +1,10 @@
 # WIP 
 # Ethereum Execution Layer JSON-RPC API
 ## Technical Specification V0.9.5 
-## Working Draft: Updated December 7th  
+## Working Draft: Updated December 8th  
 ---
 ### **Author:**
-Jared Doro(jareddoro@gmail.com) [Is my Website still down?](jareddoro.me)
+Jared Doro(jareddoro@gmail.com)
 
 ### **Editors:**
 
@@ -206,8 +206,7 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_mining
 * [EM-1] eth_mining **MUST** return true when the client has mining enabled, otherwise it **MUST** return false.
 ## eth_gasPrice
-* [EGP-1] eth_gasPrice **MUST** return the current price per unit of gas of the client in wei.
-  * ^ how is this gasPrice calculated 
+* [EGP-1] eth_gasPrice **MUST** return the current price per unit of gas in wei that the client is charging.
 ## eth_accounts
 * [EA-1] eth_accounts **MUST** return the public addresses for each Ethereum account that the client you are using manages.
 ## eth_blockNumber
@@ -224,12 +223,8 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGS-4] eth_getStorageAt **MUST** error with code -32000 when using `block number` and `block hash` while syncing to the network.
 ## eth_getTransactionCount
 * [EGTC-1] eth_getTransactionCount **MUST** return the nonce of the account is with the given `address` at the block requested by the `defaultBlockParameter`. 
-* [EGTC-2] eth_getTransactionCount **MUST** error with code -32000 when calling a block that does not exist.
-* [EGTC-3] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash for the `defaultBlockParameter` when syncing to the network.
-* [EGTC-4] eth_getTransactionCount **MUST** error with code -32000 when the client cannot pull or recreate the state required when using a block number or block hash for the `defaultBlockParameter` as a result of the chosen sync type when synced to the network.
-* [EGTC-5] eth_getTransactionCount **MUST** use the latest synced block when using block tag "latest" for the `defaultBlockParameter` when syncing to the network.
-* [EGTC-6] eth_getTransactionCount **MUST** return 0x0 when using block tag "pending" while syncing to the network.
-* [EGTC-7] eth_getTransactionCount **MUST** must return the nonce of the `address` while syncing to the network when available, otherwise it **MUST** return 0x0. 
+* [EGTC-2] eth_getTransactionCount **MUST** error with code -32000 when calling a block that does not exist or is unavailable.
+* [EGTC-3] eth_getTransactionCount **MUST** error with code -32000 when using a block number or block hash when syncing to the network.
 ## eth_getBlockTransactionCountByHash
 * [EGTCH-1] eth_getBlockTransactionCountByHash **MUST** return the number of transactions within the block with the given `block hash`.
 * [EGTCH-2] eth_getBlockTransactionCountByHash **MUST** return null when the `block hash` does not correspond to a block.
@@ -240,35 +235,33 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGTCN-3] eth_getBlockTransactionCount **MUST** return 0x0 when block tags are used while syncing to the network.
 ## eth_getUncleCountByHash
 * [EGUCH-1] eth_getUncleCountByHash **MUST** return number of uncle blocks that the block with the given `blockHash` has.
-* [EGUCH-2] eth_getUncleCountByHash **MUST** return null the block with the given `blockHash` does not exist or is not avaiable.
+* [EGUCH-2] eth_getUncleCountByHash **MUST** return null the block with the given `blockHash` does not exist or is not available.
 ## eth_getUncleCountByNumber
 * [EGUCN-1] eth_getUncleCountByNumber **MUST** return number of uncle blocks that the block with the given `block number` or `block tag` has.
 * [EGUCN-2] eth_getUncleCountByNumber **MUST** return null when the requested block does not exist or is not available. 
 * [EGUCN-3] eth_getUncleCountByNumber **MUST** return 0x0 when using `block tag` "pending".
 ## eth_getUncleByBlockHashAndIndex
-* [EGUHI-1] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information at the `uncle index` of the block corresponding to the given `block hash`.
-* [EGUHI-2] eth_getUncleCountByHashAndIndex **MUST** return null when the block is unaviable or does not exist at the given `blockHash`.
+* [EGUHI-1] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information at the `uncle index` of the block with the given `block hash`.
+* [EGUHI-2] eth_getUncleCountByHashAndIndex **MUST** return null when the block is unavailable or does not exist at the given `blockHash`.
 * [EGUHI-3] eth_getUncleCountByHashAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
 ## eth_getUncleByBlockNumberAndIndex 
 * [EGUNI-1] eth_getUncleByBlockNumberAndIndex **MUST** return the uncle block information at the `Uncle index` of the block with the given `block number` or `block tag`.
-* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block requested is unaviable or does not exist.
+* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block requested is unavailable or does not exist.
 * [EGUNI-3] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
-* [EGUNI-4] eth_getUncleByBlockNumberAndIndex **MUST** return null when `block tag` "pending" is used.
 ## eth_getCode
 * [EGC-1] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `defaultBlockParameter`.
 * [EGC-2] eth_getCode **MUST**  error with code -32000 when the state information is not available for the requested block.
 * [EGC-3] eth_getCode **MUST** error with code -32000 when using block numbers or block hashes while syncing to the network.
 * [EGC-4] eth_getCode **MUST** return 0x0 when using block tags when syncing to the network.
 ## eth_feeHistory
-* [EFH-1] eth_feeHistory **MUST** take the `blockCount`, `highestBlock`, and an array containing the desired `rewardPercentiles` as input parameters. remove input parameters described elsewhere
-* [EFH-2] eth_feeHistory **MUST** return following information for number of blocks specified by the `blockCount` parameter stopping at the `highestBlock` parameter.
-  * An array containing the base fee per gas for each block.
+* [EFH-1] eth_feeHistory **MUST** return the following information for number of blocks specified by the `blockCount` parameter stopping at the `highestBlock` parameter.
+  * An array containing the base fee per gas for each block plus then block after `highestBlock`.
   * An array containing the ratio of the gas used by each block.
   * An array containing arrays with the requested `rewardPercentiles` for each block.
   * The oldest block used for the the request.
-* [EFH-3] eth_feeHistory **MUST** use the blocks available when the requested `blockCount` range can't be retrieved.
-* [EFH-4] eth_feeHistory **MUST** allow block tags to be used for `highestBlock`.
-* [EFH-5] eth_feeHistory **MUST** error with code -32000 when `highestBlock` is ahead of the chain.
+* [EFH-2] eth_feeHistory **MUST** use the available range of blocks when the requested `blockCount` range can't be retrieved.
+* [EFH-3] eth_feeHistory **MUST** allow block tags to be used for `highestBlock`.
+* [EFH-4] eth_feeHistory **MUST** error with code -32000 when `highestBlock` is ahead of the chain.
 ## eth_sign
 * [ESN-1] eth_sign **MUST** return the ethereum specific signature detailed in [EIP-191](https://eips.ethereum.org/EIPS/eip-191) for the given unlocked `address` and `message`.
 * [ESN-2] eth_sign **MUST** error with code -32000 when when the account corresponding to the `address` is not unlocked.
@@ -340,20 +333,17 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST-26] eth_sendTransaction **MUST** error with code -32000 when `maxPriorityFeePerGas` is greater than `maxFeePerGas`.
 * [EST-27] eth_sendTransaction **MUST** error with code -32000 when the user did not increase the `maxFeePerGas` enough when trying to replace a pending transaction.
 * [EST-28] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
-* [EST-29] eth_sendTransaction **MUST** error with code -32000 when `data`/`input` that is trying to be deployed causes an EVM error.
-* [EST-30] eth_sendTransaction **MUST NOT** check if `data`/`input` causes an EVM error when `gas` is specified.
-* [EST-31] eth_sendTransaction **MUST** estimate the amount of gas needed to complete the transaction and use that value for `gas` when not specified.
-* [EST-32] eth_sendTransaction **MUST** use 0x0 for `gas` when null.
-* [EST-33] eth_sendTransaction **MUST** use 0x0 for `gasPrice` when null.
-* [EST-34] eth_sendTransaction **MUST** error with code -32000 if the transaction's `chain Id` is different than the network's Id.
-* [EST-35] eth_sendTransaction **MUST** use client price per unit gas + 7wei and client price per unit gas - 7wei for `maxFeePerGas` and `maxPriorityFeePerGas` when they are not specified.
-* [EST-36] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + 14wei for `maxFeePerGas` and `gasPrice` when only `maxPriorityFeePerGas` is specified.
-* [EST-37] eth_sendTransaction **MUST** use client price per unit gas - 7wei for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
-* [EST-38] eth_sendTransaction **MUST** error with code -32000 when trying to send a transaction while syncing to the network.
+* [EST-29] eth_sendTransaction **MUST** error with code -3200 when `data`/`input` provided caused an EVM error when the `gas` is not specified, otherwise it is ignored.
+* [EST-30] eth_sendTransaction **MUST** estimate the amount of gas needed to complete the transaction and use that value for `gas` when not specified.
+* [EST-31] eth_sendTransaction **MUST** use 0x0 for `gas` when null.
+* [EST-32] eth_sendTransaction **MUST** use 0x0 for `gasPrice` when null.
+* [EST-33] eth_sendTransaction **MUST** error with code -32000 if the transaction's `chain Id` is different than the network's Id.
+* [EST-34] eth_sendTransaction **MUST** use the estimated price per gas and max priority fee per gas for `maxFeePerGas` and `maxPriorityFeePerGas` when not specified.
+* [EST-35] eth_sendTransaction **MUST** error with code -32000 when trying to send a transaction while syncing to the network.
 ## eth_estimateGas
 * [EEG-1] eth_estimateGas **MUST** return the estimated amount of gas the given `transaction` will take to execute.
-* [EEG-2] eth_estimateGas **MUST** check the `from` account balance when `value` is used to see if the account has enough Ether to execute the given `transaction`.
-* [EEG-3] eth_estimateGas **MUST** error with code -32000 when the `from` address does not contain enough Ether to execute the given `transaction`.
+* [EEG-2] eth_estimateGas **MUST** error with code -32000 when the `from` address has insufficient Ether to execute the given `transaction`.
+* [EEG-3] eth_estimateGas **MUST NOT** check if the `from` account has sufficient funds when estimating contract deployment.
 * [EEG-4] eth_estimateGas **MUST** use 0x0000000000000000000000000000000000000000 for `from` when it is not specified.
 * [EEG-5] eth_estimateGas **MUST** error with code -32000 when estimating a contract creation that causes an error within the EVM.
 ## eth_getBlockByHash
@@ -368,28 +358,21 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ---
 ## eth_getTransactionByHash
 * [EGTH-1] eth_getTransactionByHash **MUST** return the transaction object for the transaction with the given `transaction hash`.
-* [EGTH-2] eth_getTransactionByHash **MUST** return null when the given `transaction hash` does not correspond to a transaction.
-* [EGTH-3] eth_getTransactionByHash **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
+* [EGTH-2] eth_getTransactionByHash **MUST** return null when the transaction with the given `transaction hash` does not exist or is not available. 
 ## eth_getTransactionByBlockHashAndIndex
 * [EGTHI-1] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object with the given `block hash` and `transaction index`.
-* [EGTHI-2] eth_getTransactionByBlockHashAndIndex **MUST** return null when the given `block hash` does not does correspond to a block.
-* [EGTHI-3] eth_getTransactionByBlockHashAndIndex **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
-* [EGTHI-4] eth_getTransactionByBlockHashAndIndex **MUST** return null when there is no transaction at the given `transaction index` in the requested block.
-
+* [EGTHI-2] eth_getTransactionByBlockHashAndIndex **MUST** return null block with the given `blockHash` does not exist or is not available.
+* [EGTHI-3] eth_getTransactionByBlockHashAndIndex **MUST** return null when there is no transaction at the given `transaction index` in the requested block.
 ## eth_getTransactionByBlockNumberAndIndex
 * [EGTNI-1] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object with the given `block number` or `block tag` and `transaction index`.
-* [EGTNI-2] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `block number` does not correspond to a block.
-* [EGTNI-3] eth_getTransactionByBlockNumberAndIndex **MUST** return the transaction object requested when available while syncing to the network, otherwise it **MUST** return null.
-* [EGTNI-4] eth_getTransactionByBlockNumberAndIndex **MUST** use the latest synced block when using `block tag` "latest" while syncing to the network.
-* [EGTNI-5] eth_getTransactionByBlockNumberAndIndex **MUST** return null when using `block tag` "pending" while syncing to the network.
-* [EGTNI-6] eth_getTransactionByBlockNumberAndIndex **MUST** return null when using `block tag` "earliest" while syncing to the network.
-* [EGTNI-7] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
+* [EGTNI-2] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the block with given `block number` does not exist or is not available.
+* [EGTNI-3] eth_getTransactionByBlockNumberAndIndex **MUST** return null when the given `transaction index` does not exist in the requested block.
 ## eth_getTransactionReceipt
-* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt for the transaction with the given `transaction hash` when available.
-* [EGTR-2] eth_getTransactionReceipt **MUST** return null when the given `transaction hash` is unavailable or does not correspond to a transaction.
+* [EGTR-1] eth_getTransactionReceipt **MUST** return the transaction receipt for the transaction with the given `transaction hash`.
+* [EGTR-2] eth_getTransactionReceipt **MUST** return null when the transaction with the given `transaction hash` does not exist or is not available.
 * [EGTR-3] eth_getTransactionReceipt **MUST** return null when the transaction has not been included in a block.
 ## eth_newFilter
-* [ENF-1] eth_newFilter **MUST** return the filter id of the filter created on the client with the given parameters. Explain more indeph. Filter goes through logs of blocks and returns ec.. detail what it the filter does and how it behaves for user.
+* [ENF-1] eth_newFilter **MUST** create a filter on the client that looks through each transaction log to see if it contains any the of the requested events.
 * [ENF-2] eth_newFilter **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
 * [ENF-3] eth_newFilter **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
 * [ENF-4] eth_newFilter **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
@@ -401,66 +384,60 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ENF-10] eth_newFilter **MUST** use null for `address` when it is not specified or when it is an empty array.
 * [ENF-11] eth_newFilter **MUST** allow `topics` array to contain more than 4 values.
 ## eth_newBlockFilter
-* [ENBF-1] eth_newBlockFilter **MUST** create a filter on the client that tracks when the client recieves new blocks.
+* [ENBF-1] eth_newBlockFilter **MUST** create a filter on the client that tracks when the client receives new blocks.
 * [ENBF-2] eth_newBlockFilter **MUST** return the id of the newly created block filter. 
 ## eth_newPendingTransactionFilter
-* [ENPTF-1] eth_newPendingTransactionFilter **MUST** create a filter on the client that tracks the hash of each pending transaction that the client recieves.
+* [ENPTF-1] eth_newPendingTransactionFilter **MUST** create a filter on the client that tracks the hash of each pending transaction that the client receives.
 * [ENPTF-2] eth_newPendingTransactionFilter **MUST** return the id of the newly created pending transaction filter.
 ## eth_uninstallFilter
 * [EUF-1] eth_uninstallFilter **MUST** delete the filter with the given `filter id` from the client.
 * [EUF-2] eth_uninstallFilter **MUST** return true when the given filter has been successfully uninstalled, otherwise it **MUST** return false.
 ## eth_getFilterChanges
 * [EGFC-1] eth_getFilterChanges **MUST** return the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a block filter.
-* [EGFC-2] eth_getFilterChanges **MUST** return each block synced to the client when syncing to the network.
 * [EGFC-3] eth_getFilterChanges **MUST** return the transaction hashes or each pending transaction received since the filter was last called or first created, when the `filter id` corresponds to a pending transaction filter.
 * [EGFC-4] eth_getFilterChanges **MUST** return an empty array when calling a pending transaction filter while syncing to the network.
 * [EGFC-5] eth-getFilterChanges **MUST** return all the logs that match the filters parameters since the filter was last called or first created, when the `filter id` corresponds to a regular filter.
-* [EGFC-6] eth_getFilterChanges **MUST** return all the logs that match the filters parameters within each synced block since the filter was last called or first created when syncing to the network.
 * [EGFC-7] eth_getFilterChanges **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the client.
 ## eth_getFilterLogs
-* [EGFL-1] eth_getFilterLogs **MUST** return the logs matching the filters parameters.
-* [EGFL-2] eth_getFilterLogs **MUST** return the logs that match the filters parameters for the latest synced block when syncing to the network.
+* [EGFL-1] eth_getFilterLogs **MUST** return the logs that match the filters parameters for the given `filter id`.
+* [EGFL-2] eth_getFilterLogs **MUST** only return the logs that match the filters parameters from the latest synced block when syncing to the network.
 * [EGFL-3] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` does not correspond to an active filter on the client.
 * [EGFL-4] eth_getFilterLogs **MUST** error with code -32000 when the given `filter id` corresponds to an active block filter or pending transaction filter on the client.
 * [EGFL-5] eth_getFilterLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
 ## eth_getLogs
-* [EGL-1] eth_getLogs **MUST** return all of the logs that meet the filter requirements.
-* [EGL-2] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
-* [EGL-3] eth_getLogs **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
-* [EGL-4] eth_getLogs **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
-* [EGL-5] eth_getLogs **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest and `fromBlock` is ahead of the chain.
-* [EGL-6] eth_getLogs **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
-* [EGL-7] eth_getLogs **MUST** allow `blockhash` to be used in place of `toBlock` and `fromBlock`.
-* [EGL-8] eth_getLogs **MUST** error with code -32602 when using `blockhash` with `fromBlock` and or `toBlock` in the same request.
-* [EGL-9] eth_getLogs **MUST** allow `address` to be a single address or an array of addresses.
+* [EGL-1] eth_getLogs **MUST** look through the specified range of block's transaction logs 
+* [EGL-2] eth_getLogs **MUST** return all of the logs that meet the filter requirements.
+* [EGL-3] eth_getLogs **MUST** allow `fromBlock` and `toBlock` to use both block numbers and block tags.
+* [EGL-4] eth_getLogs **MUST** allow `from` and `to` to be used instead of `fromBlock` and `toBlock`.
+* [EGL-5] eth_getLogs **MUST** give precedence to `toBlock` and `fromBlock` when used with `to` and `from`.
+* [EGL-6] eth_getLogs **MUST** error with code -32000 when the `fromBlock` is greater than the `toBlock`, except when the `toBlock` is set to latest and `fromBlock` is ahead of the current block.
+* [EGL-7] eth_getLogs **MUST** use latest for `fromBlock` and or `toBlock` when it is not specified.
+* [EGL-8] eth_getLogs **MUST** allow `blockhash` to be used in place of `toBlock` and `fromBlock`.
+* [EGL-9] eth_getLogs **MUST** error with code -32602 when using `blockhash` with `fromBlock` and or `toBlock` in the same request.
 * [EGL-10] eth_getLogs **MUST** use null for `address` when it is not specified or when it is an empty array.
 * [EGL-11] eth_getLogs **MUST** allow `topics` array to contain more than 4 values.
-  * Will never return anything.
 * [EGL-12] eth_getLogs **MUST** return logs that match the parameters from only the latest synced block when syncing to the network.
 * [EGL-13] eth_getLogs **MUST** error with code -32005 when trying to return more than 1000 logs.
-
 ## 4.2 eth_call
 * [EC-1] eth_call **MUST** return the result of the given transaction.
 * [EC-2] eth_call **MUST** accept all current transaction types. Legacy transactions and [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718) "typed" transactions.
 * [EC-3] eth_call **MUST NOT** mine any transaction on the blockchain.
 * [EC-4] eth_call **MUST** use the block requested by the `defaultBlockParameter` when interacting with contracts.
-* [EC-5] eth_call **MUST** error with code -32000 when the `defaultBlockParameter` is ahead of the chain.
-* [EC-6] eth_call **MUST** error with code -32000 when the requested state is not available.
-* [EC-8] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
-* [EC-9] eth_call **MUST NOT** error if the transaction exceeds the gas or fee cap.
-* [EC-7] eth_call **MUST** use 0x0000000000000000000000000000000000000000 as default `from` address when `from` is null or not specified. [Nethermind uses 0xf...fe] 
-* [EC-10] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction.
-* [EC-11] eth_call **MUST** error with code -32000 account has insufficient funds to execute the transaction call.
-* [EC-12] eth_call **MUST NOT** calculate cost of transactions when the `gas` and a price per unit of gas is not specified.   
-* [EC-13] eth_call **MUST** allow `data` or `input` to be used when testing deployment or interacting with contracts.
-* [EC-14] eth_call **MUST** use `input` when both `input` and `data` are specified. 
-* [EC-15] eth_call **MUST** error with code -32000 when the `data`/`input` being deployed causes and error in the EVM.
-* [EC-16] eth_call **MUST** error with code -32000 when the `gas` is too low to execute the call.
-* [EC-17] eth_call **MUST** error with code -32000 when using `gasPrice` with `maxFeePerGas` or `maxPriorityFeePerGas`. 
-* [EC-18] eth_call **MUST** use networks chain id for `chainId`
-
-* [EC-19] eth_call **MUST** error with code -32000 when using block number or block hash for `defaultBlockParameter` while syncing to the network.
-* [EC-20] eth_call **MUST** return 0x0 when using block tags for `defaultBlockParameter` while syncing to the network.
+* [EC-5] eth_call **MUST** error with code -32000 when the requested block does not exist or is not available.
+* [EC-6] eth_call **SHOULD NOT** be allow to be called from an address where CODEHASH != EMPTYCODEHASH. [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607)
+* [EC-7] eth_call **MUST NOT** error if the transaction exceeds the gas or fee cap.
+* [EC-8] eth_call **MUST** use 0x0000000000000000000000000000000000000000 as default `from` address when `from` is null or not specified. [Nethermind uses 0xf...fe] 
+* [EC-9] eth_call **MUST** check `from` account balance has sufficient funds to "pay" for the transaction.
+* [EC-10] eth_call **MUST** error with code -32000 account has insufficient funds to execute the transaction call.
+* [EC-11] eth_call **MUST NOT** calculate cost of transactions when the `gas` and a price per unit of gas is not specified.   
+* [EC-12] eth_call **MUST** allow `data` or `input` to be used when testing deployment or interacting with contracts.
+* [EC-13] eth_call **MUST** use `input` when both `input` and `data` are specified. 
+* [EC-14] eth_call **MUST** error with code -32000 when the `data`/`input` being deployed causes and error in the EVM.
+* [EC-15] eth_call **MUST** error with code -32000 when the `gas` is too low to execute the call.
+* [EC-16] eth_call **MUST** error with code -32000 when using `gasPrice` with `maxFeePerGas` or `maxPriorityFeePerGas`. 
+* [EC-17] eth_call **MUST** use networks chain id for `chainId`
+* [EC-18] eth_call **MUST** error with code -32000 when using block number or block hash for `defaultBlockParameter` while syncing to the network.
+* [EC-19] eth_call **MUST** return 0x0 when using block tags for `defaultBlockParameter` while syncing to the network.
 ## eth_hashrate
 * [EH-1] eth_hashrate **MUST** return the hashes per second that the client is using to mine blocks.
 * [EH-2] eth_hashrate **MUST** return 0x0 when the client does not have mining enabled.
@@ -472,52 +449,69 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ESH-5] eth_submitHashrate **MUST NOT** error when `id` is equal to the `id` or another mining client.
 ## eth_getWork
 * [EGW-1] eth_getWork **MUST** error with code -32000 when mining is not enabled.
-* [EGW-2] eth_getWork **MUST** return an array containing the block header POW-hash, the seed hash for the DAG, the target condition, and the block number for the block being mined.
+* [EGW-2] eth_getWork **MUST** return the block header POW-hash, the seed hash for the DAG, the target condition, and the block number for the block being mined.
 ## eth_submitWork
 * [ESW-1] eth_submitWork **MUST** return true when submitting the correct parameters to claim the block reward, otherwise false.
- 
 ## eth_getRawTransactionByHash
-* [EGRTH-1] eth_getRawTransactionByHash **MUST** return the encoded transaction associated with the given `transaction hash` when the data is available.
-* [EGRTH-2] eth_getRawTransactionByHash **MUST** return 0x0 when the transaction is unavailable.
-* [EGRTH-3] eth_getRawTransactionByHash **MUST** return 0x0 when no transaction is associated with the given `transaction hash`.
+* [EGRTH-1] eth_getRawTransactionByHash **MUST** return the encoded transaction associated with the given `transaction hash`.
+* [EGRTH-2] eth_getRawTransactionByHash **MUST** return 0x0 when the transaction with the given `transaction hash` does not exist or is not available.
 ## eth_getRawTransactionByBlockHashAndIndex
 * [EGRTHI-1] eth_getRawTransactionByBlockNumberAndIndex **MUST** return the encoded transaction associated with the given `block hash` and `transaction index`.
-* [EGRTHI-2] eth_getRawTransactionByBlockNumberAndIndex **MUST** return 0x0 the transaction is unavailable.
+* [EGRTHI-2] eth_getRawTransactionByBlockNumberAndIndex **MUST** return 0x0 the block with the given `blockHash` does not exist or is unavailable.
 * [EGRTHI-3] eth_getRawTransactionByBlockNumberAndIndex **MUST** return 0x0 when no transaction exists at the given `transaction index`.
 ## eth_getRawTransactionByBlockNumberAndIndex
 * [EGRTNI-1] eth_getRawTransactionByBlockNumberAndIndex **MUST** return the encoded transaction associated with the given `block number` or `block tag` and `transaction index`.
-* [EGRTNI-2] eth_getRawTransactionByBlockNumberAndIndex **MUST** return 0x0 when transaction is unavailable.
+* [EGRTNI-2] eth_getRawTransactionByBlockNumberAndIndex **MUST** return 0x0 when the requested block does not exist or is unavailable.
 * [EGRTNI-3] eth_getRawTransactionByBlockNUmberAndIndex **MUST** return 0x0 when no transaction exists at the given `transaction index`.
 ## eth_maxPriorityFeePerGas
-* [MPFPG-1] eth_maxPriorityFeePerGas **MUST** return the suggested maxPriorityFeePerGas for a transaction to be included into a block.
+* [EMPFPG-1] eth_maxPriorityFeePerGas **MUST** return the clients price per unit of gas - 7.
 ## eth_getProof
-* [GP-1] eth_getProof **MUST** return the proof for the given `account` at the given `defaultBlockParameter`. Explain IN detail use EIP WIP
-* [GP-2] eth_getProof **MUST** error with code -32000 when the requested block is unavailable.
+ Parameters
+DATA, 20 Bytes - address of the account.
+ARRAY, 32 Bytes - array of storage-keys which should be proofed and included. See eth_getStorageAt
+QUANTITY|TAG - integer block number, or the string "latest" or "earliest", see the default block parameter
+ Returns
+Object - A account object:
+
+balance: QUANTITY - the balance of the account. See eth_getBalance
+codeHash: DATA, 32 Bytes - hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+nonce: QUANTITY, - nonce of the account. See eth_getTransactionCount
+storageHash: DATA, 32 Bytes - SHA3 of the StorageRoot. All storage will deliver a MerkleProof starting with this rootHash.
+accountProof: ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the stateRoot-Node, following the path of the SHA3 (address) as key.
+storageProof: ARRAY - Array of storage-entries as requested. Each entry is a object with these properties:
+
+key: QUANTITY - the requested storage key
+value: QUANTITY - the storage value
+proof: ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the storageHash-Node, following the path of the SHA3 (key) as path.
+ Example
+* [EGPR-1] eth_getProof **MUST** return the proof for the given `account` at the given `defaultBlockParameter`. Explain IN detail use EIP WIP
+* [EGPR-2] eth_getProof **MUST** error with code -32000 when the requested block is unavailable.
 ## eth_createAccessList
-* [CAL-1] eth_createAccessList **MUST** return the access list and estimated gas cost when using the access list for the given `transaction`.
-* [CAL-2] eth_createAccessList **MUST** work with or without the `defaultBlockParameter`. uses latest when not given.
-* [CAL-3] eth_createAccessList **MUST** use the estimated gas when the `gas` is not specified.
-* [CAL-4] eth_createAccessList **MUST** error with code -32000 when `gas` is too low.
-* [CAL-5] eth_createAccessList **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [ECAL-1] eth_createAccessList **MUST** return an [EIP-2930](https://eips.ethereum.org/EIPS/eip-2930) access list biased off the given `transaction` and estimated gas cost when using the access list in the `transaction`.
+* [ECAL-2] eth_createAccessList **MUST** use "latest" when the `defaultBlockParameter` is not specified.
+* [ECAL-3] eth_createAccessList **MUST** use the estimated gas when the `gas` is not specified.
+* [ECAL-4] eth_createAccessList **MUST** error with code -32000 when `gas` is too low.
+* [ECAL-5] eth_createAccessList **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
 ## eth_getHeaderByNumber
-* [GHN-1] eth_getHeaderByNumber **MUST** return the block header with the given `blockNumber` or `block tag`.
-* [GHN-2] eth_getHeaderByNumber **MUST** return null when the requested block in unavailable.
+* [EGHN-1] eth_getHeaderByNumber **MUST** return the block header with the given `blockNumber` or `block tag`.
+* [EGHN-2] eth_getHeaderByNumber **MUST** return null when the requested block does not exist or is unavailable.
 ## eth_getHeaderByHash
-* [GHH-1] eth_getHeaderByNumber **MUST** return the block header with the given `blockHash`.
-* [GHH-2] eth_getHeaderByNumber **MUST** return null when the requested block in unavailable.
+* [EGHH-1] eth_getHeaderByNumber **MUST** return the block header with the given `blockHash`.
+* [EGHH-2] eth_getHeaderByNumber **MUST** return null when the requested block does not exist or is unavailable.
 ## eth_pendingTransactions
-* [PT-1] eth_pendingTransactions **MUST** return the transactions sent by accounts that are owned by the client that are currently in the transaction pool.
-* [PT-2] eth_pendingTransactions **MUST** return an empty array when syncing to the network.
+* [EPT-1] eth_pendingTransactions **MUST** return the transactions sent by accounts that are owned by the client that are currently in the transaction pool.
+* [EPT-2] eth_pendingTransactions **MUST** return an empty array when syncing to the network.
 ## eth_resend
-* [RS-1] eth_resend **MUST** error with code -32000 when given any transaction. [geth Issue](https://github.com/ethereum/go-ethereum/issues/23964)
+* [ERS-1] eth_resend **MUST** error with code -32000 when given any transaction. [geth Issue](https://github.com/ethereum/go-ethereum/issues/23964)
 ## eth_fillTransaction
-* [FT-1] eth_fillTransaction **MUST** return the return the raw transaction and JSON transaction object for the `transaction arguments`. FILL TRANSACTION
-* [FT-2] eth_filterTransaction **MUST NOT** sign the transaction.
-* [FT-3] eth_filterTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
-* [FT-4] eth_filterTransaction **MUST** allow both `data` and `input` to be used for contract cre https://vscode.dev/liveshare/8CEFFAA9075ECA257546700BD9E1DC3B23F3 ation
-* [FT-5] eth_filterTransaction **MUST** error with code -32000 when the `data` and `input` both specified and not equal
-* [FT-6] eth_filterTransaction **MUST** error with code -32000 when `data`/`input` or `to` is not specified.
-* [FT-7] eth_filterTransaction **MUST** error with code -3200 when `data`/`input` provided caused an EVM error when the `gas` is not specified, otherwise it is ignored. 
+* [EFT-1] eth_fillTransaction **MUST** fill in the missing transaction parameters of the given transaction.
+* [EFT-2] eth_fillTransaction **MUST** return the return the raw transaction and JSON transaction object of the filled transaction.
+* [EFT-3] eth_filterTransaction **MUST NOT** sign the transaction.
+* [EFT-4] eth_filterTransaction **MUST** error with code -32000 when the `from` address does not have enough Ether to pay for the transaction.
+* [EFT-5] eth_filterTransaction **MUST** allow both `data` and `input` to be used for contract creation,
+* [EFT-6] eth_filterTransaction **MUST** error with code -32000 when the `data` and `input` both specified and not equal
+* [EFT-7] eth_filterTransaction **MUST** error with code -32000 when `data`/`input` or `to` is not specified.
+* [EFT-8] eth_filterTransaction **MUST** error with code -3200 when `data`/`input` provided caused an EVM error when the `gas` is not specified, otherwise it is ignored. 
 # Errors
 Error codes between-32768 and -32000 are reserved for JSON-RPC errors, where -32000 to -32099 are for Execution layer API errors
 This table has been taken from the initial version of the JSON-RPC API spec that was never finalized. 
