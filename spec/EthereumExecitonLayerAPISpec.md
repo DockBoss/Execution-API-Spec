@@ -190,9 +190,9 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 ## eth_protocolVersion
 * [EP-1] eth_protocolVersion **MUST** return the current Ethereum Wire Protocol (eth protocol) version he network is using.
 ## eth_syncing
-* [ESY-1] eth_syncing **MUST** return the progress of the client's sync to the network.
+* [ESY-1] eth_syncing **MUST** return the progress of the client's sync of the network data.
 * [ESY-2] eth_syncing **MUST** return false when the client is not syncing or already synced to the network.
-* [ESY-3] eth_syncing **MUST** return an object containing the following for the sync progress:
+* [ESY-3] eth_syncing **MUST** return the following for the sync progress:
    * The current block being synced on the client.
    * The current highest block known by the client.
    * The number of known and pulled states.
@@ -236,31 +236,24 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EGTCH-3] eth_getBlockTransactionCountByHash **MUST** return null when the client is currently syncing to the network.
 ## eth_getBlockTransactionCountByNumber
 * [EGTCN-1] eth_getBlockTransactionCountByNumber **MUST** return the number of transactions within the block with the given `block number` or `block tag`.
-* [EGTCN-2] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` does not correspond to a block.
-* [EGTCN-3] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` is ahead of the synced blocks when the client is currently syncing to the network. wording
-* [EGTCN-4] eth_getBlockTransactionCount **MUST** return 0x0 when using `block tag` when the client is currently syncing to the network.
+* [EGTCN-2] eth_getBlockTransactionCountByNumber **MUST** return null when the `block number` is not known by the client or the block does not exist.
+* [EGTCN-3] eth_getBlockTransactionCount **MUST** return 0x0 when block tags are used while syncing to the network.
 ## eth_getUncleCountByHash
-* [EGUCH-1] eth_getUncleCountByHash **MUST** return number of uncle blocks that the block corresponding to the given `blockHash` has.
-* [EGUCH-2] eth_getUncleCountByHash **MUST** return null when the `blockHash` does not correspond to a mined block.
-* [EGUCH-3] eth_getUncleCountByHash **MUST** return null when the block information is not available while syncing to the network.
+* [EGUCH-1] eth_getUncleCountByHash **MUST** return number of uncle blocks that the block with the given `blockHash` has.
+* [EGUCH-2] eth_getUncleCountByHash **MUST** return null the block with the given `blockHash` does not exist or is not avaiable.
 ## eth_getUncleCountByNumber
-* [EGUCN-1] eth_getUncleCountByNumber **MUST** return number of uncle blocks that the block corresponding to the given `block number` or `block tag` has.
-* [EGUCN-2] eth_getUncleCountByNumber **MUST** return null when the `block number` does not correspond to a mined block.
-* [EGUCN-3] eth_getUncleCountByNumber **MUST** return null when block information is not available while syncing to the network.
-* [EGUCN-4] eth_getUncleCountByNumber **MUST** used the latest known block when using the "latest" tag while syncing.
-* [EGUCN-5] eth_getUncleCountByNumber **MUST** return 0x0 when using `block tag` "pending".
+* [EGUCN-1] eth_getUncleCountByNumber **MUST** return number of uncle blocks that the block with the given `block number` or `block tag` has.
+* [EGUCN-2] eth_getUncleCountByNumber **MUST** return null when the requested block does not exist or is not available. 
+* [EGUCN-3] eth_getUncleCountByNumber **MUST** return 0x0 when using `block tag` "pending".
 ## eth_getUncleByBlockHashAndIndex
 * [EGUHI-1] eth_getUncleCountByHashAndIndex **MUST** return the uncle block information at the `uncle index` of the block corresponding to the given `block hash`.
-* [EGUHI-2] eth_getUncleCountByHashAndIndex **MUST** return null when the `block hash` does not correspond to a mined block.
+* [EGUHI-2] eth_getUncleCountByHashAndIndex **MUST** return null when the block is unaviable or does not exist at the given `blockHash`.
 * [EGUHI-3] eth_getUncleCountByHashAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
-* [EGUHI-4] eth_getUncleCountByHashAndIndex **MUST** return null when block information is not available while syncing to the network.
 ## eth_getUncleByBlockNumberAndIndex 
-* [EGUNI-1] eth_getUncleByBlockNumberAndIndex **MUST** return the uncle block information at the `Uncle index` of the block corresponding to the given `block number` or `block tag`.
-* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the `block number` does not correspond to a mined block.
-* [EGUNI-3] eth_getUncleByBlockNumberAndIndex **MUST** return null when block information is not available while syncing to the network. 
-* [EGUNI-4] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
-* [EGUNI-5] eth_getUncleByBlockNumberAndIndex **MUST** used the latest known block when using the "latest" tag while syncing.
-* [EGUNI-6] eth_getUncleByBlockNumberAndIndex **MUST** return null when `block tag` "pending" is used.
+* [EGUNI-1] eth_getUncleByBlockNumberAndIndex **MUST** return the uncle block information at the `Uncle index` of the block with the given `block number` or `block tag`.
+* [EGUNI-2] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block requested is unaviable or does not exist.
+* [EGUNI-3] eth_getUncleByBlockNumberAndIndex **MUST** return null when the block has no uncles at the `uncle index`.
+* [EGUNI-4] eth_getUncleByBlockNumberAndIndex **MUST** return null when `block tag` "pending" is used.
 ## eth_getCode
 * [EGC-1] eth_getCode **MUST** return the deployed smart contract code at the given `address` and `defaultBlockParameter`.
 * [EGC-2] eth_getCode **MUST**  error with code -32000 when the state information is not available for the requested block.
@@ -348,11 +341,11 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [EST-27] eth_sendTransaction **MUST** error with code -32000 when the user did not increase the `maxFeePerGas` enough when trying to replace a pending transaction.
 * [EST-28] eth_sendTransaction **MUST** error with code -32000 when deploying contract with no `data`/`input`.
 * [EST-29] eth_sendTransaction **MUST** error with code -32000 when `data`/`input` that is trying to be deployed causes an EVM error.
-* [EST-30] eth_sendTransaction **MUST NOT** check validity of `data`/`input` whenever `gas` is specified.
+* [EST-30] eth_sendTransaction **MUST NOT** check if `data`/`input` causes an EVM error when `gas` is specified.
 * [EST-31] eth_sendTransaction **MUST** estimate the amount of gas needed to complete the transaction and use that value for `gas` when not specified.
 * [EST-32] eth_sendTransaction **MUST** use 0x0 for `gas` when null.
 * [EST-33] eth_sendTransaction **MUST** use 0x0 for `gasPrice` when null.
-* [EST-34] eth_sendTransaction **MUST** error with code -32000 when attempting to sign a transaction with an incorrect `chainId`.
+* [EST-34] eth_sendTransaction **MUST** error with code -32000 if the transaction's `chain Id` is different than the network's Id.
 * [EST-35] eth_sendTransaction **MUST** use client price per unit gas + 7wei and client price per unit gas - 7wei for `maxFeePerGas` and `maxPriorityFeePerGas` when they are not specified.
 * [EST-36] eth_sendTransaction **MUST** use `maxPriorityFeePerGas` + 14wei for `maxFeePerGas` and `gasPrice` when only `maxPriorityFeePerGas` is specified.
 * [EST-37] eth_sendTransaction **MUST** use client price per unit gas - 7wei for `maxPriorityFeePerGas` when only `maxFeePerGas` is specified.
@@ -408,11 +401,14 @@ The execution layer API also supports interaction using both HTTP2.0 and WebSock
 * [ENF-10] eth_newFilter **MUST** use null for `address` when it is not specified or when it is an empty array.
 * [ENF-11] eth_newFilter **MUST** allow `topics` array to contain more than 4 values.
 ## eth_newBlockFilter
-* [ENBF-1] eth_newBlockFilter **MUST** return the id of the newly created block filter on the client. 
+* [ENBF-1] eth_newBlockFilter **MUST** create a filter on the client that tracks when the client recieves new blocks.
+* [ENBF-2] eth_newBlockFilter **MUST** return the id of the newly created block filter. 
 ## eth_newPendingTransactionFilter
-* [ENPTF-1] eth_newPendingTransactionFilter **MUST** return the id of the newly created pending transaction filter on the client.
+* [ENPTF-1] eth_newPendingTransactionFilter **MUST** create a filter on the client that tracks the hash of each pending transaction that the client recieves.
+* [ENPTF-2] eth_newPendingTransactionFilter **MUST** return the id of the newly created pending transaction filter.
 ## eth_uninstallFilter
-* [EUF-1] eth_uninstallFilter **MUST** return true when the given filter has been successfully uninstalled, otherwise it **MUST** return false.
+* [EUF-1] eth_uninstallFilter **MUST** delete the filter with the given `filter id` from the client.
+* [EUF-2] eth_uninstallFilter **MUST** return true when the given filter has been successfully uninstalled, otherwise it **MUST** return false.
 ## eth_getFilterChanges
 * [EGFC-1] eth_getFilterChanges **MUST** return the block hashes of new blocks the client received since the filter was called last or first created, when the `filter id` corresponds to a block filter.
 * [EGFC-2] eth_getFilterChanges **MUST** return each block synced to the client when syncing to the network.
