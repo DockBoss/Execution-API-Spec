@@ -26,4 +26,17 @@ I have always seen it written as the default block parameter, but Micah brought 
 ## Error Messages
 JSON-RPC 2.0 Specification reserves codes -32000 to -32099 for custom errors. Though I have gotten a -32005 before a vast majority if not all of the non-standard errors return -32000. Though they do have different error messages for the  different situations. In [EIP-1474](https://eips.ethereum.org/EIPS/eip-1474) an earlier version of the RPC spec has a table of error codes that I used in hopes that the clients based the error messages off of the EIP, but it doesn't seem to be the case.
 ## Transaction types
-Geth doesn't have any transaction types at all
+I have found that transactions are not determined by their transaction `type`. After asking around I found that `type` is not even a field in Geth when sending transactions. [Geth issue](https://github.com/ethereum/go-ethereum/issues/24179).
+## Required parameters
+What should the specified behavior be when a required parameter is an empty string?
+  ### Geth
+  * eth_signTransaction
+    * [ESNT-10] when `gas` is an empty string it will default to `0x0`.
+    * [ESNT-13] when `gasPrice`, `maxFeePerGas`, or `maxPriorityFeePerGas` is an empty string it will default to `0x0`. 
+    * [ESNT-17] when `nonce` is an empty string it will default to `0x0`.
+## Verifying Contract `Data`/`Input`
+I have found that some endpoints like eth_estimateGas verifies the given `data` and errors when the `data` uses invalid opcodes or causes EVM errors. While other endpoints do not verify the `data` at all, this causes some interesting and unexpected behavior.  EX.
+* eth_fillTransaction **Does Not** verify the `data` when the `gas` is specified, but does not verify the `data` when it has to estimate the `gas`.
+* eth_signTransaction **Does Not** verify the `data` allowing you to sign a transaction contains EVM errors or invalid opcodes.
+* eth_sendRawTransaction **Does Not** verify the `data` allowing you to deploy contract containing EVM errors or invalid opcodes. This results in a contract with no code.
+* eth_sendTransaction **Does Not** verify the `data` when the `gas` is specified allowing you to deploy contract containing EVM errors or invalid opcodes. This results in a contract with no code.
