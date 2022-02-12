@@ -6,6 +6,12 @@ The purpose of this document is to summarize the notable "*features*" and incons
   - [Deprecations](#deprecations)
   - [Default Block Parameter vs Block Parameter](#default-block-parameter-vs-block-parameter)
   - [Error Messages](#error-messages)
+## Disclamer
+I am just starting out my career in Computer Science/Software Engineering. I have realized that I am not very good at organization of information as most of you Devs are. I am working to improve this skill, but in the meantime please bear with me as you read through this somewhat disorganized document.
+
+## Specs
+Below is the Ethereum Execution Layer JSON-RPC API specifications.
+I know that there **should** only be one, but I was not too sure on how I should organize the spec when clients behave differently.
 ## Background
 The specification was written using Geth as the "source of all truth". All behavior described in the document correlates to how Geth currently operates. I would've described what the expected behavior **should** be, but I didn't think I had the experience to make those calls. Plus this way the spec can be used as check list to showcase undesired behavior that still needs to be changed within Geth.
 ## Deprecations
