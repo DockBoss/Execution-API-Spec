@@ -1,4 +1,5 @@
-Disclamer -- I did not make these contracts except for ORIGIN and chainId 
+Basic contracts that I used for some tests.
+Disclamer -- I did not write these contracts except for ORIGIN and chainId 
 
 # chain id (use it)
 
