@@ -98,12 +98,12 @@ Is this erigon only or something that all clients will do?
 * should MFPG be allowed to be zero?
   * Nethermind allows it  
 
-
-# TODO:
-# Data Read Through
+# Inconsistencies per endpoint
+## web3_clientVersion
 * should web3_clientVersion collect extra params?
   * besu allows it
   * other clients error with -32602
+## web3_sha3
 * web3_sha3 empty string
   * nethermind errors with -32602
   * other clients return `"0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"`
@@ -113,21 +113,26 @@ Is this erigon only or something that all clients will do?
 * web3_sha3 `0x345`
   * nethermind returns the hash 
   * other clients error -32602
+## net_version
 * net_version extra params 
   * besu returns net version
   * other clients error -32602
+## net_peerCount
 * net_peerCount extra params 
   * besu returns peer count
   * other clients error -32602
+## net_listening
 * net_listening extra params 
   * besu returns returns true
   * other clients error -32602
+## eth_protocolVersion
 * eth_protocolVersion  
   * geth error -32601
   * others return `"0x42"`
 * eth_protocoVersion extra params
   * besu return protocol version
   * others error -32602
+## eth_gasPrice
 * eth_gasPrice
   * geth: `"0x3b9aca07"`
   * nethermind: `"0x4190ab07"`
@@ -136,6 +141,7 @@ Is this erigon only or something that all clients will do?
 * eth_gasPrice extra params
   * besu return protocol version
   * others error -32602
+## eth_maxPriorityFeePerGas
 * eth_maxPriorityFeePerGas
   * geth: `"0x3b9aca00"`
   * nethermind: `"0x4190ab07"`
@@ -144,6 +150,7 @@ Is this erigon only or something that all clients will do?
 * eth_maxPriorityFeePerGas extra params
   * besu error -32601
   * others error -32602
+## eth_blockNumber
 * eth_blockNumber extra params
   * besu return block number
   * others error -32602
@@ -315,4 +322,285 @@ Is this erigon only or something that all clients will do?
 * nethermind and besu -32601 not implimented
 * with block hash
     * return "0x"
-* 
+## eth_getRawTransactionByBlockHashAndIndex
+* Nethermind and besu -32601 not implimented
+* Geth and Erigon
+  * don't accept block tags or block numbers
+## eth_getRawTransactionByBlockNumberAndIndex
+* Besu and Nether -32601 not implimented
+* Erigon allows block number to be null
+* geth and erigon
+  * allow block tags
+## eth_getBlockTransactionCountByHash
+* besu and Nethermind allow no 0x
+  * Other clients error -32602
+*  Nethermind allows a n-1 length hash
+*  Nethermind -32001 when hash does not exist
+   *  Others return null
+## eth_getBlockTransactionCountByNumber
+* No client allows a block number without 0x
+* allows block tag
+* Nethermind errors -32001 when block is ahead of chain
+  * others return null
+* Nethermind allows a block hash
+  * others error -32602
+## eth_getUncleCountByBlockHash
+* nethermind and besu allow no 0x
+  * others -32602
+* None allow block tags
+*  Nethermind allow a block hash of n-1 length
+*  Nethermind errors -32001 when hash doesn't exist
+   *  others return null
+## eth_getUncleCountByBlock number
+* NOne allow no 0x
+* All allow block tags
+* Nethermind allows block hashe
+  * others -32602
+* Nethermind -32001 when block is ahead of chain
+  * others return null
+## eth_getUncleByBlockHashAndIndex
+* Nethermind and besu allow no 0x
+  * others -32602
+# TODO: Test This again for nethermind
+* NEthermind -32602 when no uncle exists
+  * others return null
+* Nethermind allows n-1 length hash
+  * others error -32602
+* Nethermind -32001 when using tx hash/ when block does not exist
+  * others return null.
+* none except block tags
+## eth_getUncleByBlockNumberAndIndex
+* Erigon allows number to be null, returns null
+  * others -32602
+* No one allow block number without 0x
+* Besu allows index without 0x
+  * others -32602
+# TODO: Test wit nethermind again
+* Nethermind -32602 when uncle does not exist at slot
+  * others return null
+* Nethermind -32001 when using tx hash
+  * others error -32602
+* all clients error -32602 when using block hash
+* Nethermind -32602 when using block tag(bc uncle does not exist at slot)
+  * others return null
+  ## eth_chainId
+  * nethermind and besu return when passing Null
+    * others -32602
+  * Besu return when passing text "0x500"
+    * other clients error -32602
+  ## eth_feeHistory
+  * erigon returns when only highestBlock is null
+    * others -32602
+  # TODO: check DB to make sure it doesn't return reward
+  * Nehtermind -32602 when array is null
+    * others returns without reward percentiles
+  * Nethermind -32602 when array has null value
+    * besu error -32603
+    * others returns without reward percentiles
+  * None allow num of blocks without 0x
+    * all clients error -32602
+  * Geth -32602 when block number has no 0x
+    * others return
+  * Besu returns when reward array is out of order
+    * nethermind -32602
+    * erigon and geth -32000
+  * Nethermind and besu -32602 when num of blocks is 0
+    * Geth and erigon return block 0x0 as oldest block 
+  * Nethermind errors when reward percentiles has duplicate
+    * others return
+  * All accept block tag
+  * All -32602 when passing block hash
+## eth_mining
+* besu returns when passed args
+  * others -32602
+## eth_hashrate
+* besu returns when passed args
+  * others -32602
+## eth_coinbase
+* besu returns when passed args
+  * others -32602
+* Nethermind didn't show same coinbase even thought I set it in the config
+## eth_accounts
+* Besu returns when passed args
+  * others -32602
+* Erigon -32000 when called with no arguments
+  * is deprecated
+
+## eth_estimateGas
+* Nethermind uses `0xfffffffffffffffffffffffffffffffffffffffe` as default
+  * besu ``
+  * geth ``
+  * erigon ``
+# TODO: run again with sufficient eth in nethermind default address 
+* All return 0xcf08 when passed an empty tx object
+* Besu -32004 when from address has insufficient funds
+  * others -32000
+* besu and nethermind use default address when from is empty string
+  * others error -32602
+* All clients use default when from is null
+* Besu allows value data, and to without 0x
+  * others -32602
+* All cleints do not check funds when estimating contract deployment
+* Besu and erigon return different values when using input for contract deployment than data
+  * I am assuming they only recognize data
+* Nethermind -32015 when invalid opcodes used
+  * geth and erigon -32000
+  * Besu -32603
+* Nethermind -32015 when odd hex is used for data
+  * others -32602
+* Besu returns when MFPG < MPFPG
+  * unsure of nethermind
+  * geth and error -32000
+* Besu -32602 when both GP and or MFPG, MPFPG
+  * geth and erigon -32000
+  * unsure of nethermind
+* Besu returns when addresses are incorrect length
+  * others -32602
+  * Except when nethermind is passed n-1 length then -32603 + some long message
+* besu returns when to is empty
+  * unsure of nethermind
+  * geth and erigon -32602
+*  All return when to is null 0xcf08
+   *  need to test on nethermind again
+* Nethermind -32602 when value is empty
+  * others returns
+* ALl return when value is null or nonexistent
+* All return 0xcf08 when just data, and null or empty
+## eth_getCode
+* Need to look into, but looks like erigon's return has a newline to begine with
+* Nethermind and Besu allow no 0x for address
+  * geth and erigon -32602
+* Besu and Erigon return 0x when calling before contract was created
+  * geth -32000
+  * Nethermind -32002
+* Geth -32000 when calling with blockNumber
+  * others return 
+* Geth and Besu -32000 when number is ahead of chain
+  * Nethermind -32001
+  * Erigon return latest
+* None allow blockNumber without 0x
+  * all clients error -32602
+* all -32602 when no block number exists
+  * Besu returns returns latest? when there is no `,` comma just address
+* Geth and error -32000 when blockNumber is null
+  * Nethermind and Besu -32602
+* Geth -32000 when calling fake contract block number 0x88bfa 
+  * i think its a geth setting
+  * other cleints return 0x
+* All clients error -32602 when the address is too long
+* Besu returns 0x when address is n-2
+  * others -32602
+* Nethermind and Besu return 0x when address is n-1
+  * other -32602
+## eth_getStorageAt
+* Nethermind and Besu allow address with no 0x
+  * geth and erigon -32602
+* All clients return when slot has no 0x
+* Geth -32000 when calling block before contract is created
+  * Nehtermind -32603
+  * Besu and erigon return 0x00000...
+* All clients error -32602 when only address
+* Geth and Besu -32000 when block is ahead of chain
+  * Nethermind -32001
+  * Erigon returns latest
+* All clients error -32602 when blockNumber without 0x
+* all clients error -32602 when blockNumber is empty and Null
+* Nethermind returns latest when no block exists
+  * others error -32602
+* Nethermind -32602 when slot is empty
+  * others return latest
+* Nethermind and Besu -32602 when slot is null
+  * geth and erigon return latest
+# TODO: check nethermind's coinbase situation
+## eth_call
+* Nethermind returns 0x when no block number is passed `{}`
+  * other clients error -32602
+* All clients return 0x when passed `{}, latest`
+* All clients error -32602 when blockNumber is empty
+* Nethermind and Besu -32602 when block number is null
+  * Geth and erigon -32000
+* Nethermind uses 0xfff...e for caller
+  * All others 0x000...0
+* Besu -32004 when the account has insufficient funds
+  * others -32000
+* Nethermind and Besu use default account when from is empty
+  * Geth and erigon -32602
+* All clients use default account when from is null
+* Geth and Nethermind return default account when calling msg.sender account
+  * Besu and Erigon return 0x
+* Nethermind gives precedence to `data` not `input` I think opcode 41 returns nethermind's coinbase not the blocks coinbase
+  * Geth gives precedence to `input` not `data`
+  * besu gives precedence to `data` not `input`
+  * erigon gives precedence to `data` not `input`
+* Nethermind and Besu allow data without 0x 
+  * Geth and Erigon -32602
+* Besu allows `to` and `value` no 0x 
+  * Nethermind unsure
+  * Geth and Erigon -32602
+* Besu -32004 when insufficient funds
+  * others -32000
+* Nethermind and Besu return when `to` is empty
+  * geth and erigon -32602
+* All clients return when `to` is null or not specified
+* Nethermind -32602 when `value` is empty
+  * others return
+* All clients return when `value` is null or not specified  
+* Nethermind -32015 when invalid opcode is used
+  * Besu -32603
+  * geth and erigon -32000
+* Nethermind -32015 when gas is too low
+  * Besu -32003
+  * geth and erigon -32000
+* Nethermind -32015 when gas is exceeds cap
+  * other clients return
+* Nethermind uses 5f5117e as default `gas`
+  * Geth and erigon use 2fa20fe
+  * Besu uses 7fffffffffff307d
+    * But uses 79427e when `gas` is null
+#### gasPice Opcode 
+* Nethermind returns 0x0...0 for `3a` gasPrice opcode when `"type": "0x2"` and `gasPrice` is used
+  * Nethermind reruns the gasPrice when not `type` is not specified
+  * other clients return `gasPrice`
+* All clients return 7 for gasPrice opcode when `maxFeePerGas` is used
+* Nethermind returns 0x00...0 for gasPrice opcode when only `maxPriorityFeePerGas` is used
+  * Besu -32602
+  * geth and erigon -32000
+* All cleints return 100006 for gasPrice opcode when both `MFPG` and `MPFPG` are used
+* Nethermind reruns `maxFeePerGas` for gasPrice opcode when `MPFPG` > `MFPG`
+  * others -32000
+* Nethermind -32602 when `MFPG` and `MPFPG` are empty
+  * others use 0x0 for values
+* All return when `MFPG` and `MPFPG` are null
+* Nethermind and Besu -32602 when `mfpg` is empty and `mpfpg` is not
+  * Geth and erigon -32000 mpfpg > mfpg
+* Nethermind returns 0x0...0 when `mfpg` is null and `mpfpg` is not
+  * geth and erigon -32000 mpfpg > mfpg
+  * besu -32602
+* Nethermind -32602 when `mpfpg` is empty and `mfpg` is not
+  * others return 7
+* All return 7 when `mpfpg`is null and `mpfpg` is not
+* Nethermind returns 10006 when `mfpg` `mpfpg`, and `gp` are used
+  * besu -32602
+  * geth and erigon -32000
+#### chain id opcode
+* Nethermind -32602 when chain id is empty
+  * others return
+* besu -32602 when chain id is null
+  * others return
+#### calling simple storage return function
+* All clients -32602 when block number has no 0x
+* Erigon and Besu return 0x when block number is before contract deployment
+  * geth -32000
+  * nethermind -32002
+* Erigon return 0x when block is ahead of chain
+  * geth and besu -32000
+  * nethermind -32001
+* All clients ignore extra key value pairs that do no pertain to the call
+# TODO: check general JSON-RPC test results again
+## General JSON-RPC Tests
+* All clients allow json-rpc other that 2.0
+* Besu -32600 when name has WeIRD case
+  * others return
+* All allow id to be float
+* Nehtermind returns when no ID - notification
+  * others return `request/node error`
